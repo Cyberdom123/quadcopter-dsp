@@ -105,7 +105,7 @@ int main(void)
   /* End of testing */
 
   //NRF24L01_Chanel(&nrf24l01, 0x08);
-
+  NRF24L01_Chanel(&nrf24l01, 23);
   HAL_StatusTypeDef status =  NRF24L01_Init(
     &nrf24l01,
     RX_DR_INT_SET,   //Interrupt not reflected on IRQ
