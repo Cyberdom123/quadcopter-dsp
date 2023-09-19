@@ -671,7 +671,7 @@
       (net 17 "Net-(U1-SW)") (pinfunction "1") (pintype "passive") (tstamp 25fa1d14-912e-4f98-b934-fb9939050f4c))
     (pad "2" smd rect (at 1.185 0 90) (size 0.98 3.4) (layers "F.Cu" "F.Paste" "F.Mask")
       (net 1 "VDD") (pinfunction "2") (pintype "passive") (tstamp 229d8d28-a38f-4e85-8d50-96123a83fe2e))
-    (model "${KICAD6_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Coilcraft_XxL4040.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Wuerth_MAPI-4020.step"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -1554,6 +1554,11 @@
       (net 5 "Net-(U2-PD0)") (pinfunction "3") (pintype "passive") (tstamp 481b39c4-247e-4548-a534-4007a1544e54))
     (pad "4" smd rect (at 1.1 -1.85) (size 1.2 2) (layers "F.Cu" "F.Paste" "F.Mask")
       (net 3 "GND") (pinfunction "4") (pintype "passive") (tstamp 4ab96381-2e60-4ff4-97da-aae7cc5bd269))
+    (model "/home/dom/Documents/Coding/stm32/quadcopter-dsp/quadcopter-flight-controller-v0.2/libs/QT532S-8.000MAAJ-T/QT532S-8.000MAAJ-T.step"
+      (offset (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz -90 0 0))
+    )
   )
 
   (footprint "swd_conn:Pin_2x03_P2.54mm" (layer "F.Cu")
@@ -1653,7 +1658,7 @@
       (tstamp 1f2ce927-d611-4e27-9e9a-5cc1d6c7e28b)
     )
     (fp_text user "PCB END" (at 4.85 1.2 90) (layer "F.Fab")
-        (effects (font (size 0.32 0.32) (thickness 0.15)))
+        (effects (font (size 0.32 0.32) (thickness 0.08)))
       (tstamp 9c65bc57-1130-4a2e-92a3-52516d01b80c)
     )
     (fp_line (start -3.8 1.45) (end -3.8 1.22)
@@ -1730,6 +1735,11 @@
       (net 14 "unconnected-(J2-SHIELD-PadS1)") (pinfunction "SHIELD") (pintype "passive+no_connect") (tstamp 959e85d4-5620-4e1f-8328-6222282d1ad7))
     (pad "S6" thru_hole oval (at 3.3 0 270) (size 0.9 1.8) (drill oval 0.5 1.2) (layers "*.Cu" "*.Mask")
       (net 14 "unconnected-(J2-SHIELD-PadS1)") (pinfunction "SHIELD") (pintype "passive+no_connect") (tstamp 281cdb2d-199e-4ef2-9abc-47691a10e47a))
+    (model "/home/dom/Documents/Coding/stm32/quadcopter-dsp/quadcopter-flight-controller-v0.2/libs/10118193-0001LF/10118193-0001LF.step"
+      (offset (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz -90 0 0))
+    )
   )
 
   (footprint "TestPoint:TestPoint_Pad_D1.0mm" (layer "F.Cu")

@@ -222,7 +222,6 @@ HAL_StatusTypeDef NRF24L01_Packet_Available(NRF24L01_STRUCT *nrf24l01){
     NRF24L01_Read_Byte(nrf24l01, FIFO_STATUS, &data);
 
     if(!(data & 1<<RX_EMPTY)){ 
-        //NRF24L01_Write_Byte(nrf24l01, NRF_STATUS, data);
         return HAL_OK; 
     }
     
@@ -234,12 +233,15 @@ HAL_StatusTypeDef NRF24L01_Read_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
 
-    uint8_t tx_buff[len+1];
-    tx_buff[0] = R_RX_PAYLOAD;
-    uint8_t rx_buff[len];
-    HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(nrf24l01->spiHandle, tx_buff, rx_buff, len, HAL_MAX_DELAY);
+    uint8_t tx_buff = R_RX_PAYLOAD;
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(nrf24l01->spiHandle, &tx_buff, 1, HAL_MAX_DELAY);
     while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);
+    if(status != HAL_OK){ return status; }
     
+    status = HAL_SPI_Receive(nrf24l01->spiHandle, data, len, HAL_MAX_DELAY); 
+    while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);      
+    if(status != HAL_OK){ return status; }                                    
+
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
 
     return status;
@@ -274,7 +276,7 @@ HAL_StatusTypeDef NRF24L01_Open_Writing_Pipe(NRF24L01_STRUCT *nrf24l01, uint64_t
 }
 
 /* READ REGISTER DATA FOR DEBUG */
-HAL_StatusTypeDef NRF24L01_Print_Info(NRF24L01_STRUCT *nrf24l01){
+HAL_StatusTypeDef NRF24L01_Get_Info(NRF24L01_STRUCT *nrf24l01){
     uint8_t data = 0; uint64_t data_long = 0;
 
     HAL_StatusTypeDef status = NRF24L01_Read_Byte(nrf24l01, NRF_CONFIG, &data);

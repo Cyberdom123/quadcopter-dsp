@@ -39,6 +39,7 @@ C_SOURCES =  \
 Core/Src/gpio.c \
 Core/Src/i2c.c \
 Core/Src/main.c \
+Core/Src/motors.c \
 Core/Src/mpu6050.c \
 Core/Src/nrf24l01.c \
 Core/Src/spi.c \

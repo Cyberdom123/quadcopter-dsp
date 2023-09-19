@@ -124,7 +124,7 @@ void NRF24L01_Stop_Listening(NRF24L01_STRUCT *nrf24l01);
 
 HAL_StatusTypeDef NRF24L01_Read_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 
-HAL_StatusTypeDef NRF24L01_Print_Info(NRF24L01_STRUCT *nrf24l01);
+HAL_StatusTypeDef NRF24L01_Get_Info(NRF24L01_STRUCT *nrf24l01);
 /* END OF MAIN FUNCTIONS */
 
 /* Memory Map */
