@@ -2,6 +2,7 @@
 
 /* Initialize device */
 /* Call this function at the beginning */
+/* TODO: Dont enable interrupts in init, write function */
 HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8_t maskTx, uint8_t maskMaxRT,
                                 uint8_t enCrc, CRCO_ENCODING crco, RX_TX_CONTROL rxTx, RX_TX_ADDRESS_WIDTH addrWidth,
                                 uint8_t retDelay, uint8_t retCount, AIR_DATA_RATE rfDr, RF_POWER_SEL rfPwrSel,
