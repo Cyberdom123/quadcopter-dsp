@@ -133,15 +133,15 @@ int main(void)
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
   //char payload[18] = "hello_from_stm32";
-  /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  // MPU6050_STRUCT mpu;
-  // mpu.hi2c = &hi2c1;
-  // uint8_t who_am_i = 0;
-  // mpu6050_read_byte(&mpu, 0x75, &who_am_i);
-  // HAL_Delay(5000);
+  int16_t acc_data[3];
+
+  MPU6050_STRUCT mpu;
+  mpu.hi2c = &hi2c1;
+  uint8_t who_am_i = 0;
+  mpu6050_read_byte(&mpu, 0x75, &who_am_i);
+  HAL_Delay(5000);
+
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
@@ -265,9 +265,8 @@ int main(void)
     }
     HAL_Delay(1);
 
-    /* USER CODE END WHILE */
+    MPU_read_acc(&mpu, acc_data);
 
-    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
