@@ -68,17 +68,11 @@
 /*---------- -----------*/
 #define USBD_MAX_STR_DESC_SIZ     512
 /*---------- -----------*/
-#define USBD_SUPPORT_USER_STRING_DESC     1
-/*---------- -----------*/
 #define USBD_DEBUG_LEVEL     0
 /*---------- -----------*/
 #define USBD_SELF_POWERED     1
 /*---------- -----------*/
-#define USBD_DFU_MAX_ITF_NUM     1
-/*---------- -----------*/
-#define USBD_DFU_XFER_SIZE     1024
-/*---------- -----------*/
-#define USBD_DFU_APP_DEFAULT_ADD     0x08000000
+#define MAX_STATIC_ALLOC_SIZE     512
 
 /****************************************/
 /* #define for FS and HS identification */
