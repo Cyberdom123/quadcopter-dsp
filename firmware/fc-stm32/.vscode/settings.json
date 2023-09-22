@@ -1,0 +1,63 @@
+{
+    "cortex-debug.armToolchainPath": "/home/kacper/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-none-eabi-gcc/12.3.1-1.1.1/.content/bin",
+    "cortex-debug.openocdPath": "/home/kacper/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-2.1/.content/bin/openocd",
+    "cortex-debug.variableUseNaturalFormat": false,
+
+    // Todo Tree
+    "todo-tree.highlights.defaultHighlight": {
+        "foreground": "white",
+        "background": "red",
+        "icon": "check",
+        "type": "text",
+        "gutterIcon": true
+    },
+    "todo-tree.highlights.customHighlight": {
+        "BUG": {
+            "icon": "bug"
+        },
+        "HACK": {
+            "icon": "tools"
+        },
+        "TODO": {
+            "icon": "check-circle",
+            "background": "#09b004",
+            "iconColour": "#09b004"
+        },
+        "FIXME": {
+            "icon": "flame",
+            "background": "#d65d0e",
+            "foreground": "#282828",
+            "iconColour": "#d65d0e",
+            "type": "text",
+            "gutterIcon": true
+        },
+        "XXX": {
+            "icon": "x"
+        },
+        "[ ]": {
+            "icon": "issue-draft"
+        },
+        "[x]": {
+            "icon": "issue-closed"
+        }
+    },
+    "todo-tree.highlights.useColourScheme": true,
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "FIX",
+        "FIXIT",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]"
+    ],
+    "todo-tree.general.tagGroups": {
+        "FIXME": [
+            "FIXME",
+            "FIXIT",
+            "FIX",
+        ],
+    },
+}
