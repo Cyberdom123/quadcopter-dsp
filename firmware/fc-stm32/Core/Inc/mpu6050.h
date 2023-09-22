@@ -10,7 +10,7 @@ typedef struct
     I2C_HandleTypeDef *hi2c;
 } MPU6050_STRUCT;
 #define AD0 0
-#define MPU6050_ADDR	0b1101000 | (AD0)
+#define MPU6050_ADDR	(0b1101000 | (AD0))
 
 #define PWR_MGMT_1_REG  0x6B
 #define SMPLRT_DIV_REG  0x19
