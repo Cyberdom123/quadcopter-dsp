@@ -14,17 +14,18 @@ HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8
     /* Clear Payload Flag */
     nrf24l01->payloadFlag = 0;
 
-    HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_SET);
+    //HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
+    //HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_SET);
 
     HAL_Delay(105);
 
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_RESET);
 
-    /* Power Down Device */
-    status = NRF24L01_Write_Byte(nrf24l01, NRF_CONFIG, 0x00);
-    if(status != HAL_OK){ return status; }
+    /* Power Down Device & Disable Interrupts */
+    // data = (1 << MASK_RX_DR | 1 << MASK_TX_DS | 1 << MASK_MAX_RT);
+    // status = NRF24L01_Write_Byte(nrf24l01, NRF_CONFIG, data);
+    // if(status != HAL_OK){ return status; }
 
     /* Setup Address Widths */
     data = addrWidth;
@@ -47,9 +48,9 @@ HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8
     if(status != HAL_OK){ return status; }
 
     /* Clear Status Register */
-    data = (1 << MASK_RX_DR | 1 << MASK_TX_DS | 1 << MASK_MAX_RT);
-    status = NRF24L01_Write_Byte(nrf24l01, NRF_STATUS, data);
-    if(status != HAL_OK){ return status; }
+    // data = (1 << MASK_RX_DR | 1 << MASK_TX_DS | 1 << MASK_MAX_RT);
+    // status = NRF24L01_Write_Byte(nrf24l01, NRF_STATUS, data);
+    // if(status != HAL_OK){ return status; }
 
     /* FLush RX TX */
     NRF24L01_Flush_Tx(nrf24l01);

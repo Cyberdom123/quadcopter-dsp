@@ -65,8 +65,8 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
-    NRF24L01_Flush_Rx(&nrf24l01);
-    NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
+    //NRF24L01_Flush_Rx(&nrf24l01);
+    //NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
     //NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
   }
 }
