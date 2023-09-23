@@ -31,6 +31,7 @@
 
 #include "nrf24l01.h"
 #include "mpu6050.h"
+#include "motors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -63,17 +64,30 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/* TODO: Talk about interrupts tasks, executing order, or about using RTOS */
+/* TEST: Sometimes spi goes into blocking mode, test why */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
-    //NRF24L01_Flush_Rx(&nrf24l01);
-    //NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
+    NRF24L01_Stop_Listening(&nrf24l01);
+    //NRF24L01_Flush_Tx(&nrf24l01);
     //NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
+    //NRF24L01_Read_Payload(&nrf24l01, msg, 8);
+    NRF24L01_Read_Payload_RxTx(&nrf24l01, msg, 8);
+    NRF24L01_Flush_Rx(&nrf24l01);
+    NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
+    
+    Motors_Run(msg);
+    
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+    NRF24L01_Start_Listening(&nrf24l01);
   }
 }
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
   if(nrf24l01.payloadFlag){
-    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, msg, 8);
+    // NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, msg, 8);
+    // NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
+    // NRF24L01_Start_Listening(&nrf24l01);
   }
 }
 /* USER CODE END 0 */
@@ -160,56 +174,8 @@ int main(void)
   // uint8_t who_am_i = 0;
   // mpu6050_read_byte(&mpu, 0x75, &who_am_i);
   
-  uint8_t power_on = 0;
-  uint8_t pwr = 10;
-
   while (1)
   {
-
-    TIM2->CCR1 = pwr;
-    TIM2->CCR2 = pwr;
-    TIM2->CCR3 = pwr;
-    TIM2->CCR4 = pwr;
-
-    if(power_on){
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);   
-    }else{
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-    }
-
-
-    // NRF24L01_Get_Info(&nrf24l01);
-    // HAL_Delay(1);
-    // if(NRF24L01_Packet_Available(&nrf24l01) == HAL_OK){
-    //   // NRF24L01_Read_Payload(&nrf24l01, msg, 8);
-      
-    //   // pwr = 10;
-    //   // if(msg[0]-70 > 10){
-    //   //   pwr = msg[0] - 70;
-    //   // }
-      
-    //   // if(msg[4] == 1 && power_on == 0){
-    //   //   power_on = 1;
-    //   // }
-
-    //   // if(msg[5] == 1 && power_on == 1){
-    //   //   power_on = 0;
-    //   // }
-
-    //   //HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-
-
-    //   NRF24L01_Flush_Rx(&nrf24l01);
-    //   NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
-    // }else{
-    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    // }
     HAL_Delay(1);
 
     /* USER CODE END WHILE */

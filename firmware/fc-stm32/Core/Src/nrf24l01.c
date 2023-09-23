@@ -5,7 +5,7 @@
  * @brief Initialize device 
  * Call this function at the beginning
  */
-/*  */
+/* TEST: Check if init still works fine afeter changes */
 HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8_t maskTx, uint8_t maskMaxRT,
                                 uint8_t enCrc, CRCO_ENCODING crco, RX_TX_CONTROL rxTx, RX_TX_ADDRESS_WIDTH addrWidth,
                                 uint8_t retDelay, uint8_t retCount, AIR_DATA_RATE rfDr, RF_POWER_SEL rfPwrSel,
@@ -258,6 +258,7 @@ HAL_StatusTypeDef NRF24L01_Packet_Available(NRF24L01_STRUCT *nrf24l01){
 /** 
  * @brief Read payload from rx fif0 
  */
+/*  */
 HAL_StatusTypeDef NRF24L01_Read_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len)
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
@@ -276,9 +277,38 @@ HAL_StatusTypeDef NRF24L01_Read_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data
     return status;
 }
 
+HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len){
+    HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
+
+    uint8_t tx_buff[len+1];
+    uint8_t rx_buff[len+1];
+
+    for (size_t i = 1; i < len+1; i++)
+    {
+        tx_buff[i] = 0xFF;
+    }
+    
+    tx_buff[0] = R_RX_PAYLOAD;
+
+    HAL_StatusTypeDef status =  HAL_SPI_TransmitReceive(nrf24l01->spiHandle, tx_buff, rx_buff, len+1, HAL_MAX_DELAY);
+    while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);
+
+    for (size_t i = 0; i < len; i++)
+    {
+        data[i] = rx_buff[i+1];
+    }
+                                         
+
+    HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
+    
+    return status;
+}
+
+
 /**
  * @brief Read payload using dma
  */
+/* FIX: Transmit-receive doesn't work  */
 HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t len)
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
@@ -288,6 +318,7 @@ HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t le
         HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
         return HAL_ERROR;        
     }
+
     nrf24l01->payloadFlag = 0;                               
     return HAL_OK;        
 }
@@ -295,6 +326,7 @@ HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t le
 /** 
  * @brief When dma read is completed 
  */
+/* TODO: Think about semaphore or consider if memcpy its a good idea */
 void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len)
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);

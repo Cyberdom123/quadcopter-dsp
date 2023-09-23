@@ -132,6 +132,8 @@ HAL_StatusTypeDef NRF24L01_Get_Info(NRF24L01_STRUCT *nrf24l01);
 HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t len);
 
 void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
+
+HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 /* END OF MAIN FUNCTIONS */
 
 /* Memory Map */
