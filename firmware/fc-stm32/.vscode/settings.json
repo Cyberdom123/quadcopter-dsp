@@ -1,8 +1,4 @@
 {
-    "cortex-debug.armToolchainPath": "/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-none-eabi-gcc/12.2.1-1.2.1/.content/bin",
-    "cortex-debug.openocdPath": "/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd",
-    "cortex-debug.variableUseNaturalFormat": false,
-
     // Todo Tree
     "todo-tree.highlights.defaultHighlight": {
         "foreground": "white",
@@ -11,6 +7,7 @@
         "type": "text",
         "gutterIcon": true
     },
+
     "todo-tree.highlights.customHighlight": {
         "BUG": {
             "icon": "bug"
@@ -20,14 +17,14 @@
         },
         "TODO": {
             "icon": "check-circle",
-            "background": "#09b004",
-            "iconColour": "#09b004"
+            "background": "#049500",
+            "iconColour": "#049500"
         },
         "FIXME": {
             "icon": "flame",
-            "background": "#d65d0e",
+            "background": "#fe8019",
+            "iconColour": "#fe8019",
             "foreground": "#282828",
-            "iconColour": "#d65d0e",
             "type": "text",
             "gutterIcon": true
         },
@@ -39,6 +36,20 @@
         },
         "[x]": {
             "icon": "issue-closed"
+        },
+        "TEST": {
+            "icon": "cpu",
+            "background": "#458588",
+            "foreground": "#ebdbb2",
+            "iconColour": "#458588"
+        },
+        "MAGIC NUMBER": {
+            "icon" : "number",
+            "background": "#b16286",
+            "iconColour": "#b16286",
+            // "foreground": "#7DDD14"
+            "foreground": "#ebdbb2"
+
         }
     },
     "todo-tree.highlights.useColourScheme": true,
@@ -51,7 +62,9 @@
         "TODO",
         "XXX",
         "[ ]",
-        "[x]"
+        "[x]",
+        "TEST",
+        "MAGIC NUMBER"
     ],
     "todo-tree.general.tagGroups": {
         "FIXME": [
@@ -59,5 +72,8 @@
             "FIXIT",
             "FIX",
         ],
+        "MAGIC NUMBER": [
+            "MAGIC"
+        ]
     },
 }
