@@ -22,6 +22,12 @@ HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8
 
     HAL_Delay(105);
 
+    /* Initialize Tx Buffer */
+    nrf24l01->txBuff[0] = R_RX_PAYLOAD;
+    for (size_t i = 1; i < 33; i++)
+    {
+        nrf24l01->txBuff[i] = 0xFF;
+    }
 
     /* Power Down Device & Disable Interrupts */
     data = (1 << MASK_RX_DR | 1 << MASK_TX_DS | 1 << MASK_MAX_RT);
@@ -277,7 +283,8 @@ HAL_StatusTypeDef NRF24L01_Read_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data
     return status;
 }
 
-HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len){
+HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len)
+{
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
 
     uint8_t tx_buff[len+1];
@@ -308,30 +315,31 @@ HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t 
 /**
  * @brief Read payload using dma
  */
-/* FIX: Transmit-receive doesn't work  */
 HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t len)
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
+    
+    nrf24l01->payloadFlag = 1;                               
 
-    uint8_t tx_buff = R_RX_PAYLOAD;
-    if(HAL_SPI_TransmitReceive_DMA(nrf24l01->spiHandle, &tx_buff, nrf24l01->payloadBuff, len) != HAL_OK){
-        HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
-        return HAL_ERROR;        
-    }
-
-    nrf24l01->payloadFlag = 0;                               
-    return HAL_OK;        
+    HAL_StatusTypeDef status = HAL_SPI_TransmitReceive_DMA(nrf24l01->spiHandle, nrf24l01->txBuff,
+                                                           nrf24l01->payloadBuff, len+1);
+    
+    return status;
 }
 
 /** 
  * @brief When dma read is completed 
  */
-/* TODO: Think about semaphore or consider if memcpy its a good idea */
 void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len)
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
-    nrf24l01->payloadFlag = 1;                               
-    memcpy(data, nrf24l01->payloadBuff, len);
+    nrf24l01->payloadFlag = 0;
+
+    for (size_t i = 0; i < len; i++)
+    {
+        data[i] = nrf24l01->payloadBuff[i+1];
+    }                               
+
 }
 
 

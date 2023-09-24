@@ -65,31 +65,27 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* TODO: Talk about interrupts tasks, executing order, or about using RTOS */
-/* TEST: Sometimes spi goes into blocking mode, test why */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-  if(GPIO_Pin == NRF_INT_Pin){
-    NRF24L01_Stop_Listening(&nrf24l01);
-    //NRF24L01_Flush_Tx(&nrf24l01);
-    //NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
-    //NRF24L01_Read_Payload(&nrf24l01, msg, 8);
-    NRF24L01_Read_Payload_RxTx(&nrf24l01, msg, 8);
-    NRF24L01_Flush_Rx(&nrf24l01);
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
+  if(nrf24l01.payloadFlag){
+    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, msg, 8);
     NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
-    
     Motors_Run(msg);
     
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Start_Listening(&nrf24l01);
   }
+
 }
 
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
-  if(nrf24l01.payloadFlag){
-    // NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, msg, 8);
-    // NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
-    // NRF24L01_Start_Listening(&nrf24l01);
+/* TEST: Sometimes spi goes into blocking mode, test why */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+  if(GPIO_Pin == NRF_INT_Pin){
+    NRF24L01_Stop_Listening(&nrf24l01);
+    NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
   }
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -176,8 +172,6 @@ int main(void)
   
   while (1)
   {
-    HAL_Delay(1);
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

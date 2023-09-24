@@ -16,7 +16,9 @@ typedef struct
     uint16_t cePin;
 
     /* DMA */
-    uint8_t payloadBuff[32];
+    uint8_t payloadBuff[33];
+    uint8_t txBuff[33];
+    
     uint8_t payloadFlag;
 
 } NRF24L01_STRUCT;
