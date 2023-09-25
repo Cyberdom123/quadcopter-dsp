@@ -1,7 +1,6 @@
 from inputs import get_gamepad
 import serial
 import time
-import struct
 import math
 import threading
 
@@ -47,20 +46,15 @@ class XboxController(object):
         return [x, y, a]
     
     def send(self):
-        x = -round(self.LeftJoystickX*80) + 81
-        y = -round(self.LeftJoystickY*80) + 81
-        y_btn = self.Y
+        x1 = -round(self.LeftJoystickX*80) + 80
+        y1 = -round(self.LeftJoystickY*80) + 80
+        x2 = -round(self.RightJoystickX*80) + 80
+        y2 = -round(self.RightJoystickY*80) + 80
         a = self.A
-        time.sleep(0.001)
+        b = self.B
+        time.sleep(0.0001)
 
-        # struct.pack( '>ccc',int(y).to_bytes(1, byteorder="big", signed=False),
-        #             int(x).to_bytes(1, byteorder="big", signed=False),
-        #             int(a).to_bytes(1, byteorder="big", signed=False))
-        
-        ser.write(int(y).to_bytes(1, byteorder="big", signed=False) +
-                  int(x).to_bytes(1, byteorder="big", signed=False) +
-                  int(a).to_bytes(1, byteorder="big", signed=False) +
-                  int(y_btn).to_bytes(1, byteorder="big", signed=False))
+        ser.write(bytearray([y1, x1, y2, x2, a, b]))
         
         while True:
             if(ser.in_waiting > 0):
