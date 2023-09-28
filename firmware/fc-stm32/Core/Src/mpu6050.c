@@ -13,14 +13,15 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu) {
 
     int status = HAL_OK;
 
-    *i2c_buffer = 7; // magic number: 7 in SMPLRT_DIV
+    // set the clock divider to 8
+    *i2c_buffer = 7;
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
                             SMPLRT_DIV, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 1; // magic number: 7 in SMPLRT_DIV
+    *i2c_buffer = 1; // magic number: 1 in PWR_MGMT_1
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
                             PWR_MGMT_1, 1,
                             i2c_buffer, 1,
@@ -34,14 +35,7 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu) {
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 24; // magic number: 24 in GYRO_CONFIG_REG
-    status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
-                            GYRO_CONFIG_REG, 1,
-                            i2c_buffer, 1,
-                            HAL_MAX_DELAY);
-    HAL_error_check(status);
-
-    *i2c_buffer = AFS_SEL << 3;
+    *i2c_buffer = (AFS_SEL << 3);
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
                             ACC_CONFIG_REG, 1,
                             i2c_buffer, 1,

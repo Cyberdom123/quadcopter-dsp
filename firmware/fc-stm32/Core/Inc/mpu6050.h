@@ -15,8 +15,6 @@ typedef struct
 #define AD0 0
 #define MPU6050_ADDR	(0b1101000 | (AD0))
 
-// TODO: define all registers
-
 /////////////////////////////////////
 /////////// REGISTER MAP ////////////
 /////////////////////////////////////
@@ -30,10 +28,8 @@ typedef struct
 // Sample rate divider
 #define SMPLRT_DIV  0x19
 
-#define CONFIG_REG      0x1A
+#define CONFIG_REG  0x1A
 
-#define PWR_MGMT_1  0x6B
-#define INT_ENABLE  0x38
 /**
   * @brief
   * Address of gyroscope config register.
@@ -147,13 +143,20 @@ typedef struct
 #define SIGNAL_PATH_RESET  0x68
 #define USER_CTRL          0x6A
 
-#define I2C_BYPASS_EN 1
+#define PWR_MGMT_1 0x6B
+#define PWR_MGMT_2 0x6C
 
+#define FIFO_COUNT 0x72
+#define FIFO_R_W   0x74
+#define WHO_AM_I   0x75
+
+
+#define I2C_BYPASS_EN 1
 #define I2C_MST_EN 5
 
 
 // Gyroscope range
-#define FS_SEL 1
+#define FS_SEL 0b11
 // Accelerometer range
 #define AFS_SEL 1
 
@@ -167,8 +170,11 @@ typedef struct
 
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data);
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu);
+// todo: read function are to return scaled floating point output
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, int16_t output[]);
 HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, int16_t output[]);
+// todo: add functions to change the sensor resolution
+// todo: add a function for sampling rate
 
 
 #endif // mpu6050
