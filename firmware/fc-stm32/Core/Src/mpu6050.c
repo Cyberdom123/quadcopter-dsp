@@ -9,33 +9,32 @@ HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *
 
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu) {
     // TODO: make this prettier
-    // TODO: make a structure for MPU6050 config for easier configuration
     uint8_t i2c_buffer[2];
 
     int status = HAL_OK;
 
-    *i2c_buffer = 7; // FIXME: Magic value
+    *i2c_buffer = 7; // magic number: 7 in SMPLRT_DIV
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
-                            SMPLRT_DIV_REG, 1,
+                            SMPLRT_DIV, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 1; // FIXME: Magic value
+    *i2c_buffer = 1; // magic number: 7 in SMPLRT_DIV
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
-                            PWR_MGMT_1_REG, 1,
+                            PWR_MGMT_1, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 0; // FIXME: Magic value
+    *i2c_buffer = 0; // magic number: 0 in CONFIG_REG
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
                             CONFIG_REG, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 24; // FIXME: Magic value
+    *i2c_buffer = 24; // magic number: 24 in GYRO_CONFIG_REG
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
                             GYRO_CONFIG_REG, 1,
                             i2c_buffer, 1,
@@ -56,24 +55,24 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu) {
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 1; // FIXME: Magic value
+    *i2c_buffer = 1; // magic number: 1 in INT_ENABLE
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
-                            INT_ENABLE_REG, 1,
+                            INT_ENABLE, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
     // Enable I2C pass-through mode
-    *i2c_buffer = (1 << I2C_BYPASS_EN); // FIXME: Magic value
+    *i2c_buffer = (1 << I2C_BYPASS_EN); 
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
-                            INT_PIN_CFG_REG, 1,
+                            INT_PIN_CFG, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
     *i2c_buffer = 0;
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
-                            USER_CTRL_REG, 1,
+                            USER_CTRL, 1,
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
