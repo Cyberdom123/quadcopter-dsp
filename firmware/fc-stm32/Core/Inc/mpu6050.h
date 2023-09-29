@@ -10,7 +10,26 @@ typedef struct
     I2C_HandleTypeDef *hi2c;
 } MPU6050_STRUCT;
 
+enum acc_range_t {
+  FS_2g  = 0b00,
+  FS_4g  = 0b01,
+  FS_8g  = 0b10,
+  FS_16g = 0b11
+};
+
+enum gyro_range_t {
+  FS_250dps  = 0b00,
+  FS_500dps  = 0b01,
+  FS_1000dps = 0b10,
+  FS_2000dps = 0b11
+};
+
 // TODO: make a structure for MPU6050 config for easier configuration
+typedef struct {
+  uint8_t sample_rate_divider;
+  enum gyro_range_t fs_sel;
+  enum acc_range_t  afs_sel;
+} MPU6050_config;
 
 #define AD0 0
 #define MPU6050_ADDR	(0b1101000 | (AD0))
