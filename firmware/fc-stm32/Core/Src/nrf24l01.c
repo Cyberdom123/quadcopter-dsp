@@ -5,7 +5,6 @@
  * @brief Initialize device 
  * Call this function at the beginning
  */
-/* TEST: Check if init still works fine afeter changes */
 HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8_t maskTx, uint8_t maskMaxRT,
                                 uint8_t enCrc, CRCO_ENCODING crco, RX_TX_CONTROL rxTx, RX_TX_ADDRESS_WIDTH addrWidth,
                                 uint8_t retDelay, uint8_t retCount, AIR_DATA_RATE rfDr, RF_POWER_SEL rfPwrSel,
@@ -20,11 +19,11 @@ HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_RESET);
 
-    HAL_Delay(105);
+    HAL_Delay(POWER_ON_TIME);
 
     /* Initialize Tx Buffer */
     nrf24l01->txBuff[0] = R_RX_PAYLOAD;
-    for (size_t i = 1; i < 33; i++)
+    for (size_t i = 1; i < MAX_RX_PAYLOAD_SIZE; i++)
     {
         nrf24l01->txBuff[i] = 0xFF;
     }
@@ -70,9 +69,15 @@ HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8
 
 /**
  * @brief Set rf chanel 
+ * f = 2400 + rfCh [MHz]
+ * max rfCh = 127
  */
 HAL_StatusTypeDef NRF24L01_Chanel(NRF24L01_STRUCT *nrf24l01, uint8_t rfCh)
 {
+    if(rfCh > MAX_RF_CH){
+        rfCh = MAX_RF_CH;
+    }
+
     return NRF24L01_Write_Byte(nrf24l01, RF_CH, rfCh);
 }
 
@@ -209,7 +214,6 @@ HAL_StatusTypeDef NRF24L01_Send_Payload(NRF24L01_STRUCT *nrf24l01)
 {
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_SET);
     TIM1_Delay_Microseconds(15);
-    //HAL_Delay(1);
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_RESET);
 
     uint8_t data;
@@ -235,6 +239,7 @@ HAL_StatusTypeDef NRF24L01_Send(NRF24L01_STRUCT *nrf24l01, void *data, uint8_t l
  * @brief Start listening for packages 
  */
 void NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01){
+    NRF24L01_Write_Byte(nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_SET);    
     TIM1_Delay_Microseconds(150);
 }
@@ -343,23 +348,26 @@ void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data,
 }
 
 
-/** @brief
- *  Open reading pipe for rx data
+/** 
+ * @brief Open reading pipe for rx data
  */
-HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t pipeAddr, uint64_t rxAddr, uint8_t payloadSize)
+HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t pipeAddr,
+                                             uint64_t rxAddr, uint8_t payloadSize)
 {   
     HAL_StatusTypeDef status; 
+    // Check reading pipe
     if(pipeAddr == RX_ADDR_P0 || pipeAddr == RX_ADDR_P1){
         status = NRF24L01_Write(nrf24l01, pipeAddr, rxAddr, 5);
     }else{
         status = NRF24L01_Write_Byte(nrf24l01, pipeAddr, rxAddr);
     }
     if(status != HAL_OK){ return status; }                                    
-    // Set payload size
+    // Set payload size, add 0x07 to get a payload size register address
     status = NRF24L01_Write_Byte(nrf24l01, (pipeAddr + 0x07), payloadSize);
     if(status != HAL_OK){ return status; }                                    
 
-    // Enable data pipe
+    // Enable data pipe, subtract 0xa to get a value that points to the selected pipe
+    // in the EN_RXADDR registry
     return NRF24L01_Write_Byte(nrf24l01, EN_RXADDR, 1<<(pipeAddr - 0xa));
 
 }

@@ -234,4 +234,10 @@ HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t 
 #define RF_DR_LOW   0
 #define RF_DR_HIGH  8
 
+/* Other */
+#define MAX_RX_PAYLOAD_SIZE 33
+#define MAX_RF_CH           127
+#define POWER_ON_TIME       105
+
+
 #endif // NRF24L01

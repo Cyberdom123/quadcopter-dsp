@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN PV */
 NRF24L01_STRUCT nrf24l01;
-uint8_t msg[8];
+uint8_t command[8];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,9 +68,8 @@ void SystemClock_Config(void);
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
-    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, msg, 8);
-    NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
-    Motors_Run(msg);
+    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
+    Motors_Run(command);
     
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Start_Listening(&nrf24l01);
@@ -78,7 +77,6 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 
 }
 
-/* TEST: Sometimes spi goes into blocking mode, test why */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
     NRF24L01_Stop_Listening(&nrf24l01);
@@ -147,18 +145,18 @@ int main(void)
     LNA_HCURR_SET
   );
 
-  //NRF24L01_Open_Writing_Pipe(&nrf24l01, 0xc2c2c2c2c2LL);
-  NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, 0xc2c2c2c2c2LL, 8);
+  uint64_t Pipe_addr = 0xc2c2c2c2c2;
+  NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, Pipe_addr, 8);
   
   if(status == HAL_OK){
     HAL_Delay(200);
   }
-  NRF24L01_Chanel(&nrf24l01, 44);
+
+  NRF24L01_Chanel(&nrf24l01, 88);
 
   NRF24L01_Get_Info(&nrf24l01);
   
   NRF24L01_Flush_Rx(&nrf24l01);
-  NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
   
   NRF24L01_Start_Listening(&nrf24l01);
   /* USER CODE END 2 */
