@@ -1,6 +1,7 @@
 #if !defined(mpu6050)
 #define mpu6050
 
+#include <stdbool.h>
 #include "i2c.h"
 #include "gpio.h"
 #include "tim.h"
@@ -10,25 +11,67 @@ typedef struct
     I2C_HandleTypeDef *hi2c;
 } MPU6050_STRUCT;
 
-enum acc_range_t {
-  FS_2g  = 0b00,
-  FS_4g  = 0b01,
-  FS_8g  = 0b10,
-  FS_16g = 0b11
-};
+typedef enum acc_range_t {
+  AFS_2g  = 0b00,
+  AFS_4g  = 0b01,
+  AFS_8g  = 0b10,
+  AFS_16g = 0b11
+} acc_range_t;
 
-enum gyro_range_t {
+typedef enum gyro_range_t {
   FS_250dps  = 0b00,
   FS_500dps  = 0b01,
   FS_1000dps = 0b10,
   FS_2000dps = 0b11
-};
+} gyro_range_t;
 
-// TODO: make a structure for MPU6050 config for easier configuration
-typedef struct {
+typedef enum mpu_clk_src_t {
+  MPU_CLK_internal = 0,
+  MPU_CLK_PLL_X = 1,
+  MPU_CLK_PLL_Y = 2,
+  MPU_CLK_PLL_Z = 3,
+  MPU_CLK_external_32kHz = 4,
+  MPU_CLK_external_19MHz = 5,
+  MPU_CLK_STOP = 7
+} mpu_clk_src_t;
+
+/* TODO: make a structure for MPU6050 config for easier configuration 
+  - PWR_MGMT registers
+  - USER_CTRL
+  - ACC_CONFIG and GYRO_CONFIG
+*/
+typedef struct MPU6050_config {
   uint8_t sample_rate_divider;
-  enum gyro_range_t fs_sel;
-  enum acc_range_t  afs_sel;
+  gyro_range_t fs_sel;
+  acc_range_t  afs_sel;
+  // for CONFIG_REG
+  uint8_t ext_sync_set;
+  uint8_t dlpf_cfg;
+  // For INT_ENABLE
+  bool data_rdy_en;
+  bool i2c_mst_int_en;
+  bool fifo_oflow_en;
+  // For INT_PIN_CFG
+  bool int_level;      
+  bool int_open;       
+  bool latch_int;   
+  bool int_rd_clear;   
+  bool fsync_int_level;
+  bool fsync_int_en;   
+  bool i2c_bypass_en;  
+  // PWR_MGMT_1
+  bool device_reset;
+  bool sleep;
+  bool cycle;
+  bool temp_dis;
+  mpu_clk_src_t clksel;
+  // USER_CTRL
+  bool fifo_en;
+  bool i2c_mst_en;
+  bool i2c_if_dis;
+  bool fifo_reset;
+  bool i2c_mst_reset;
+  bool sig_cond_reset;
 } MPU6050_config;
 
 #define AD0 0
@@ -95,7 +138,19 @@ typedef struct {
 
 #define I2C_MST_STATUS 0x36
 #define INT_PIN_CFG    0x37
+#define INT_LEVEL_MASK        7
+#define INT_OPEN_MASK         6
+#define LATCH_INT_EN_MASK     5
+#define INT_RD_CLEAR_MASK     4
+#define FSYNC_INT_LEVEL_MASK  3
+#define FSYNC_INT_EN_MASK     2
+#define I2C_BYPASS_EN_MASK    1
+
+
 #define INT_ENABLE     0x38
+#define FIFO_OVLOW_EN_MASK  4
+#define I2C_MST_INT_EN_MASK 3
+#define DATA_RDY_EN_MASK    0
 #define INT_STATUS     0x3A
 /**
   * @brief
@@ -161,8 +216,21 @@ typedef struct {
 #define I2C_MST_DELAY_CTRL 0x67
 #define SIGNAL_PATH_RESET  0x68
 #define USER_CTRL          0x6A
+#define FIFO_EN_MASK
+#define I3C_MST_EN_MASK
+#define I3C_IF_DIS_MASK
+#define FIFO_RESET_MASK
+#define I3C_MST_RESET_MASK
+#define SIG_COND_RESET_MASK
+
 
 #define PWR_MGMT_1 0x6B
+#define DEVICE_RESET_MASK 7
+#define SLEEP_MASK        6
+#define CYCLE_MASK        5
+#define TEMP_DIS_MASK     3
+#define CLKSEL_MASK       0
+
 #define PWR_MGMT_2 0x6C
 
 #define FIFO_COUNT 0x72
@@ -188,7 +256,7 @@ typedef struct {
 
 
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data);
-HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu);
+HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg);
 // todo: read function are to return scaled floating point output
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, int16_t output[]);
 HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, int16_t output[]);
