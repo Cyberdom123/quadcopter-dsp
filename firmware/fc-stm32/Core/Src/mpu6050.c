@@ -20,6 +20,10 @@ MPU6050_config default_cfg = {
     .clksel = MPU_CLK_internal
 };
 
+MPU6050_config MPU_get_default_cfg(void) {
+    return default_cfg;
+}
+
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data)
 {
     return HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR<<1, addr, 1, data, 1, HAL_MAX_DELAY);

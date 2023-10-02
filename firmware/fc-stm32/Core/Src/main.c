@@ -142,6 +142,10 @@ int main(void)
   mpu6050_read_byte(&mpu, 0x75, &who_am_i);
   HAL_Delay(5000);
 
+  MPU6050_config mpu_config = MPU_get_default_cfg();
+
+  MPU_init(&mpu, &mpu_config);
+
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);

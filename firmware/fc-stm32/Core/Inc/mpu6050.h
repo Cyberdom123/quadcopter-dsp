@@ -262,6 +262,7 @@ HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, int16_t output[]);
 HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, int16_t output[]);
 // todo: add functions to change the sensor resolution
 // todo: add a function for sampling rate
+MPU6050_config MPU_get_default_cfg(void);
 
 
 #endif // mpu6050
