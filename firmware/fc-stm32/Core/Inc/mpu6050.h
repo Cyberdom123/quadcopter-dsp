@@ -35,11 +35,7 @@ typedef enum mpu_clk_src_t {
   MPU_CLK_STOP = 7
 } mpu_clk_src_t;
 
-/* TODO: make a structure for MPU6050 config for easier configuration 
-  - PWR_MGMT registers
-  - USER_CTRL
-  - ACC_CONFIG and GYRO_CONFIG
-*/
+// TODO: add self test values to struct
 typedef struct MPU6050_config {
   uint8_t sample_rate_divider;
   gyro_range_t fs_sel;
@@ -76,6 +72,8 @@ typedef struct MPU6050_config {
 
 #define AD0 0
 #define MPU6050_ADDR	(0b1101000 | (AD0))
+
+#define FLOAT_TYPE float
 
 /////////////////////////////////////
 /////////// REGISTER MAP ////////////
@@ -216,12 +214,12 @@ typedef struct MPU6050_config {
 #define I2C_MST_DELAY_CTRL 0x67
 #define SIGNAL_PATH_RESET  0x68
 #define USER_CTRL          0x6A
-#define FIFO_EN_MASK
-#define I3C_MST_EN_MASK
-#define I3C_IF_DIS_MASK
-#define FIFO_RESET_MASK
-#define I3C_MST_RESET_MASK
-#define SIG_COND_RESET_MASK
+#define FIFO_EN_MASK          6
+#define I2C_MST_EN_MASK       5
+#define I2C_IF_DIS_MASK       4
+#define FIFO_RESET_MASK       2
+#define I2C_MST_RESET_MASK    1
+#define SIG_COND_RESET_MASK   0
 
 
 #define PWR_MGMT_1 0x6B
@@ -242,25 +240,12 @@ typedef struct MPU6050_config {
 #define I2C_MST_EN 5
 
 
-// Gyroscope range
-#define FS_SEL 0b11
-// Accelerometer range
-#define AFS_SEL 1
-
-/**
-  * @brief sensitivity scale factor in LSB per g
-*/
-#define ACC_LSB_PER_G (16384.0f / pow(2, AFS_SEL))
-#define ACC_SCALE_FACTOR (pow(2, AFS_SEL) / 16384.0)
-#define GYRO_SCALE_FACTOR (pow(2, FS_SEL) / 131.0)
-
-
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data);
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg);
-// todo: read function are to return scaled floating point output
-HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, int16_t output[]);
-HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, int16_t output[]);
-// todo: add functions to change the sensor resolution
+HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]);
+HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]);
+HAL_StatusTypeDef MPU_set_acc_resolution(MPU6050_STRUCT *mpu, acc_range_t range);
+HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t range);
 // todo: add a function for sampling rate
 MPU6050_config MPU_get_default_cfg(void);
 

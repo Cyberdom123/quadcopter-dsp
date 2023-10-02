@@ -2,6 +2,9 @@
 
 #define HAL_error_check(status) if(status != HAL_OK) { return status; }
 
+static FLOAT_TYPE ACC_SCALE_FACTOR = 0.0;
+static FLOAT_TYPE GYRO_SCALE_FACTOR = 0.0;
+
 MPU6050_config default_cfg = {
     .sample_rate_divider = 7,
     .ext_sync_set = 0,
@@ -14,10 +17,17 @@ MPU6050_config default_cfg = {
     .i2c_bypass_en = true,
     // pwr mgmt
     .device_reset = false,
-    .sleep = false,
-    .cycle = false,
-    .temp_dis = false,
-    .clksel = MPU_CLK_internal
+    .sleep        = false,
+    .cycle        = false,
+    .temp_dis     = false,
+    .clksel       = MPU_CLK_internal,
+    // User CTRL
+    .fifo_en        = false,
+    .i2c_mst_en     = false,
+    .i2c_if_dis     = false,
+    .fifo_reset     = false,
+    .i2c_mst_reset  = false,
+    .sig_cond_reset = false
 };
 
 MPU6050_config MPU_get_default_cfg(void) {
@@ -30,10 +40,14 @@ HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *
 }
 
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
-    // TODO: make this prettier
+    HAL_StatusTypeDef status = HAL_OK;
+    
+    if(cfg == NULL) {
+        return HAL_ERROR;
+    }
+
     uint8_t i2c_buffer[2];
 
-    int status = HAL_OK;
 
     *i2c_buffer = cfg->sample_rate_divider;
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
@@ -96,7 +110,14 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
                             HAL_MAX_DELAY);
     HAL_error_check(status);
 
-    *i2c_buffer = 0; // Magic number: USER_CTRL
+    *i2c_buffer = (cfg->fifo_en        <<  FIFO_EN_MASK)       |
+                  (cfg->i2c_mst_en     <<  I2C_MST_EN_MASK)    |
+                  (cfg->i2c_if_dis     <<  I2C_IF_DIS_MASK)    |
+                  (cfg->fifo_reset     <<  FIFO_RESET_MASK)    |
+                  (cfg->i2c_mst_reset  <<  I2C_MST_RESET_MASK) |
+                  (cfg->sig_cond_reset <<  SIG_COND_RESET_MASK);
+
+
     status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
                             USER_CTRL, 1,
                             i2c_buffer, 1,
@@ -106,7 +127,7 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
     return HAL_OK;
 }
 
-HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, int16_t output[]) {
+HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]) {
     HAL_StatusTypeDef status;
     uint8_t i2c_buffer[6];
 
@@ -117,13 +138,13 @@ HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, int16_t output[]) {
     HAL_error_check(status);
 
     for(uint8_t i = 0; i < 3; i++) {
-        output[i] = (i2c_buffer[2 * i] << 8) | i2c_buffer[2 * i + 1];
+        output[i] = ACC_SCALE_FACTOR * ((i2c_buffer[2 * i] << 8) | i2c_buffer[2 * i + 1]);
     }
 
     return HAL_OK;
 }
 
-HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, int16_t output[]) {
+HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]) {
     HAL_StatusTypeDef status;
     uint8_t i2c_buffer[6];
 
@@ -134,8 +155,40 @@ HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, int16_t output[]) {
     HAL_error_check(status);
 
     for(uint8_t i = 0; i < 3; i++) {
-        output[i] = (i2c_buffer[2 * i] << 8) | i2c_buffer[2 * i + 1];
+        output[i] = GYRO_SCALE_FACTOR * ((i2c_buffer[2 * i] << 8) | i2c_buffer[2 * i + 1]);
     }
 
     return HAL_OK;
+}
+
+HAL_StatusTypeDef MPU_set_acc_resolution(MPU6050_STRUCT *mpu, acc_range_t range) {
+    HAL_StatusTypeDef status;
+
+    uint8_t i2c_buffer[1] = {0};
+
+    *i2c_buffer = (range << 3);
+    status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
+                            ACC_CONFIG_REG, 1,
+                            i2c_buffer, 1,
+                            HAL_MAX_DELAY);
+    if(status == HAL_OK) {
+        ACC_SCALE_FACTOR = (pow(2, range) / 16384.0);
+        return status;
+    }
+}
+
+HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t range) {
+    HAL_StatusTypeDef status;
+
+    uint8_t i2c_buffer[1] = {0};
+
+    *i2c_buffer = (range << 3);
+    status = HAL_I2C_Mem_Write(mpu->hi2c, MPU6050_ADDR << 1, 
+                            GYRO_CONFIG_REG, 1,
+                            i2c_buffer, 1,
+                            HAL_MAX_DELAY);
+    if(status == HAL_OK) {
+        GYRO_SCALE_FACTOR = (pow(2, range) / 131.0);
+        return status;
+    }
 }

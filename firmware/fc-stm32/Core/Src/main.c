@@ -269,7 +269,6 @@ int main(void)
     }
     HAL_Delay(1);
 
-    // fix: returns all zeros
     MPU_read_acc(&mpu, acc_data);
 
   }
