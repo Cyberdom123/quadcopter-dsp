@@ -36,12 +36,14 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Src/dma.c \
 Core/Src/gpio.c \
 Core/Src/i2c.c \
 Core/Src/main.c \
 Core/Src/motors.c \
 Core/Src/mpu6050.c \
 Core/Src/nrf24l01.c \
+Core/Src/rc.c \
 Core/Src/spi.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Core/Src/stm32f1xx_it.c \
@@ -65,13 +67,13 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c \
-Middlewares/ST/STM32_USB_Device_Library/Class/DFU/Src/usbd_dfu.c \
+Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 USB_DEVICE/App/usb_device.c \
+USB_DEVICE/App/usbd_cdc_if.c \
 USB_DEVICE/App/usbd_desc.c \
-USB_DEVICE/App/usbd_dfu_if.c \
 USB_DEVICE/Target/usbd_conf.c
 
 
@@ -91,7 +93,7 @@ PREFIX = arm-none-eabi-
 POSTFIX = "
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
-GCC_PATH="/home/kacper/.local/bin/gcc-arm-none-eabi-10.3-2021.10/bin
+GCC_PATH="/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-none-eabi-gcc/12.2.1-1.2.1/.content/bin
 ifdef GCC_PATH
 CXX = $(GCC_PATH)/$(PREFIX)g++$(POSTFIX)
 CC = $(GCC_PATH)/$(PREFIX)gcc$(POSTFIX)
@@ -149,7 +151,7 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
--IMiddlewares/ST/STM32_USB_Device_Library/Class/DFU/Inc \
+-IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
 -IUSB_DEVICE/App \
 -IUSB_DEVICE/Target
@@ -249,13 +251,13 @@ $(BUILD_DIR):
 # flash
 #######################################
 flash: $(BUILD_DIR)/$(TARGET).elf
-	"/home/kacper/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-2.1/.content/bin/openocd" -f ./openocd.cfg -c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit"
+	"/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd" -f ./openocd.cfg -c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit"
 
 #######################################
 # erase
 #######################################
 erase: $(BUILD_DIR)/$(TARGET).elf
-	"/home/kacper/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-2.1/.content/bin/openocd" -f ./openocd.cfg -c "init; reset halt; stm32f1x mass_erase 0; exit"
+	"/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd" -f ./openocd.cfg -c "init; reset halt; stm32f1x mass_erase 0; exit"
 
 #######################################
 # clean up

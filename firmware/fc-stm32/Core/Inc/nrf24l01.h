@@ -4,6 +4,7 @@
 #include "spi.h"
 #include "gpio.h"
 #include "tim.h"
+#include "string.h"
 
 /* Transceiver struct */
 typedef struct 
@@ -14,7 +15,11 @@ typedef struct
     uint16_t csnPin;
     uint16_t cePin;
 
-    uint8_t txPayloadSize;
+    /* DMA */
+    uint8_t payloadBuff[33];
+    uint8_t txBuff[33];
+    
+    uint8_t payloadFlag;
 
 } NRF24L01_STRUCT;
 
@@ -125,6 +130,12 @@ void NRF24L01_Stop_Listening(NRF24L01_STRUCT *nrf24l01);
 HAL_StatusTypeDef NRF24L01_Read_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 
 HAL_StatusTypeDef NRF24L01_Get_Info(NRF24L01_STRUCT *nrf24l01);
+
+HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t len);
+
+void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
+
+HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 /* END OF MAIN FUNCTIONS */
 
 /* Memory Map */

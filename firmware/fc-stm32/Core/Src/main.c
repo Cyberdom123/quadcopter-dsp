@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "i2c.h"
 #include "spi.h"
 #include "tim.h"
@@ -30,6 +31,7 @@
 
 #include "nrf24l01.h"
 #include "mpu6050.h"
+#include "motors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +53,7 @@
 
 /* USER CODE BEGIN PV */
 NRF24L01_STRUCT nrf24l01;
+uint8_t msg[8];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,6 +64,27 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/* TODO: Talk about interrupts tasks, executing order, or about using RTOS */
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
+  if(nrf24l01.payloadFlag){
+    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, msg, 8);
+    NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
+    Motors_Run(msg);
+    
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
+    NRF24L01_Start_Listening(&nrf24l01);
+  }
+
+}
+
+/* TEST: Sometimes spi goes into blocking mode, test why */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+  if(GPIO_Pin == NRF_INT_Pin){
+    NRF24L01_Stop_Listening(&nrf24l01);
+    NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
+  }
+}
 
 /* USER CODE END 0 */
 
@@ -92,6 +116,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_TIM1_Init();
   MX_I2C1_Init();
@@ -110,8 +135,8 @@ int main(void)
   HAL_StatusTypeDef status =  NRF24L01_Init(
     &nrf24l01,
     RX_DR_INT_SET,   //Interrupt not reflected on IRQ
-    TX_DS_INT_SET,   //Interrupt not reflected on IRQ
-    MAX_RT_INT_SET,  //Interrupt not reflected on IRQ
+    TX_DS_INT_RESET,   //Interrupt not reflected on IRQ
+    MAX_RT_INT_RESET,  //Interrupt not reflected on IRQ
     EN_CRC_SET,       //Enable CRC
     ONE_BYTE_ENCODING,
     PRX,
@@ -131,152 +156,24 @@ int main(void)
   NRF24L01_Chanel(&nrf24l01, 44);
 
   NRF24L01_Get_Info(&nrf24l01);
+  
+  NRF24L01_Flush_Rx(&nrf24l01);
+  NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
+  
   NRF24L01_Start_Listening(&nrf24l01);
-  //char payload[18] = "hello_from_stm32";
 
-  FLOAT_TYPE acc_data[3];
-  FLOAT_TYPE gyro_data[3];
+  /* USER CODE END 2 */
 
-  volatile HAL_StatusTypeDef mpu_status = HAL_OK;
-
-  MPU6050_STRUCT mpu;
-  mpu.hi2c = &hi2c1;
-  uint8_t who_am_i = 0;
-
-
-  MPU6050_config mpu_config = MPU_get_default_cfg();
-
-  mpu_status = mpu6050_read_byte(&mpu, 0x75, &who_am_i);
-  mpu_status = MPU_init(&mpu, &mpu_config);
-
-  // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-  // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-  // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-  // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 30;
-  // TIM2->CCR2 = 30;
-  // TIM2->CCR3 = 30;
-  // TIM2->CCR4 = 30;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 40;
-  // TIM2->CCR2 = 40;
-  // TIM2->CCR3 = 40;
-  // TIM2->CCR4 = 40;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 45;
-  // TIM2->CCR2 = 45;
-  // TIM2->CCR3 = 45;
-  // TIM2->CCR4 = 45;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 50;
-  // TIM2->CCR2 = 50;
-  // TIM2->CCR3 = 50;
-  // TIM2->CCR4 = 50 ;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 55;
-  // TIM2->CCR2 = 55;
-  // TIM2->CCR3 = 55;
-  // TIM2->CCR4 = 55 ;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 53;
-  // TIM2->CCR2 = 53;
-  // TIM2->CCR3 = 53;
-  // TIM2->CCR4 = 53;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 40;
-  // TIM2->CCR2 = 40;
-  // TIM2->CCR3 = 40;
-  // TIM2->CCR4 = 40;
-
-  // HAL_Delay(1000);
-
-  // TIM2->CCR1 = 20;
-  // TIM2->CCR2 = 20;
-  // TIM2->CCR3 = 20;
-  // TIM2->CCR4 = 20;
-
-  // HAL_Delay(2000);
-  // HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-  // HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-  // HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-  // HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-  char msg[8];
-  uint8_t power_on = 0;
-  uint8_t pwr = 10;
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  
   while (1)
   {
-    // NRF24L01_Send(&nrf24l01, payload, 18);
-
-    // NRF24L01_Print_Info(&nrf24l01);
-    // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
-    // HAL_Delay(500);
-
-    TIM2->CCR1 = pwr;
-    TIM2->CCR2 = pwr;
-    TIM2->CCR3 = pwr;
-    TIM2->CCR4 = pwr;
-
-    if(power_on){
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-      HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);   
-    }else{
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_3);
-      HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-    }
-
-
-    NRF24L01_Get_Info(&nrf24l01);
-    HAL_Delay(1);
-    if(NRF24L01_Packet_Available(&nrf24l01) == HAL_OK){
-      NRF24L01_Read_Payload(&nrf24l01, (uint8_t*) msg, 8);
-      
-      pwr = 10;
-      if(msg[0]-70 > 10){
-        pwr = msg[0] - 70;
-      }
-      
-      if(msg[2] == 1 && power_on == 0){
-        power_on = 1;
-      }
-
-      if(msg[3] == 1 && power_on == 1){
-        power_on = 0;
-      }
-
-      NRF24L01_Flush_Rx(&nrf24l01);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-      //HAL_Delay(100);
-
-
-      NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
-    }else{
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    }
-    HAL_Delay(1);
-
-    mpu_status = MPU_read_acc(&mpu, acc_data);
-    mpu_status = MPU_read_gyro(&mpu, gyro_data);
-
+    /* USER CODE END WHILE */
+    /* USER CODE BEGIN 3 */
+    /* USER CODE END 3 */
   }
-  /* USER CODE END 3 */
+  
 }
 
 /**
