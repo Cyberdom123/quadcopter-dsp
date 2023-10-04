@@ -134,17 +134,20 @@ int main(void)
   NRF24L01_Start_Listening(&nrf24l01);
   //char payload[18] = "hello_from_stm32";
 
-  int16_t acc_data[3];
+  FLOAT_TYPE acc_data[3];
+  FLOAT_TYPE gyro_data[3];
+
+  volatile HAL_StatusTypeDef mpu_status = HAL_OK;
 
   MPU6050_STRUCT mpu;
   mpu.hi2c = &hi2c1;
   uint8_t who_am_i = 0;
-  mpu6050_read_byte(&mpu, 0x75, &who_am_i);
-  HAL_Delay(5000);
+
 
   MPU6050_config mpu_config = MPU_get_default_cfg();
 
-  MPU_init(&mpu, &mpu_config);
+  mpu_status = mpu6050_read_byte(&mpu, 0x75, &who_am_i);
+  mpu_status = MPU_init(&mpu, &mpu_config);
 
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   // HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
@@ -269,7 +272,8 @@ int main(void)
     }
     HAL_Delay(1);
 
-    MPU_read_acc(&mpu, acc_data);
+    mpu_status = MPU_read_acc(&mpu, acc_data);
+    mpu_status = MPU_read_gyro(&mpu, gyro_data);
 
   }
   /* USER CODE END 3 */

@@ -12,17 +12,17 @@ typedef struct
 } MPU6050_STRUCT;
 
 typedef enum acc_range_t {
-  AFS_2g  = 0b00,
-  AFS_4g  = 0b01,
-  AFS_8g  = 0b10,
-  AFS_16g = 0b11
+  AFS_2g  = 0b00U,
+  AFS_4g  = 0b01U,
+  AFS_8g  = 0b10U,
+  AFS_16g = 0b11U
 } acc_range_t;
 
 typedef enum gyro_range_t {
-  FS_250dps  = 0b00,
-  FS_500dps  = 0b01,
-  FS_1000dps = 0b10,
-  FS_2000dps = 0b11
+  FS_250dps  = 0b00U,
+  FS_500dps  = 0b01U,
+  FS_1000dps = 0b10U,
+  FS_2000dps = 0b11U
 } gyro_range_t;
 
 typedef enum mpu_clk_src_t {
@@ -48,7 +48,7 @@ typedef struct MPU6050_config {
   bool i2c_mst_int_en;
   bool fifo_oflow_en;
   // For INT_PIN_CFG
-  bool int_level;      
+  bool int_level; // todo: add enum for this value
   bool int_open;       
   bool latch_int;   
   bool int_rd_clear;   
@@ -248,6 +248,9 @@ HAL_StatusTypeDef MPU_set_acc_resolution(MPU6050_STRUCT *mpu, acc_range_t range)
 HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t range);
 // todo: add a function for sampling rate
 MPU6050_config MPU_get_default_cfg(void);
+
+// todo: add self test
+// todo: add functions for calibrating acc and gyro
 
 
 #endif // mpu6050
