@@ -17,11 +17,7 @@
         "STM32F103x6",
         "USE_HAL_DRIVER"
       ],
-<<<<<<< Updated upstream
       "compilerPath": "/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-none-eabi-gcc/12.2.1-1.2.1/.content/bin/arm-none-eabi-gcc"
-=======
-      "compilerPath": "/home/kacper/.local/bin/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc"
->>>>>>> Stashed changes
     }
   ],
   "version": 4

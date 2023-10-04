@@ -7,7 +7,6 @@
         "type": "text",
         "gutterIcon": true
     },
-
     "todo-tree.highlights.customHighlight": {
         "BUG": {
             "icon": "bug"

@@ -161,22 +161,19 @@ int main(void)
   NRF24L01_Write_Byte(&nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) | (1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
   
   NRF24L01_Start_Listening(&nrf24l01);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  // MPU6050_STRUCT mpu;
-  // mpu.hi2c = &hi2c1;
-  // uint8_t who_am_i = 0;
-  // mpu6050_read_byte(&mpu, 0x75, &who_am_i);
   
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
+    /* USER CODE END 3 */
   }
-  /* USER CODE END 3 */
+  
 }
 
 /**
