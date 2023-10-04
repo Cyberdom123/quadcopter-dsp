@@ -46,10 +46,10 @@ class XboxController(object):
         return [x, y, a]
     
     def send(self):
-        x1 = -round(self.LeftJoystickX*80) + 80
-        y1 = -round(self.LeftJoystickY*80) + 80
-        x2 = -round(self.RightJoystickX*80) + 80
-        y2 = -round(self.RightJoystickY*80) + 80
+        x1 = -round(self.LeftJoystickX*100) + 100
+        y1 = -round(self.LeftJoystickY*100) + 100
+        x2 = -round(self.RightJoystickX*100) + 100
+        y2 = -round(self.RightJoystickY*100) + 100
         a = self.A
         b = self.B
         time.sleep(0.0001)

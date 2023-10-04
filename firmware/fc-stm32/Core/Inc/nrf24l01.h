@@ -5,25 +5,7 @@
 #include "gpio.h"
 #include "tim.h"
 #include "string.h"
-
-/* Transceiver struct */
-typedef struct 
-{
-    SPI_HandleTypeDef *spiHandle;
-
-    GPIO_TypeDef *nrf24l01GpioPort;
-    uint16_t csnPin;
-    uint16_t cePin;
-
-    /* DMA */
-    uint8_t payloadBuff[33];
-    uint8_t txBuff[33];
-    
-    uint8_t payloadFlag;
-
-} NRF24L01_STRUCT;
-
-
+ 
 /* RF Power Select Enum */
 typedef enum {
     RF_POWER_0 = 0x00U, //-18dBm
@@ -89,6 +71,47 @@ typedef enum {
     LNA_HCURR_SET = 0x01U
 } LNA_HCURR;
 
+/* Transceiver struct */
+typedef struct 
+{
+    SPI_HandleTypeDef *spiHandle;
+
+    GPIO_TypeDef *nrf24l01GpioPort;
+    uint16_t csnPin;
+    uint16_t cePin;
+
+    /* DMA */
+    uint8_t payloadBuff[33];
+    uint8_t txBuff[33];
+    
+    uint8_t payloadFlag;
+
+} NRF24L01_STRUCT;
+
+/* Transceiver Init Struct */
+typedef struct 
+{
+    NRF_RX_INTERRUPTS rx_int;
+    NRF_TX_INTERRUPTS tx_int;
+    MAX_RT_INTERRUPTS max_rt_int;
+
+    EN_CRC en_crc;
+    CRCO_ENCODING crco_enc;
+    RX_TX_CONTROL rx_tx_control;
+    RX_TX_ADDRESS_WIDTH rx_tx_addr_width;
+    LNA_HCURR lna_hcurr;
+    AIR_DATA_RATE data_rate;
+    RF_POWER_SEL power_sel;
+
+    uint8_t re_transmission_delay;
+    uint8_t re_transmission_num;
+    uint8_t chanel;
+
+} NRF24L01_CONFIG;
+
+/* Default NRF24L01 Config */
+extern NRF24L01_CONFIG nrf24l01_default_config;
+
 /* LOW LEVEL FUNCTIONS */
 HAL_StatusTypeDef NRF24L01_Read_Byte(NRF24L01_STRUCT *nrf24l01, uint8_t addr, uint8_t *data);
 
@@ -104,14 +127,13 @@ HAL_StatusTypeDef NRF24L01_Flush_Rx(NRF24L01_STRUCT *nrf24l01);
 /* END OF LOW LEVEL FUNCTIONS */
 
 /* MAIN FUNCTIONS */
-HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, uint8_t maskRX, uint8_t maskTx, uint8_t maskMaxRT,
-                                uint8_t enCrc, CRCO_ENCODING crco, RX_TX_CONTROL rxTx, RX_TX_ADDRESS_WIDTH addrWidth, uint8_t retDelay,
-                                uint8_t retCount, AIR_DATA_RATE rfDr, RF_POWER_SEL rfPwrSel,
-                                uint8_t lnaGain);
+HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf24l01_cfg);
 
 HAL_StatusTypeDef NRF24L01_Chanel(NRF24L01_STRUCT *nrf24l01, uint8_t rfCh);
 
 HAL_StatusTypeDef NRF24L01_Open_Writing_Pipe(NRF24L01_STRUCT *nrf24l01, uint64_t txAddr);
+
+HAL_StatusTypeDef NRF24L01_Enable_ACKN_Payload(NRF24L01_STRUCT *nrf24l01);
 
 HAL_StatusTypeDef NRF24L01_Write_Tx_Payload(NRF24L01_STRUCT *nrf24l01, void *payload, uint8_t len);
 
@@ -135,7 +157,7 @@ HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t le
 
 void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 
-HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
+HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 /* END OF MAIN FUNCTIONS */
 
 /* Memory Map */
@@ -233,5 +255,11 @@ HAL_StatusTypeDef NRF24L01_Read_Payload_RxTx(NRF24L01_STRUCT *nrf24l01, uint8_t 
 /* P model bit Mnemonics */
 #define RF_DR_LOW   0
 #define RF_DR_HIGH  8
+
+/* Other */
+#define MAX_RX_PAYLOAD_SIZE 33
+#define MAX_RF_CH           127
+#define POWER_ON_TIME       105
+
 
 #endif // NRF24L01
