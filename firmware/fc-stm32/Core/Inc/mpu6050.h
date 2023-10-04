@@ -35,6 +35,11 @@ typedef enum mpu_clk_src_t {
   MPU_CLK_STOP = 7
 } mpu_clk_src_t;
 
+typedef enum mpu_int_level_t {
+  MPU_int_active_high = 0U;
+  MPU_int_active_log = 1U;
+} mpu_int_level_t;
+
 // TODO: add self test values to struct
 typedef struct MPU6050_config {
   uint8_t sample_rate_divider;
@@ -48,7 +53,7 @@ typedef struct MPU6050_config {
   bool i2c_mst_int_en;
   bool fifo_oflow_en;
   // For INT_PIN_CFG
-  bool int_level; // todo: add enum for this value
+  mpu_int_level_t int_level;
   bool int_open;       
   bool latch_int;   
   bool int_rd_clear;   
