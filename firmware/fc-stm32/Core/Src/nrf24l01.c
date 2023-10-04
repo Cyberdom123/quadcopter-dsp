@@ -336,7 +336,6 @@ void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data,
 
 }
 
-
 /**
  * @brief Send payload with payload package
  */
@@ -344,7 +343,6 @@ void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data,
 HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len){
 
 }
-
 
 /** 
  * @brief Open reading pipe for rx data
@@ -384,9 +382,9 @@ HAL_StatusTypeDef NRF24L01_Open_Writing_Pipe(NRF24L01_STRUCT *nrf24l01, uint64_t
 /**
  * @brief Enable Payload with ACKN package 
  */
-//TODO
+//TEST
 HAL_StatusTypeDef NRF24L01_Enable_ACKN_Payload(NRF24L01_STRUCT *nrf24l01){
-
+    return NRF24L01_Write_Byte(nrf24l01, FEATURE, 1<<EN_ACK_PAY);
 }
 
 /**

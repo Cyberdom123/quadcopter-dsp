@@ -145,8 +145,9 @@ int main(void)
   
   while (1)
   {
+    HAL_Delay(1000);
+    char log[5] = "test";
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
