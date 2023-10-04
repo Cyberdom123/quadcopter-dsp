@@ -36,8 +36,8 @@ typedef enum mpu_clk_src_t {
 } mpu_clk_src_t;
 
 typedef enum mpu_int_level_t {
-  MPU_int_active_high = 0U;
-  MPU_int_active_log = 1U;
+  MPU_int_active_high = 0U,
+  MPU_int_active_log = 1U
 } mpu_int_level_t;
 
 // TODO: add self test values to struct
