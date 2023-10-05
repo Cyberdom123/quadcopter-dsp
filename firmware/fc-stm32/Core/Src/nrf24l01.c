@@ -20,6 +20,7 @@ NRF24L01_CONFIG nrf24l01_default_config = {
  * @brief Initialize device 
  * Call this function at the beginning
  */
+//TODO: enable dada pipe in int 
 HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf24l01_cfg)
 {
     uint8_t data; HAL_StatusTypeDef status; 
@@ -338,10 +339,13 @@ void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data,
 
 /**
  * @brief Send payload with payload package
+ * Call after selecting reading pipe
  */
-//TODO
+//TEST this function
 HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len){
-
+    uint8_t command = W_ACK_PAYLOAD | nrf24l01->pipeNum;
+    uint64_t *data_ptr = (uint64_t*) &data;
+    return NRF24L01_Write(nrf24l01, command, *data_ptr, len);
 }
 
 /** 
@@ -364,6 +368,7 @@ HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t 
 
     // Enable data pipe, subtract 0xa to get a value that points to the selected pipe
     // in the EN_RXADDR registry
+    nrf24l01->pipeNum = 1<<(pipeAddr - 0xa);
     return NRF24L01_Write_Byte(nrf24l01, EN_RXADDR, 1<<(pipeAddr - 0xa));
 
 }

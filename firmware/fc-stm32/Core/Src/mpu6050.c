@@ -8,6 +8,7 @@ static FLOAT_TYPE GYRO_SCALE_FACTOR = 0.0;
 MPU6050_config default_cfg = {
     .sample_rate_divider = 7,
     .ext_sync_set = 0,
+    .int_level = MPU_int_active_low,
     .dlpf_cfg = 0,
     .data_rdy_en = true,
     .i2c_mst_int_en = false,

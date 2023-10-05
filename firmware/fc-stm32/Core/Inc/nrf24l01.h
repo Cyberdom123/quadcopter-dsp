@@ -86,6 +86,9 @@ typedef struct
     
     uint8_t payloadFlag;
 
+    /* PIPE Addr */
+    uint8_t pipeNum;
+
 } NRF24L01_STRUCT;
 
 /* Transceiver Init Struct */
@@ -141,7 +144,8 @@ HAL_StatusTypeDef NRF24L01_Send_Payload(NRF24L01_STRUCT *nrf24l01);
 
 HAL_StatusTypeDef NRF24L01_Send(NRF24L01_STRUCT *nrf24l01, void *data, uint8_t len);
 
-HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t pipeAddr, uint64_t rxAddr, uint8_t payloadSize);
+HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t pipeAddr,
+                                             uint64_t rxAddr, uint8_t payloadSize);
 
 HAL_StatusTypeDef NRF24L01_Packet_Available(NRF24L01_STRUCT *nrf24l01);
 

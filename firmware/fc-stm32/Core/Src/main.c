@@ -27,7 +27,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
+#include "usbd_cdc_if.h"
+#include "my_sprintf.h"
 
 #include "nrf24l01.h"
 #include "mpu6050.h"
@@ -43,6 +44,7 @@
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
+
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
@@ -64,7 +66,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* TODO: Talk about interrupts tasks, executing order or RTOS */
-
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
@@ -121,6 +122,12 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
+  
+  /* Initialize mpu */
+  MPU6050_STRUCT mpu;
+  mpu.hi2c = &hi2c1;
+  MPU6050_config   mpu_cfg = MPU_get_default_cfg();
+  MPU_init(&mpu, &mpu_cfg);
 
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
@@ -135,20 +142,31 @@ int main(void)
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
 
+  /* Declare IO buffers */
+  FLOAT_TYPE acc_buff[3];
+  FLOAT_TYPE gyro_buff[3];
+  char usb_msg_buff[128];
+  volatile HAL_StatusTypeDef mpu_status;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  
+  sprintf(usb_msg_buff, "test");
   while (1)
   {
-    HAL_Delay(1000);
-    char log[5] = "test";
+    mpu_status = MPU_read_acc(&mpu, acc_buff);
+    mpu_status = MPU_read_gyro(&mpu, gyro_buff);
+    HAL_Delay(500);
+    //sprintf(usb_msg_buff, "acc = %0.01f %0.01f %0.01f ,\n gyro = %0.01f %0.01f %0.01f",
+    //          acc_buff[0], acc_buff[1], acc_buff[2], gyro_buff[0], gyro_buff[1], gyro_buff[2]);
+    //sprintf(usb_msg_buff, "test%d", 1);
+    //my_sprintf(usb_msg_buff, "test%d", 1);
+    CDC_Transmit_FS((uint8_t*) usb_msg_buff, 4);
+  } 
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
-    /* USER CODE END 3 */
-  }
-  
+  /* USER CODE END 3 */
 }
 
 /**
