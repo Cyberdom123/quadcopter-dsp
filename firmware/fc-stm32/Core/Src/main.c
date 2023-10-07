@@ -151,17 +151,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  sprintf(usb_msg_buff, "test");
+  //sprintf(usb_msg_buff, "test");
+  my_sprintf(usb_msg_buff, "%d", 0);
   while (1)
   {
     mpu_status = MPU_read_acc(&mpu, acc_buff);
     mpu_status = MPU_read_gyro(&mpu, gyro_buff);
-    HAL_Delay(500);
     //sprintf(usb_msg_buff, "acc = %0.01f %0.01f %0.01f ,\n gyro = %0.01f %0.01f %0.01f",
     //          acc_buff[0], acc_buff[1], acc_buff[2], gyro_buff[0], gyro_buff[1], gyro_buff[2]);
-    //sprintf(usb_msg_buff, "test%d", 1);
-    //my_sprintf(usb_msg_buff, "test%d", 1);
-    CDC_Transmit_FS((uint8_t*) usb_msg_buff, 4);
+    CDC_Transmit_FS((uint8_t*) usb_msg_buff, sizeof("test"));
+    HAL_Delay(500);
   } 
     /* USER CODE END WHILE */
 
