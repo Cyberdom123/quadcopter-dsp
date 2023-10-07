@@ -44,6 +44,8 @@ static void ftoa_fixed(char *buffer, double value) {
     if (value < 0.0) {
         *buffer++ = '-';
         value = -value;
+    } else {
+        *buffer++ = '+';
     }
 
     exponent = normalize(&value);
@@ -78,16 +80,20 @@ static void ftoa_fixed(char *buffer, double value) {
 }
 
 
-void my_sprintf(char* buff, char const *fmt, ...){
+void sprintf_opt(char* buff, char const *fmt, ...){
     va_list args;
     va_start(args, fmt);
 
+
     double double_temp;
     char buff_temp[512];
-    char ch;
+    volatile char ch;
     int length = 0;
 
-    while (ch = *fmt++)
+    char* from = buff_temp;
+    char* to = buff;
+
+    while ( (ch = *fmt++) != '\0')
     {
         if(ch == '%'){
             switch (ch = *fmt)
@@ -99,15 +105,28 @@ void my_sprintf(char* buff, char const *fmt, ...){
             case 'f':
                 double_temp = va_arg(args, double);
                 ftoa_fixed(buff_temp, double_temp);
-                strcat(buff, buff_temp);
-                length += strlen(buff_temp);
+                from = buff_temp;
+                while( (*to++ = *from++) != '\0')
+                    ;
+                to--;
+                fmt++;
                 break;
             case 'd':
                 int int_temp = va_arg(args, int);
+
                 itoa(int_temp, buff_temp, 10);
+
+                from = buff_temp;
+                while( (*to++ = *from++) != '\0')
+                    ;
+                to--;
+                fmt++;
+                break;
             default:
                 break;
             }
+        } else {
+            *to++ = ch;
         }
     }
     

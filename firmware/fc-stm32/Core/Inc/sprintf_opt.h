@@ -6,6 +6,6 @@
 #include <string.h>
 
 static void ftoa_fixed(char *buffer, double value);
-void my_sprintf(char* buff, char const *fmt, ...);
+void sprintf_opt(char* buff, char const *fmt, ...);
 
 #endif // MY_SPRINTF
