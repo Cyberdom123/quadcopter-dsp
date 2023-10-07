@@ -1,4 +1,4 @@
-#include "my_sprintf.h"
+#include "sprintf_opt.h"
 
 /** 
     @brief normalize function to form 0.XXX * 10 ^ exponent
