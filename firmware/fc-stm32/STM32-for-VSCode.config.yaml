@@ -10,7 +10,7 @@ target: fc-stm32
 # Can be C or C++
 language: C
 
-optimization: Og
+optimization: Os
 
 # MCU settings
 targetMCU: stm32f1x
@@ -84,6 +84,8 @@ includeDirectories:
 # these should be escaped with a: \ or the name should be in double quotes e.g. "HARDWARE_DRIVER*.c"
 sourceFiles:  
   - Src/**
+  - Src/dsp/**
+  - Src/drivers/**
   - Core/Src/**
   - Core/Lib/**
 

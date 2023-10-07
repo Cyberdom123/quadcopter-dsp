@@ -28,9 +28,9 @@
 /* USER CODE BEGIN Includes */
 //#include "usbd_cdc_if.h"
 
-#include "nrf24l01.h"
-#include "mpu6050.h"
-#include "motors.h"
+#include <drivers/nrf24l01.h>
+#include <drivers/mpu6050.h>
+#include <drivers/motors.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

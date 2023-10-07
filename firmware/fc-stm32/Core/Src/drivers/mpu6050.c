@@ -1,4 +1,4 @@
-#include "mpu6050.h"
+#include <drivers/mpu6050.h>
 
 #define HAL_error_check(status) if(status != HAL_OK) { return status; }
 

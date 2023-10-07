@@ -1,4 +1,4 @@
-#include "nrf24l01.h"
+#include <drivers/nrf24l01.h>
 
 NRF24L01_CONFIG nrf24l01_default_config = {
     .rx_int = RX_DR_INT_SET,
