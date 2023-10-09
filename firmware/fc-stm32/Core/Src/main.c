@@ -31,6 +31,8 @@
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
 #include <drivers/motors.h>
+
+#include <dsp/pid.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
