@@ -5,11 +5,18 @@
 
 #include <pid.h>
 
+/** 
+ * @brief Initialize pid controller
+ * Call this function at the beginning
+ */
 void PID_init(pid_t *pid){
     pid->i_error = 0;
     pid->last_error = 0;
 }
 
+/**
+ * @brief Calculate pid output
+ */
 float PID_Calculate(pid_t *pid, float input, float target){
 
     float error = target - input;
