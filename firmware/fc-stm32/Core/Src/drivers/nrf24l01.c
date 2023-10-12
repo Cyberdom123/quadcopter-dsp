@@ -11,8 +11,8 @@ NRF24L01_CONFIG nrf24l01_default_config = {
     .lna_hcurr = LNA_HCURR_SET,
     .data_rate = ONE_MBPS_DATA_RATE,
     .power_sel = RF_POWER_1,
-    .re_transmission_delay = 0xF,
-    .re_transmission_num = 0x7,
+    .re_transmission_delay = 0x4,
+    .re_transmission_num = 0xF,
     .chanel = 88 
 };
 
@@ -20,7 +20,7 @@ NRF24L01_CONFIG nrf24l01_default_config = {
  * @brief Initialize device 
  * Call this function at the beginning
  */
-//TODO: enable dada pipe in int 
+//TODO: enable data pipe in int 
 HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf24l01_cfg)
 {
     uint8_t data; HAL_StatusTypeDef status; 
@@ -341,11 +341,29 @@ void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data,
  * @brief Send payload with payload package
  * Call after selecting reading pipe
  */
-//TEST this function
-HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len){
-    uint8_t command = W_ACK_PAYLOAD | nrf24l01->pipeNum;
-    uint64_t *data_ptr = (uint64_t*) &data;
-    return NRF24L01_Write(nrf24l01, command, *data_ptr, len);
+//TEST this function, test if flush tx improve communication
+HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, void *data, uint8_t len){
+
+    HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
+
+    /* Flush tx to enable further communication */
+    //NRF24L01_Flush_Tx(nrf24l01);
+
+    uint8_t *payload = (uint8_t*) data;
+    //ACK payload will be sent along with data arrival to selected reading pipe
+    uint8_t tx_buff = (W_ACK_PAYLOAD | nrf24l01->pipeNum);
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(nrf24l01->spiHandle, &tx_buff, 1, HAL_MAX_DELAY);
+    while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);
+    if(status != HAL_OK){ return status; }
+    
+    status = HAL_SPI_Transmit(nrf24l01->spiHandle, payload, len, HAL_MAX_DELAY); 
+    while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);      
+    if(status != HAL_OK){ return status; }                                   
+
+    HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_SET);
+
+    return HAL_OK;
+
 }
 
 /** 
@@ -368,7 +386,7 @@ HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t 
 
     // Enable data pipe, subtract 0xa to get a value that points to the selected pipe
     // in the EN_RXADDR registry
-    nrf24l01->pipeNum = 1<<(pipeAddr - 0xa);
+    nrf24l01->pipeNum = (pipeAddr - 0xa);
     return NRF24L01_Write_Byte(nrf24l01, EN_RXADDR, 1<<(pipeAddr - 0xa));
 
 }
@@ -385,11 +403,15 @@ HAL_StatusTypeDef NRF24L01_Open_Writing_Pipe(NRF24L01_STRUCT *nrf24l01, uint64_t
 }
 
 /**
- * @brief Enable Payload with ACKN package 
+ * @brief Enable Payload with ACKN package
+ * ACKN payloads are sent with TX addr equal to RX pipe addr.
  */
-//TEST
-HAL_StatusTypeDef NRF24L01_Enable_ACKN_Payload(NRF24L01_STRUCT *nrf24l01){
-    return NRF24L01_Write_Byte(nrf24l01, FEATURE, 1<<EN_ACK_PAY);
+HAL_StatusTypeDef NRF24L01_Enable_ACKN_Payload(NRF24L01_STRUCT *nrf24l01)
+{
+    HAL_StatusTypeDef status = NRF24L01_Write_Byte(nrf24l01, DYNPD, (1<<DPL_P0|1<<DPL_P1)); 
+    if(status != HAL_OK){ return status; }
+
+    return NRF24L01_Write_Byte(nrf24l01, FEATURE, (1<<EN_ACK_PAY|1<<EN_DPL));
 }
 
 /**
@@ -426,9 +448,18 @@ HAL_StatusTypeDef NRF24L01_Get_Info(NRF24L01_STRUCT *nrf24l01){
     if(status != HAL_OK){ return status; }
 
     status = NRF24L01_Read_Byte(nrf24l01, FIFO_STATUS, &data);
-   if(status != HAL_OK){ return status; }
+    if(status != HAL_OK){ return status; }
+
+    status = NRF24L01_Read_Byte(nrf24l01, SETUP_RETR, &data);
+    if(status != HAL_OK){ return status; }
 
     status = NRF24L01_Read_Byte(nrf24l01, OBSERVE_TX, &data);
+    if(status != HAL_OK){ return status; }
+
+    status = NRF24L01_Read(nrf24l01, RX_ADDR_P0, &data_long, 5);
+    if(status != HAL_OK){ return status; }
+
+    status = NRF24L01_Read_Byte(nrf24l01, FEATURE, &data);
     if(status != HAL_OK){ return status; }
 
     return HAL_OK;
