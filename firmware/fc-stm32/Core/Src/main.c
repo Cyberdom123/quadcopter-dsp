@@ -27,7 +27,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include "usbd_cdc_if.h"
-
+#include "sprintf_opt.h"
+#include "string.h"
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
 #include <drivers/motors.h>
@@ -53,6 +54,7 @@
 /* USER CODE BEGIN PV */
 NRF24L01_STRUCT nrf24l01;
 uint8_t command[8];
+char telemetry[27] = "hello from stm32!";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,16 +70,21 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
     Motors_Run(command);
-    
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Start_Listening(&nrf24l01);
   }
 
 }
 
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
+
+}
+
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
     NRF24L01_Stop_Listening(&nrf24l01);
+    NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry, 27);
     NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
   }
 }
@@ -134,8 +141,11 @@ int main(void)
 
   NRF24L01_Init(&nrf24l01, &nrf24l01_default_config);
   
-  uint64_t Pipe_addr = 0xc2c2c2c2c2;
-  NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, Pipe_addr, 8);
+  NRF24L01_Enable_ACKN_Payload(&nrf24l01);
+
+  uint64_t rx_addr_pipe = 0xc2c2c2c2c2;
+  NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, rx_addr_pipe, 8);
+  
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
 
@@ -152,7 +162,7 @@ int main(void)
   {
     mpu_status = MPU_read_acc(&mpu, acc_buff);
     mpu_status = MPU_read_gyro(&mpu, gyro_buff);
-    HAL_Delay(500);
+    sprintf_opt(telemetry, "%f %f %f", acc_buff[0], acc_buff[1], acc_buff[2]);
   } 
     /* USER CODE END WHILE */
 
