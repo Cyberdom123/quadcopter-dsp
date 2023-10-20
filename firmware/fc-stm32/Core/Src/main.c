@@ -142,8 +142,7 @@ int main(void)
   NRF24L01_Init(&nrf24l01, &nrf24l01_default_config);
   
   NRF24L01_Enable_ACKN_Payload(&nrf24l01);
-
-  uint64_t rx_addr_pipe = 0xc2c2c2c2c2;
+  uint64_t rx_addr_pipe = 0xc2c2c2c2c2LL;
   NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, rx_addr_pipe, 8);
   
   NRF24L01_Get_Info(&nrf24l01);

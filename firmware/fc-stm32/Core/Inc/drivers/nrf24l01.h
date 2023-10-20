@@ -149,7 +149,7 @@ HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t 
 
 HAL_StatusTypeDef NRF24L01_Packet_Available(NRF24L01_STRUCT *nrf24l01);
 
-void NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01);
+HAL_StatusTypeDef NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01);
 
 void NRF24L01_Stop_Listening(NRF24L01_STRUCT *nrf24l01);
 

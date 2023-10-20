@@ -13,14 +13,13 @@ NRF24L01_CONFIG nrf24l01_default_config = {
     .power_sel = RF_POWER_1,
     .re_transmission_delay = 0x4,
     .re_transmission_num = 0xF,
-    .chanel = 88 
+    .chanel = 88
 };
 
 /**
  * @brief Initialize device 
  * Call this function at the beginning
  */
-//TODO: enable data pipe in int 
 HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf24l01_cfg)
 {
     uint8_t data; HAL_StatusTypeDef status; 
@@ -258,12 +257,13 @@ HAL_StatusTypeDef NRF24L01_Send(NRF24L01_STRUCT *nrf24l01, void *data, uint8_t l
 /** 
  * @brief Start listening for packages 
  */
-void NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01){
+HAL_StatusTypeDef NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01){
     //flush rx before reseting interrupts
     NRF24L01_Flush_Rx(nrf24l01);
     volatile HAL_StatusTypeDef status =  NRF24L01_Write_Byte(nrf24l01, NRF_STATUS, (1<<MASK_RX_DR) |(1<<MASK_TX_DS) | (1<<MASK_MAX_RT));
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->cePin, GPIO_PIN_SET);    
     TIM1_Delay_Microseconds(150);
+    return status;
 }
 /**
  * @brief Stop listening for packages 
@@ -402,7 +402,7 @@ HAL_StatusTypeDef NRF24L01_Open_Writing_Pipe(NRF24L01_STRUCT *nrf24l01, uint64_t
 }
 
 /**
- * @brief Enable Payload with ACKN package
+ * @brief Enable Payload with ACKN package,
  * ACKN payloads are sent with TX addr equal to RX pipe addr.
  */
 HAL_StatusTypeDef NRF24L01_Enable_ACKN_Payload(NRF24L01_STRUCT *nrf24l01)
