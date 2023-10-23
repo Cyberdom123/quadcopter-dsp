@@ -5,6 +5,9 @@
 static FLOAT_TYPE ACC_SCALE_FACTOR = 0.0;
 static FLOAT_TYPE GYRO_SCALE_FACTOR = 0.0;
 
+static FLOAT_TYPE* mpu_acc_buffer;
+static FLOAT_TYPE* mpu_gyro_buffer;
+
 MPU6050_config default_cfg = {
     .sample_rate_divider = 7,
     .ext_sync_set = 0,
@@ -42,6 +45,9 @@ HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *
 
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
     HAL_StatusTypeDef status = HAL_OK;
+
+    mpu_acc_buffer = mpu->mpu_acc_buff;
+    mpu_gyro_buffer = mpu->mpu_gyro_buff;
     
     if(cfg == NULL) {
         return HAL_ERROR;
