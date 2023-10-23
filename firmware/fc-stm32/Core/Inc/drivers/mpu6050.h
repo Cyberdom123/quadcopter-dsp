@@ -2,9 +2,8 @@
 #define mpu6050
 
 #include <stdbool.h>
-#include "i2c.h"
-#include "gpio.h"
-#include "tim.h"
+#include <i2c.h>
+#include <gpio.h>
 
 #define FLOAT_TYPE float
 
@@ -13,8 +12,8 @@ typedef struct
     I2C_HandleTypeDef *hi2c;
     FLOAT_TYPE* mpu_acc_buff;
     FLOAT_TYPE* mpu_gyro_buff;
-    bool gyro_flag;
-    bool acc_flag;
+    bool acc_busy;
+    bool gyro_busy;
 } MPU6050_STRUCT;
 
 typedef enum acc_range_t {

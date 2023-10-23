@@ -5,8 +5,13 @@
 static FLOAT_TYPE ACC_SCALE_FACTOR = 0.0;
 static FLOAT_TYPE GYRO_SCALE_FACTOR = 0.0;
 
+static uint16_t mpu_acc_buf_raw[3];
+static uint16_t mpu_gyro_buf_raw[3];
 static FLOAT_TYPE* mpu_acc_buffer;
 static FLOAT_TYPE* mpu_gyro_buffer;
+
+extern bool mpu_acc_read_available;
+extern bool mpu_gyro_read_available;
 
 MPU6050_config default_cfg = {
     .sample_rate_divider = 7,
@@ -189,4 +194,38 @@ HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t rang
     }
 
     return status;
+}
+
+// test: test the DMA support
+
+HAL_StatusTypeDef MPU_read_acc_DMA(MPU6050_STRUCT *mpu) {
+    mpu->gyro_busy = true;
+    HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR << 1,
+                            ACC_REG_START, 1,
+                            mpu_acc_buf_raw, 6,
+                            HAL_MAX_DELAY);
+    return HAL_OK;
+}
+
+HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu) {
+    for(uint8_t i = 0; i < 3; i++) {
+        mpu_acc_buffer[i] = ACC_SCALE_FACTOR * (int16_t)((mpu_acc_buf_raw[2 * i] << 8) | mpu_acc_buf_raw[2 * i + 1]);
+    }
+    mpu->acc_busy = false;
+}
+
+HAL_StatusTypeDef MPU_read_gyro_DMA(MPU6050_STRUCT *mpu) {
+    mpu->acc_busy = true;
+    HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR << 1,
+                            GYRO_REG_START, 1,
+                            mpu_gyro_buf_raw, 6,
+                            HAL_MAX_DELAY);
+    return HAL_OK;
+}
+
+HAL_StatusTypeDef MPU_read_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
+    for(uint8_t i = 0; i < 3; i++) {
+        mpu_gyro_buffer[i] = GYRO_SCALE_FACTOR * (int16_t)((mpu_gyro_buf_raw[2 * i] << 8) | mpu_gyro_buf_raw[2 * i + 1]);
+    }
+    mpu->gyro_busy = false;
 }
