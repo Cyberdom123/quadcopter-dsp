@@ -17,6 +17,7 @@ MPU6050_config default_cfg = {
     .sample_rate_divider = 7,
     .ext_sync_set = 0,
     .int_level = MPU_int_active_low,
+    .latch_int = true,
     .dlpf_cfg = 0,
     .data_rdy_en = true,
     .i2c_mst_int_en = false,
@@ -200,10 +201,9 @@ HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t rang
 
 HAL_StatusTypeDef MPU_read_acc_DMA(MPU6050_STRUCT *mpu) {
     mpu->gyro_busy = true;
-    HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR << 1,
+    HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
                             ACC_REG_START, 1,
-                            mpu_acc_buf_raw, 6,
-                            HAL_MAX_DELAY);
+                            mpu_acc_buf_raw, 6);
     return HAL_OK;
 }
 
@@ -216,10 +216,9 @@ HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu) {
 
 HAL_StatusTypeDef MPU_read_gyro_DMA(MPU6050_STRUCT *mpu) {
     mpu->acc_busy = true;
-    HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR << 1,
+    HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
                             GYRO_REG_START, 1,
-                            mpu_gyro_buf_raw, 6,
-                            HAL_MAX_DELAY);
+                            mpu_gyro_buf_raw, 6);
     return HAL_OK;
 }
 
