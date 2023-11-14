@@ -251,6 +251,7 @@ typedef struct MPU6050_config {
 
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data);
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg);
+HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]);
 HAL_StatusTypeDef MPU_read_acc_DMA(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu);

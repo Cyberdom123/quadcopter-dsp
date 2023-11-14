@@ -56,6 +56,10 @@ NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
 uint8_t command[8];
 char telemetry[27] = "hello from stm32!";
+
+FLOAT_TYPE acc_buff[3];
+FLOAT_TYPE gyro_buff[3];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,6 +83,9 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 
 /* BUG: I2C doesn't completing transaction */
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
+  if(!mpu.gyro_busy){
+    MPU_read_gyro_DMA_complete(&mpu);
+  }
   if(!mpu.acc_busy){
     MPU_read_acc_DMA_complete(&mpu);
   }
@@ -94,7 +101,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
   if(GPIO_Pin == MPU_INT_Pin){
     /* BUG: I2C in reset state, must be in ready*/
-    MPU_read_gyro_DMA(&mpu);
+    //MPU_read_gyro_DMA(&mpu);
+    MPU_read_acc_DMA(&mpu);
   }
 }
 
@@ -137,9 +145,6 @@ int main(void)
   HAL_Delay(1000);
   
   /* Declare IO buffers */
-  FLOAT_TYPE acc_buff[3];
-  FLOAT_TYPE gyro_buff[3];
-
   mpu.mpu_acc_buff = acc_buff;
   mpu.mpu_gyro_buff = gyro_buff;
  

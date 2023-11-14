@@ -125,9 +125,22 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
+    
+    status = MPU_clear_int(mpu);
+    HAL_error_check(status);    
 
     return HAL_OK;
 }
+
+HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu){
+
+    uint8_t i2c_read_buffer[1];
+    return HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR << 1,
+                            INT_STATUS, 1,
+                            i2c_read_buffer, 1,
+                            HAL_MAX_DELAY);
+
+} 
 
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]) {
     HAL_StatusTypeDef status;
@@ -212,6 +225,7 @@ HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu) {
         mpu_acc_buffer[i] = ACC_SCALE_FACTOR * (int16_t)((mpu_acc_buf_raw[2 * i] << 8) | mpu_acc_buf_raw[2 * i + 1]);
     }
     mpu->acc_busy = false;
+    MPU_clear_int(mpu);
 }
 
 HAL_StatusTypeDef MPU_read_gyro_DMA(MPU6050_STRUCT *mpu) {
@@ -227,4 +241,5 @@ HAL_StatusTypeDef MPU_read_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
         mpu_gyro_buffer[i] = GYRO_SCALE_FACTOR * (int16_t)((mpu_gyro_buf_raw[2 * i] << 8) | mpu_gyro_buf_raw[2 * i + 1]);
     }
     mpu->gyro_busy = false;
+    MPU_clear_int(mpu);
 }
