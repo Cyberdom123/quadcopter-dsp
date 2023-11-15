@@ -56,6 +56,10 @@ NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
 uint8_t command[8];
 char telemetry[27] = "hello from stm32!";
+
+FLOAT_TYPE acc_buff[3];
+FLOAT_TYPE gyro_buff[3];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,24 +81,26 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 
 }
 
-/* BUG: I2C doesn't completing transaction */
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
-  if(!mpu.acc_busy){
+  if(mpu.gyro_busy && mpu.acc_busy){
+    MPU_read_acc_gyro_DMA_complete(&mpu);
+  }
+  else if(mpu.gyro_busy){
+    MPU_read_gyro_DMA_complete(&mpu);
+  }
+  else if(mpu.acc_busy){
     MPU_read_acc_DMA_complete(&mpu);
   }
 }
 
-/* BUG: Interrupt called before the mpu init function */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
     NRF24L01_Stop_Listening(&nrf24l01);
     NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry, 27);
     NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
   }
-
   if(GPIO_Pin == MPU_INT_Pin){
-    /* BUG: I2C in reset state, must be in ready*/
-    MPU_read_gyro_DMA(&mpu);
+    MPU_read_acc_gyro_DMA(&mpu);
   }
 }
 
@@ -137,9 +143,6 @@ int main(void)
   HAL_Delay(1000);
   
   /* Declare IO buffers */
-  FLOAT_TYPE acc_buff[3];
-  FLOAT_TYPE gyro_buff[3];
-
   mpu.mpu_acc_buff = acc_buff;
   mpu.mpu_gyro_buff = gyro_buff;
  
@@ -163,16 +166,13 @@ int main(void)
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
 
-  volatile HAL_StatusTypeDef mpu_status;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    //mpu_status = MPU_read_acc(&mpu, acc_buff);
-    //mpu_status = MPU_read_gyro(&mpu, gyro_buff);
-    //sprintf_opt(telemetry, "%f %f %f", acc_buff[0], acc_buff[1], acc_buff[2]);
+
   } 
     /* USER CODE END WHILE */
 

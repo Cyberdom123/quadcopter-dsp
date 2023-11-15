@@ -5,8 +5,9 @@
 static FLOAT_TYPE ACC_SCALE_FACTOR = 0.0;
 static FLOAT_TYPE GYRO_SCALE_FACTOR = 0.0;
 
-static uint16_t mpu_acc_buf_raw[3];
-static uint16_t mpu_gyro_buf_raw[3];
+static uint8_t mpu_acc_buf_raw[6];
+static uint8_t mpu_gyro_buf_raw[6];
+static uint8_t mpu_acc_gyro_buf_raw[14];
 static FLOAT_TYPE* mpu_acc_buffer;
 static FLOAT_TYPE* mpu_gyro_buffer;
 
@@ -54,6 +55,9 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
 
     mpu_acc_buffer = mpu->mpu_acc_buff;
     mpu_gyro_buffer = mpu->mpu_gyro_buff;
+
+    mpu->acc_busy = false;
+    mpu->gyro_busy = false;
     
     if(cfg == NULL) {
         return HAL_ERROR;
@@ -125,9 +129,22 @@ HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg) {
                             i2c_buffer, 1,
                             HAL_MAX_DELAY);
     HAL_error_check(status);
+    
+    status = MPU_clear_int(mpu);
+    HAL_error_check(status);    
 
     return HAL_OK;
 }
+
+HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu){
+
+    uint8_t i2c_read_buffer[1];
+    return HAL_I2C_Mem_Read(mpu->hi2c, MPU6050_ADDR << 1,
+                            INT_STATUS, 1,
+                            i2c_read_buffer, 1,
+                            HAL_MAX_DELAY);
+
+} 
 
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]) {
     HAL_StatusTypeDef status;
@@ -197,14 +214,12 @@ HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t rang
     return status;
 }
 
-// test: test the DMA support
 
 HAL_StatusTypeDef MPU_read_acc_DMA(MPU6050_STRUCT *mpu) {
-    mpu->gyro_busy = true;
-    HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
+    mpu->acc_busy = true;
+    return HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
                             ACC_REG_START, 1,
                             mpu_acc_buf_raw, 6);
-    return HAL_OK;
 }
 
 HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu) {
@@ -212,14 +227,14 @@ HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu) {
         mpu_acc_buffer[i] = ACC_SCALE_FACTOR * (int16_t)((mpu_acc_buf_raw[2 * i] << 8) | mpu_acc_buf_raw[2 * i + 1]);
     }
     mpu->acc_busy = false;
+    return MPU_clear_int(mpu);
 }
 
 HAL_StatusTypeDef MPU_read_gyro_DMA(MPU6050_STRUCT *mpu) {
-    mpu->acc_busy = true;
-    HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
+    mpu->gyro_busy = true;
+    return HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
                             GYRO_REG_START, 1,
                             mpu_gyro_buf_raw, 6);
-    return HAL_OK;
 }
 
 HAL_StatusTypeDef MPU_read_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
@@ -227,4 +242,25 @@ HAL_StatusTypeDef MPU_read_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
         mpu_gyro_buffer[i] = GYRO_SCALE_FACTOR * (int16_t)((mpu_gyro_buf_raw[2 * i] << 8) | mpu_gyro_buf_raw[2 * i + 1]);
     }
     mpu->gyro_busy = false;
+    return MPU_clear_int(mpu);
+}
+
+HAL_StatusTypeDef MPU_read_acc_gyro_DMA(MPU6050_STRUCT *mpu) {
+    mpu->gyro_busy = true;
+    mpu->acc_busy = true;
+    return HAL_I2C_Mem_Read_DMA(mpu->hi2c, MPU6050_ADDR << 1,
+                            ACC_REG_START, 1,
+                            mpu_acc_gyro_buf_raw, 14);
+}
+
+HAL_StatusTypeDef MPU_read_acc_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
+    for(uint8_t i = 0; i < 3; i++) {
+        mpu_acc_buffer[i] = ACC_SCALE_FACTOR * (int16_t)((mpu_acc_gyro_buf_raw[2 * i] << 8) | mpu_acc_gyro_buf_raw[2 * i + 1]);
+    }
+    for(uint8_t i = 0; i < 3; i++) {
+        mpu_gyro_buffer[i] = GYRO_SCALE_FACTOR * (int16_t)((mpu_acc_gyro_buf_raw[8 + 2 * i] << 8) | mpu_acc_gyro_buf_raw[8 + 2 * i + 1]);
+    }
+    mpu->acc_busy = false;
+    mpu->acc_busy = false;
+    return MPU_clear_int(mpu);
 }

@@ -251,6 +251,7 @@ typedef struct MPU6050_config {
 
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data);
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg);
+HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]);
 HAL_StatusTypeDef MPU_read_acc_DMA(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu);
@@ -259,6 +260,8 @@ HAL_StatusTypeDef MPU_read_gyro_DMA(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_gyro_DMA_complete(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_set_acc_resolution(MPU6050_STRUCT *mpu, acc_range_t range);
 HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t range);
+HAL_StatusTypeDef MPU_read_acc_gyro_DMA(MPU6050_STRUCT *mpu);
+HAL_StatusTypeDef MPU_read_acc_gyro_DMA_complete(MPU6050_STRUCT *mpu);
 // todo: add a function for sampling rate
 MPU6050_config MPU_get_default_cfg(void);
 
