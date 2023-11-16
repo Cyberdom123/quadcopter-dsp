@@ -27,7 +27,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include "usbd_cdc_if.h"
-#include "sprintf_opt.h"
 #include "string.h"
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
@@ -54,8 +53,13 @@
 /* USER CODE BEGIN PV */
 NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
+
+/* Declare buffers */
 uint8_t command[8];
-char telemetry[27] = "hello from stm32!";
+union Telemetry {
+  FLOAT_TYPE floatingPoint[6];
+  uint8_t bytes[24];
+} telemetry;
 
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
@@ -70,7 +74,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-/* TODO: Talk about interrupts tasks, executing order or RTOS */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
@@ -84,6 +87,15 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
+    for (size_t i = 0; i < 3; i++)
+    {
+      telemetry.floatingPoint[i] = acc_buff[i];
+    }
+    for (size_t i = 0; i < 3; i++)
+    {
+      telemetry.floatingPoint[3+i] = acc_buff[i];
+    }
+    
   }
   else if(mpu.gyro_busy){
     MPU_read_gyro_DMA_complete(&mpu);
@@ -96,7 +108,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
     NRF24L01_Stop_Listening(&nrf24l01);
-    NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry, 27);
+    NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry.bytes, 24);
     NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
   }
   if(GPIO_Pin == MPU_INT_Pin){
@@ -142,7 +154,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
   
-  /* Declare IO buffers */
+  /* Initialize IO buffers */
   mpu.mpu_acc_buff = acc_buff;
   mpu.mpu_gyro_buff = gyro_buff;
  
@@ -178,7 +190,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
-}
+} 
 
 /**
   * @brief System Clock Configuration
