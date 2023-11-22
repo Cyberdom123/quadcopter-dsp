@@ -11,6 +11,10 @@ class DataLogger:
              record.append(data)
         self.dataFrame = pd.concat([self.dataFrame, pd.DataFrame(record)], axis=1,
                                    ignore_index=True)
+        
+    def save_data(self):
+        self.dataFrame = self.dataFrame.transpose()
+        self.dataFrame.to_csv(self.fileName)
 
     def get_data(self):
         return self.dataFrame
