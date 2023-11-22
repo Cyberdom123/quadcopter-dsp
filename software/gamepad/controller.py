@@ -5,8 +5,7 @@ import time
 import math
 import threading
 
-
-ser = serial.Serial('/dev/ttyUSB1', 57600)
+ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 class XboxController(object):
     MAX_TRIG_VAL = math.pow(2, 8)
@@ -115,6 +114,6 @@ class XboxController(object):
 
 if __name__ == '__main__':
     joy = XboxController()
-    ser.timeout = 0.01
+    ser.timeout = 0.005
     while True:
         joy.send()

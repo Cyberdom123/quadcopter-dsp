@@ -10,8 +10,7 @@ class TestLogger(unittest.TestCase):
         for i in range(10):
             self.dataLogger.log_data(123.12, 123.22, 1222.1, 1.1, 2.22)
         print(self.dataLogger.dataFrame)
-
-
+        
 
 if __name__ == '__main__':
     unittest.main()

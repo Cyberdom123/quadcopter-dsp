@@ -40,6 +40,9 @@ Core/Src/dma.c \
 Core/Src/drivers/motors.c \
 Core/Src/drivers/mpu6050.c \
 Core/Src/drivers/nrf24l01.c \
+Core/Src/drivers/w25qxx.c \
+Core/Src/dsp/angle_estimation.c \
+Core/Src/dsp/filters.c \
 Core/Src/gpio.c \
 Core/Src/i2c.c \
 Core/Src/main.c \
@@ -137,6 +140,7 @@ AS_INCLUDES = \
 C_INCLUDES =  \
 -ICore/Inc \
 -ICore/Inc/drivers \
+-ICore/Inc/dsp \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \

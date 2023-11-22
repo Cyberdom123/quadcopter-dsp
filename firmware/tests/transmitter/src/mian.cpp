@@ -45,8 +45,13 @@ RF24 radio(9, 10); // CE, CSN
 
 uint16_t cnt = 0;
 
+typedef union {
+  float floatingPoint[6];
+  byte binary[24];
+} telemetry;
+
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(115200);
   Serial.setTimeout(1);
   printf_begin();
 
@@ -73,30 +78,28 @@ void setup() {
 }
 
 char msg[8] = "";
-char text[33] = "";
+//char text[33] = "";
 uint8_t payload_size = 0;
 uint8_t pipe;
+telemetry tele;
 void loop() {
 
   if(Serial.available()){
     Serial.readBytes(msg, 6);
-    //Serial.write(msg, 6);
   }
   
-  if(!radio.write(msg, 8))
-  {
-    //delay(1000);
-    //radio.printDetails();
-  }
-
+  radio.write(msg, 8);
+  
   //ACKpayload
   if (radio.available(&pipe)) {
-    radio.read(&text, sizeof(text));
-    Serial.println(text);
+    radio.read(tele.binary, 24);
+    Serial.write(tele.binary, 24); //7ms
   }
-  // else{
-  //   Serial.write("Received: an empty ACK packet"); 
-  // }
+  else{
+    //Serial.write("Received: an empty ACK packet"); 
+    radio.flush_rx();
+    radio.flush_tx();
+  }
 
-  delay(10);
+  delay(5);
 }
