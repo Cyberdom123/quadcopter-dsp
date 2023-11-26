@@ -66,6 +66,9 @@ void Error_Handler(void);
 #define CE_GPIO_Port GPIOB
 #define STATUS_LED_Pin GPIO_PIN_12
 #define STATUS_LED_GPIO_Port GPIOB
+#define MPU_INT_Pin GPIO_PIN_5
+#define MPU_INT_GPIO_Port GPIOB
+#define MPU_INT_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
 

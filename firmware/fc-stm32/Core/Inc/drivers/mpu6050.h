@@ -2,13 +2,18 @@
 #define mpu6050
 
 #include <stdbool.h>
-#include "i2c.h"
-#include "gpio.h"
-#include "tim.h"
+#include <i2c.h>
+#include <gpio.h>
+
+#define FLOAT_TYPE float
 
 typedef struct
 {
     I2C_HandleTypeDef *hi2c;
+    FLOAT_TYPE* mpu_acc_buff;
+    FLOAT_TYPE* mpu_gyro_buff;
+    bool acc_busy;
+    bool gyro_busy;
 } MPU6050_STRUCT;
 
 typedef enum acc_range_t {
@@ -40,6 +45,16 @@ typedef enum mpu_int_level_t {
   MPU_int_active_low = 1U
 } mpu_int_level_t;
 
+typedef enum mpu_dlpf_cfg_t {
+  BAND_260HZ = 0U,
+  BAND_184HZ = 1U,
+  BAND_94Hz  = 2U,
+  BAND_44HZ  = 3U,
+  BAND_21HZ  = 4U,
+  BAND_10HZ  = 5U,
+  BAND_5HZ   = 6U
+} mpu_dlpf_cfg_t;
+
 // TODO: add self test values to struct
 typedef struct MPU6050_config {
   uint8_t sample_rate_divider;
@@ -47,7 +62,7 @@ typedef struct MPU6050_config {
   acc_range_t  afs_sel;
   // for CONFIG_REG
   uint8_t ext_sync_set;
-  uint8_t dlpf_cfg;
+  mpu_dlpf_cfg_t dlpf_cfg;
   // For INT_ENABLE
   bool data_rdy_en;
   bool i2c_mst_int_en;
@@ -78,7 +93,6 @@ typedef struct MPU6050_config {
 #define AD0 0
 #define MPU6050_ADDR	(0b1101000 | (AD0))
 
-#define FLOAT_TYPE float
 
 /////////////////////////////////////
 /////////// REGISTER MAP ////////////
@@ -247,10 +261,17 @@ typedef struct MPU6050_config {
 
 HAL_StatusTypeDef mpu6050_read_byte(MPU6050_STRUCT *mpu, uint8_t addr, uint8_t *data);
 HAL_StatusTypeDef MPU_init(MPU6050_STRUCT *mpu, MPU6050_config* cfg);
+HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_acc(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]);
+HAL_StatusTypeDef MPU_read_acc_DMA(MPU6050_STRUCT *mpu);
+HAL_StatusTypeDef MPU_read_acc_DMA_complete(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_gyro(MPU6050_STRUCT *mpu, FLOAT_TYPE output[]);
+HAL_StatusTypeDef MPU_read_gyro_DMA(MPU6050_STRUCT *mpu);
+HAL_StatusTypeDef MPU_read_gyro_DMA_complete(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_set_acc_resolution(MPU6050_STRUCT *mpu, acc_range_t range);
 HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t range);
+HAL_StatusTypeDef MPU_read_acc_gyro_DMA(MPU6050_STRUCT *mpu);
+HAL_StatusTypeDef MPU_read_acc_gyro_DMA_complete(MPU6050_STRUCT *mpu);
 // todo: add a function for sampling rate
 MPU6050_config MPU_get_default_cfg(void);
 

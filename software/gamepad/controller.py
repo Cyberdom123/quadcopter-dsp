@@ -1,11 +1,11 @@
 from inputs import get_gamepad
 import serial
+import struct
 import time
 import math
 import threading
 
-
-ser = serial.Serial('/dev/ttyUSB0', 57600)
+ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 class XboxController(object):
     MAX_TRIG_VAL = math.pow(2, 8)
@@ -58,8 +58,12 @@ class XboxController(object):
         
         while True:
             if(ser.in_waiting > 0):
-                msg = ser.read(ser.in_waiting)
-                print(msg)
+                msg = ser.read(24)
+                try:
+                    [acc0, acc1, acc2, gyro0, gyro1, gyro2] = struct.unpack('6f', msg)
+                    print(f"{acc0} {acc1} {acc2} {gyro0} {gyro1} {gyro2}")
+                except:
+                    pass
                 break
 
     def _monitor_controller(self):
@@ -110,6 +114,6 @@ class XboxController(object):
 
 if __name__ == '__main__':
     joy = XboxController()
-    ser.timeout = 0.01
+    ser.timeout = 0.005
     while True:
         joy.send()

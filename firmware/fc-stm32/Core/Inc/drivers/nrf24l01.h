@@ -149,7 +149,7 @@ HAL_StatusTypeDef NRF24L01_Open_Reading_Pipe(NRF24L01_STRUCT *nrf24l01, uint8_t 
 
 HAL_StatusTypeDef NRF24L01_Packet_Available(NRF24L01_STRUCT *nrf24l01);
 
-void NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01);
+HAL_StatusTypeDef NRF24L01_Start_Listening(NRF24L01_STRUCT *nrf24l01);
 
 void NRF24L01_Stop_Listening(NRF24L01_STRUCT *nrf24l01);
 
@@ -161,7 +161,7 @@ HAL_StatusTypeDef NRF24L01_Read_PayloadDMA(NRF24L01_STRUCT *nrf24l01, uint8_t le
 
 void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
 
-HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *data, uint8_t len);
+HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, void *data, uint8_t len);
 /* END OF MAIN FUNCTIONS */
 
 /* Memory Map */

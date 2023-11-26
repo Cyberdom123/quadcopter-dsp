@@ -22,7 +22,7 @@ TARGET = fc-stm32
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Og
+OPT = -Os
 
 
 #######################################
@@ -37,12 +37,15 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/dma.c \
+Core/Src/drivers/motors.c \
+Core/Src/drivers/mpu6050.c \
+Core/Src/drivers/nrf24l01.c \
+Core/Src/drivers/w25qxx.c \
+Core/Src/dsp/angle_estimation.c \
+Core/Src/dsp/filters.c \
 Core/Src/gpio.c \
 Core/Src/i2c.c \
 Core/Src/main.c \
-Core/Src/motors.c \
-Core/Src/mpu6050.c \
-Core/Src/nrf24l01.c \
 Core/Src/spi.c \
 Core/Src/sprintf_opt.c \
 Core/Src/stm32f1xx_hal_msp.c \
@@ -136,6 +139,8 @@ AS_INCLUDES = \
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/Inc/drivers \
+-ICore/Inc/dsp \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
