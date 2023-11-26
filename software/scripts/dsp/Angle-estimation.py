@@ -8,7 +8,7 @@ from logger import DataLogger
 from filters import ema_filter
 
 baudRate = 115200
-ser = serial.Serial('/dev/ttyUSB1', baudRate)
+ser = serial.Serial('/dev/ttyUSB0', baudRate)
 
 
 def get_imu_data():
@@ -37,9 +37,9 @@ def get_pitch_roll(ax, ay, az):
     axOffset = 0.064
     ax = ax - axOffset
     
-    # axf = ema_filter(ax, 0.3, axf)
-    # ayf = ema_filter(ay, 0.3, ayf)
-    # azf = ema_filter(az, 0.3, azf)
+    # axf = ema_filter(ax, 0.05, axf)
+    # ayf = ema_filter(ay, 0.05, ayf)
+    # azf = ema_filter(az, 0.05, azf)
 
     axf = ax
     ayf = ay
@@ -61,7 +61,7 @@ def get_pitch_roll(ax, ay, az):
 
 if __name__ == '__main__':
     ser.timeout = 0.005
-    logger = DataLogger("sample0")
+    logger = DataLogger("sample1-filtered-10Hz")
     while True:
         try:
             start = time.time()
@@ -69,10 +69,10 @@ if __name__ == '__main__':
             stop = time.time()
 
             sampling = round(1/(stop - start)) 
-            print(f"{acc0} {acc1} {acc2} {gyro0} {gyro1} {gyro2}")
+            #print(f"{acc0} {acc1} {acc2} {gyro0} {gyro1} {gyro2}")
             logger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
-            #[pitch, roll] = get_pitch_roll(acc0, acc1, acc2)
-            #print(f"pitch = {pitch}, roll = {roll}")
+            [pitch, roll] = get_pitch_roll(acc0, acc1, acc2)
+            print(f"pitch = {pitch}, roll = {roll}")
         except KeyboardInterrupt:
             print(" Nara")
             logger.save_data()

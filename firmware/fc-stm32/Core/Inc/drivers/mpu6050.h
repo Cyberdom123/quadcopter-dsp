@@ -45,6 +45,16 @@ typedef enum mpu_int_level_t {
   MPU_int_active_low = 1U
 } mpu_int_level_t;
 
+typedef enum mpu_dlpf_cfg_t {
+  BAND_260HZ = 0U,
+  BAND_184HZ = 1U,
+  BAND_94Hz  = 2U,
+  BAND_44HZ  = 3U,
+  BAND_21HZ  = 4U,
+  BAND_10HZ  = 5U,
+  BAND_5HZ   = 6U
+} mpu_dlpf_cfg_t;
+
 // TODO: add self test values to struct
 typedef struct MPU6050_config {
   uint8_t sample_rate_divider;
@@ -52,7 +62,7 @@ typedef struct MPU6050_config {
   acc_range_t  afs_sel;
   // for CONFIG_REG
   uint8_t ext_sync_set;
-  uint8_t dlpf_cfg;
+  mpu_dlpf_cfg_t dlpf_cfg;
   // For INT_ENABLE
   bool data_rdy_en;
   bool i2c_mst_int_en;
