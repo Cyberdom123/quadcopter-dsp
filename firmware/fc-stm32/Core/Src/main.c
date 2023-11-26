@@ -162,6 +162,9 @@ int main(void)
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
+  MPU_measure_gyro_offset(&mpu, 1000);
+
+  HAL_StatusTypeDef status = MPU_clear_int(&mpu);
 
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
@@ -182,9 +185,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  volatile int dupa = 0;
   while (1)
   {
-
+    dupa++;
   } 
     /* USER CODE END WHILE */
 
