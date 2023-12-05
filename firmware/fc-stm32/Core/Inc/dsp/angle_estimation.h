@@ -4,6 +4,6 @@
 
 #define AX_OFFSET   0.064
 
-void Get_Roll_Pitch(float acc_buf[3], float angles[2]);
+void Get_Roll_Pitch_Acc(float acc_buf[3], float angles[2]);
 
 #endif // ANGLE_ESTIMATION

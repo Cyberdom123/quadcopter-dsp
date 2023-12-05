@@ -31,13 +31,12 @@
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
 #include <drivers/motors.h>
-#include <dsp/filters.h>
-#include <dsp/angle_estimation.h>
+#include <stabilizer.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define TELEMETRY
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -57,11 +56,13 @@ NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
 
 /* Declare buffers */
-uint8_t command[8];
+int8_t command[8] = {0};
+#if defined(TELEMETRY)
 union Telemetry {
   FLOAT_TYPE floatingPoint[6];
   uint8_t bytes[24];
 } telemetry;
+#endif // TELEMETRY
 
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
@@ -78,8 +79,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
-    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
-    Motors_Run(command);
+    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, (uint8_t*) command, 8);
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Start_Listening(&nrf24l01);
   }
@@ -89,20 +89,26 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
+    
+    /* Writing to telemetry buffer */    
+    #if defined(TELEMETRY)    
+    float angles[2];
+    Get_Roll_Pitch_Acc(acc_buff, angles);
+    telemetry.floatingPoint[0] = (angles[0]/3.14)*180;
+    telemetry.floatingPoint[1] = (angles[1]/3.14)*180;
 
-    // float angles[2];
-    // Get_Roll_Pitch(acc_buff, angles);
-    // telemetry.floatingPoint[0] = (angles[0]/3.14)*180;
-    // telemetry.floatingPoint[1] = (angles[1]/3.14)*180;
+    // for (size_t i = 0; i < 3; i++)
+    // {
+    //   telemetry.floatingPoint[i] = acc_buff[i];
+    // }
+    // for (size_t i = 0; i < 3; i++)
+    // {
+    //   telemetry.floatingPoint[3+i] = acc_buff[i];
+    // }
+    
+    #endif // TELEMETRY
 
-    for (size_t i = 0; i < 3; i++)
-    {
-      telemetry.floatingPoint[i] = acc_buff[i];
-    }
-    for (size_t i = 0; i < 3; i++)
-    {
-      telemetry.floatingPoint[3+i] = acc_buff[i];
-    }
+    Stabilize(acc_buff, gyro_buff, command);
     
   }
   else if(mpu.gyro_busy){
@@ -116,7 +122,10 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   if(GPIO_Pin == NRF_INT_Pin){
     NRF24L01_Stop_Listening(&nrf24l01);
-    NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry.bytes, 24);
+    #if defined(TELEMETRY)
+    NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry.bytes, 24);    
+    #endif // TELEMETRY
+    
     NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
   }
   if(GPIO_Pin == MPU_INT_Pin){
@@ -165,7 +174,9 @@ int main(void)
   /* Initialize IO buffers */
   mpu.mpu_acc_buff = acc_buff;
   mpu.mpu_gyro_buff = gyro_buff;
- 
+
+  /* Initialize stabilizer */
+  Stabilizer_init();
   /* Initialize mpu */
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
@@ -178,10 +189,13 @@ int main(void)
   nrf24l01.spiHandle = &hspi1;
 
   NRF24L01_Init(&nrf24l01, &nrf24l01_default_config);
-  
-  NRF24L01_Enable_ACKN_Payload(&nrf24l01);
+
+  #if defined(TELEMETRY)
+  NRF24L01_Enable_ACKN_Payload(&nrf24l01);  
   uint64_t rx_addr_pipe = 0xc2c2c2c2c2LL;
   NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, rx_addr_pipe, 8);
+  #endif // TELEMETRY
+  
   
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);

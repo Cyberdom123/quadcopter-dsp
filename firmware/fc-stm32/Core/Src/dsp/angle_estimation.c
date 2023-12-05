@@ -5,7 +5,7 @@
  * @details [ax, ay, az] = (rotation matrix form fixed frame to body frame) * (g vector) 
  *          ax = g * sin(pitch), ay = -g * sin(roll) * cos(pitch), az = -g * cos(roll) * cos(pitch) 
   */
-void Get_Roll_Pitch(float acc_buf[3], float angles[2]){
+void Get_Roll_Pitch_Acc(float acc_buf[3], float angles[2]){
 
   //remove offset
   acc_buf[0] = acc_buf[0] - AX_OFFSET;

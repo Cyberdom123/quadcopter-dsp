@@ -9,11 +9,14 @@ typedef struct
     float kd;
 
     /* errors */
-    float i_error;
-    float last_error;
-
-    float max_out;
-    float sample_time;
+    float IntError;
+    float lastError;
+    
+    float maxOut;
+    float minOut;
+    float maxInt;
+    float minInt;
+    float sampleTime;
 }pid_t;
 
 void PID_init(pid_t *pid);

@@ -10,8 +10,8 @@
  * Call this function at the beginning
  */
 void PID_init(pid_t *pid){
-    pid->i_error = 0;
-    pid->last_error = 0;
+    pid->IntError = 0;
+    pid->lastError = 0;
 }
 
 /**
@@ -21,18 +21,30 @@ float PID_Calculate(pid_t *pid, float input, float target){
 
     float error = target - input;
 
-    pid->i_error += error * pid->sample_time;
+    pid->IntError +=  pid->ki * 0.5f * (error + pid->lastError) * pid->sampleTime;
 
-    float output  = error * pid->kp + pid->i_error * pid->ki + 
-                   (error - pid->last_error) * pid->kd / pid->sample_time;
-
-    if(output > pid->max_out){
-        output = pid->max_out;
+    if (pid->IntError > pid->maxInt)
+    {
+        pid->IntError = pid->maxInt;
+    }
+    if(pid->IntError < - pid->minInt)
+    {
+        pid->IntError = - pid->minInt;
     }
 
-    if(output < 0){
-        output = 0;
+    float output  = error * pid->kp + pid->IntError + 
+                   (error - pid->lastError) * pid->kd / pid->sampleTime;
+
+    if(output > pid->maxOut){
+        output = pid->maxOut;
     }
+
+    if(output < pid->minOut){
+        output = pid->minOut;
+    }
+
+    /* shit values */
+    pid->lastError = error;
 
     return output; 
 }  
