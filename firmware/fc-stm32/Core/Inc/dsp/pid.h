@@ -7,16 +7,19 @@ typedef struct
     float kp;
     float ki;
     float kd;
+    float sampleTime;
 
     /* errors */
     float IntError;
     float lastError;
-    
+    float derivError;
+
+    /* limits */
     float maxOut;
     float minOut;
     float maxInt;
     float minInt;
-    float sampleTime;
+
 }pid_t;
 
 void PID_init(pid_t *pid);

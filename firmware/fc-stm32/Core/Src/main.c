@@ -92,19 +92,19 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
     
     /* Writing to telemetry buffer */    
     #if defined(TELEMETRY)    
-    float angles[2];
-    Get_Roll_Pitch_Acc(acc_buff, angles);
-    telemetry.floatingPoint[0] = (angles[0]/3.14)*180;
-    telemetry.floatingPoint[1] = (angles[1]/3.14)*180;
+    // float angles[2];
+    // Get_Roll_Pitch_Acc(acc_buff, angles);
+    // telemetry.floatingPoint[0] = (angles[0]/3.14)*180;
+    // telemetry.floatingPoint[1] = (angles[1]/3.14)*180;
 
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //   telemetry.floatingPoint[i] = acc_buff[i];
-    // }
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //   telemetry.floatingPoint[3+i] = acc_buff[i];
-    // }
+    for (size_t i = 0; i < 3; i++)
+    {
+      telemetry.floatingPoint[i] = acc_buff[i];
+    }
+    for (size_t i = 0; i < 3; i++)
+    {
+      telemetry.floatingPoint[3+i] = acc_buff[i];
+    }
     
     #endif // TELEMETRY
 

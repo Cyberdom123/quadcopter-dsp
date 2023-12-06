@@ -8,6 +8,6 @@ typedef struct EMA_filter_t {
     uint8_t buffer_size;
 } EMA_filter_t;
 
-void EMA_filter(EMA_filter_t* ema, float* output, float* input);
+void EMA_filter(EMA_filter_t* ema, float* output, float input);
 
 #endif

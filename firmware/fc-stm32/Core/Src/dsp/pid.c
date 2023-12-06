@@ -12,6 +12,7 @@
 void PID_init(pid_t *pid){
     pid->IntError = 0;
     pid->lastError = 0;
+    pid->derivError = 0;
 }
 
 /**
@@ -27,9 +28,9 @@ float PID_Calculate(pid_t *pid, float input, float target){
     {
         pid->IntError = pid->maxInt;
     }
-    if(pid->IntError < - pid->minInt)
+    if(pid->IntError < pid->minInt)
     {
-        pid->IntError = - pid->minInt;
+        pid->IntError = pid->minInt;
     }
 
     float output  = error * pid->kp + pid->IntError + 
@@ -44,6 +45,7 @@ float PID_Calculate(pid_t *pid, float input, float target){
     }
 
     /* shit values */
+    pid->derivError = input;
     pid->lastError = error;
 
     return output; 
