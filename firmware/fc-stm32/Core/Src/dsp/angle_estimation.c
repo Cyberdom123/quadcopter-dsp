@@ -39,6 +39,7 @@ void update_euler_angles(float angles[3], float gyro[3], float dt) {
   const int roll = 0, pitch = 1, yaw = 2;
   const int x    = 0, y     = 1, z   = 2;
 
+  // NOTE: this are variables, so the trig functions are only evaluated once for speed
   float sin_psi   = sin(angles[roll]);
   float cos_psi   = cos(angles[roll]), cos_theta = cos(angles[pitch]);
   float tan_theta = tan(angles[pitch]);
