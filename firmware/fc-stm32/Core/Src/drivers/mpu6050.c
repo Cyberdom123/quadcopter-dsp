@@ -209,6 +209,11 @@ HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t rang
                             HAL_MAX_DELAY);
     if(status == HAL_OK) {
         GYRO_SCALE_FACTOR = ((1 << range) / 131.0);
+        
+        // reverse gyro outputs
+        #if REVERSE_GYRO
+            GYRO_SCALE_FACTOR *= -1;
+        #endif
     }
 
     return status;
@@ -254,11 +259,35 @@ HAL_StatusTypeDef MPU_read_acc_gyro_DMA(MPU6050_STRUCT *mpu) {
 }
 
 HAL_StatusTypeDef MPU_read_acc_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
+    FLOAT_TYPE wx, wy, wz;
     for(uint8_t i = 0; i < 3; i++) {
         mpu_acc_buffer[i] = ACC_SCALE_FACTOR * (int16_t)((mpu_acc_gyro_buf_raw[2 * i] << 8) | mpu_acc_gyro_buf_raw[2 * i + 1]);
     }
     for(uint8_t i = 0; i < 3; i++) {
         mpu_gyro_buffer[i] = GYRO_SCALE_FACTOR * (int16_t)((mpu_acc_gyro_buf_raw[8 + 2 * i] << 8) | mpu_acc_gyro_buf_raw[8 + 2 * i + 1]);
+
+        // remap the gyro axes
+        #if GYRO_VARIANT == 1
+            /*
+                y' = -x
+                x' = y
+            */
+            wx = mpu_gyro_buffer[0];
+            wy = mpu_gyro_buffer[1];
+
+            mpu_gyro_buffer[1] = -wx;
+            mpu_gyro_buffer[0] = wy;
+        #elif GYRO_VARIANT == 2
+            /*
+                y' = x
+                x' = -y
+            */
+            wx = mpu_gyro_buffer[0];
+            wy = mpu_gyro_buffer[1];
+
+            mpu_gyro_buffer[1] = wx;
+            mpu_gyro_buffer[0] = -wy;
+        #endif
     }
     mpu->acc_busy = false;
     mpu->acc_busy = false;
