@@ -42,8 +42,9 @@ void update_euler_angles(float gyro_angles[3], float angles[3], float gyro[3], f
   // NOTE: this are variables, so the trig functions are only evaluated once for speed
   float sin_psi   = sinf(angles[roll]);
   float cos_psi   = cosf(angles[roll]), cos_theta = cosf(angles[pitch]);
-  float tan_theta = tanf(angles[pitch]);
+  float tan_theta = tanf(angles[pitch]);  
 
+  gyro[1] = - gyro[1];
 
   float angle_change[3] = {gyro[x] + tan_theta * (sin_psi  * gyro[y] + cos_psi * gyro[z]),
                            cos_psi * gyro[y] - sin_psi * gyro[z],
@@ -62,6 +63,9 @@ void Get_Complementary_Roll_Pitch(float angles[3], float acc[3], float gyro[3], 
 
   Get_Roll_Pitch(acc, acc_angles);
   update_euler_angles(gyro_angles, angles, gyro, dt);
+
+  acc_angles[0] = (angles[0]/3.14)*180;
+  acc_angles[1] = (angles[1]/3.14)*180;
 
   angles[0] = alpha * acc_angles[0] + (1-alpha) * gyro_angles[0];
   angles[1] = alpha * acc_angles[1] + (1-alpha) * gyro_angles[1];
