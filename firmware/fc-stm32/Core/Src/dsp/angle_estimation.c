@@ -43,8 +43,9 @@ void update_euler_angles(float gyro_angles[3], float angles[3], float gyro[3], f
   float sin_psi   = sinf(angles[roll]);
   float cos_psi   = cosf(angles[roll]), cos_theta = cosf(angles[pitch]);
   float tan_theta = tanf(angles[pitch]);  
-
-  gyro[1] = - gyro[1];
+  
+  //Remap gyro angular velocity
+  gyro[0] = -gyro[0];
 
   float angle_change[3] = {gyro[x] + tan_theta * (sin_psi  * gyro[y] + cos_psi * gyro[z]),
                            cos_psi * gyro[y] - sin_psi * gyro[z],
@@ -53,20 +54,17 @@ void update_euler_angles(float gyro_angles[3], float angles[3], float gyro[3], f
 
   for(int i = 0; i < 3; i++) {
     // NOTE: this function currently returns the new euler angles but may be chaged to return the deltas for use in a complementary filter
-    gyro_angles[i] += gyro[i] * dt;   
+    gyro_angles[i] += angle_change[i] * dt;   
   }
 }
 
-static float gyro_angles[3];
+static float gyro_angles[3] = {0};
 void Get_Complementary_Roll_Pitch(float angles[3], float acc[3], float gyro[3], float dt, float alpha){
-  float acc_angles[2];
+  float acc_angles[2] = {0};
 
   Get_Roll_Pitch(acc, acc_angles);
   update_euler_angles(gyro_angles, angles, gyro, dt);
 
-  acc_angles[0] = (angles[0]/3.14)*180;
-  acc_angles[1] = (angles[1]/3.14)*180;
-
-  angles[0] = alpha * acc_angles[0] + (1-alpha) * gyro_angles[0];
-  angles[1] = alpha * acc_angles[1] + (1-alpha) * gyro_angles[1];
+  angles[0] = alpha * acc_angles[0] + (1-alpha) * gyro_angles[0] * 3.14159265/180;
+  angles[1] = alpha * acc_angles[1] + (1-alpha) * gyro_angles[1] * 3.14159265/180;
 }

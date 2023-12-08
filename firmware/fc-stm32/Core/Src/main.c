@@ -91,16 +91,18 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
-    const float dt = 0.001, alpha = 0.001;
+    const float dt = 0.001, alpha = 0.9;
 
     float acc_angles[2];
+    Get_Roll_Pitch(acc_buff, acc_angles);
     Get_Complementary_Roll_Pitch(angles, acc_buff, gyro_buff, dt, alpha);
-    //Get_Roll_Pitch(acc_buff, acc_angles);
 
-    telemetry.floatingPoint[0] = angles[0];
-    telemetry.floatingPoint[2] = angles[1];
-    //telemetry.floatingPoint[1] = (acc_angles[0]/3.14)*180;
-    //telemetry.floatingPoint[3] = (acc_angles[1]/3.14)*180;
+    telemetry.floatingPoint[0] = (acc_angles[0]/3.14)*180;
+    telemetry.floatingPoint[2] = (acc_angles[1]/3.14)*180;
+    telemetry.floatingPoint[1] = (angles[0]/3.14)*180;
+    telemetry.floatingPoint[3] = (angles[1]/3.14)*180;
+    // telemetry.floatingPoint[1] = 3.14 * angles[0]/180;
+    // telemetry.floatingPoint[3] = 3.14 * angles[1]/180;
 
     // for (size_t i = 0; i < 3; i++)
     // {
@@ -167,7 +169,7 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_Delay(1000);
+  HAL_Delay(100);
   
   /* Initialize IO buffers */
   mpu.mpu_acc_buff = acc_buff;
@@ -177,6 +179,9 @@ int main(void)
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
+  MPU_measure_gyro_offset(&mpu, 10000);
+
+  HAL_StatusTypeDef status = MPU_clear_int(&mpu);
 
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
@@ -197,9 +202,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  volatile int dupa = 0;
   while (1)
   {
-
+    dupa++;
   } 
     /* USER CODE END WHILE */
 
