@@ -15,7 +15,7 @@ void Get_Roll_Pitch(float acc_buf[3], float angles[2]){
     acc_buf[2] = 0.0001;
   }
   
-  angles[0] = atan2(acc_buf[1], acc_buf[2]);
+  angles[0] = atan2f(acc_buf[1], acc_buf[2]);
 
   //sin must be in <-1, 1>
   if(acc_buf[0] > 1){
@@ -25,7 +25,7 @@ void Get_Roll_Pitch(float acc_buf[3], float angles[2]){
     acc_buf[0] = -1;
   }
 
-  angles[1] = asin(acc_buf[0]);
+  angles[1] = asinf(acc_buf[0]);
 }
 /**
  * @brief 
@@ -35,21 +35,34 @@ void Get_Roll_Pitch(float acc_buf[3], float angles[2]){
  * @param dt time since last gyro sample
  */
 
-void update_euler_angles(float angles[3], float gyro[3], float dt) {
+void update_euler_angles(float gyro_angles[3], float angles[3], float gyro[3], float dt) {
   const int roll = 0, pitch = 1, yaw = 2;
   const int x    = 0, y     = 1, z   = 2;
 
   // NOTE: this are variables, so the trig functions are only evaluated once for speed
-  float sin_psi   = sin(angles[roll]);
-  float cos_psi   = cos(angles[roll]), cos_theta = cos(angles[pitch]);
-  float tan_theta = tan(angles[pitch]);
+  float sin_psi   = sinf(angles[roll]);
+  float cos_psi   = cosf(angles[roll]), cos_theta = cosf(angles[pitch]);
+  float tan_theta = tanf(angles[pitch]);
 
-  float angle_change[3] = {gyro[x] + sin_psi * cos_theta * gyro[y],
+
+  float angle_change[3] = {gyro[x] + tan_theta * (sin_psi  * gyro[y] + cos_psi * gyro[z]),
                            cos_psi * gyro[y] - sin_psi * gyro[z],
-                           (sin_psi / cos_theta) * gyro[y] + (cos_psi / cos_theta) * gyro[z]};
+                           0};
+  //(sin_psi / cos_theta) * gyro[y] + (cos_psi / cos_theta) * gyro[z]}
 
   for(int i = 0; i < 3; i++) {
     // NOTE: this function currently returns the new euler angles but may be chaged to return the deltas for use in a complementary filter
-    angles[i] += angle_change[i] * dt;   
+    gyro_angles[i] += gyro[i] * dt;   
   }
+}
+
+static float gyro_angles[3];
+void Get_Complementary_Roll_Pitch(float angles[3], float acc[3], float gyro[3], float dt, float alpha){
+  float acc_angles[2];
+
+  Get_Roll_Pitch(acc, acc_angles);
+  update_euler_angles(gyro_angles, angles, gyro, dt);
+
+  angles[0] = alpha * acc_angles[0] + (1-alpha) * gyro_angles[0];
+  angles[1] = alpha * acc_angles[1] + (1-alpha) * gyro_angles[1];
 }
