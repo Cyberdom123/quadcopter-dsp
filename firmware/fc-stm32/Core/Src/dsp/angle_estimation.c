@@ -5,14 +5,14 @@
  * @details [ax, ay, az] = (rotation matrix form fixed frame to body frame) * (g vector) 
  *          ax = g * sin(pitch), ay = -g * sin(roll) * cos(pitch), az = -g * cos(roll) * cos(pitch) 
   */
-void Get_Roll_Pitch(float acc_buf[3], float angles[2]){
+void Calculate_Angles_acc(float acc_buf[3], float angles[2]){
 
   //remove offset
   acc_buf[0] = acc_buf[0] - AX_OFFSET;
 
   //cannot divide by 0
   if(acc_buf[2] == 0){
-    acc_buf[2] = 0.0001;
+    acc_buf[2] = 0.0001f;
   }
   
   angles[0] = atan2f(acc_buf[1], acc_buf[2]);
@@ -35,13 +35,13 @@ void Get_Roll_Pitch(float acc_buf[3], float angles[2]){
  * @param dt time since last gyro sample
  */
 
-void update_euler_angles(float gyro_angles[3], float angles[3], float gyro[3], float dt) {
+void Calculate_Angles_gyro(float angles[3], float gyro[3], float dt) {
   const int roll = 0, pitch = 1, yaw = 2;
   const int x    = 0, y     = 1, z   = 2;
 
   // NOTE: this are variables, so the trig functions are only evaluated once for speed
   float sin_psi   = sinf(angles[roll]);
-  float cos_psi   = cosf(angles[roll]), cos_theta = cosf(angles[pitch]);
+  float cos_psi   = cosf(angles[roll]);
   float tan_theta = tanf(angles[pitch]);  
   
   //Remap gyro angular velocity
@@ -54,17 +54,16 @@ void update_euler_angles(float gyro_angles[3], float angles[3], float gyro[3], f
 
   for(int i = 0; i < 3; i++) {
     // NOTE: this function currently returns the new euler angles but may be chaged to return the deltas for use in a complementary filter
-    gyro_angles[i] += angle_change[i] * dt;   
+    angles[i] += degToRad(angle_change[i]) * dt;   
   }
 }
 
-static float gyro_angles[3] = {0};
 void Get_Complementary_Roll_Pitch(float angles[3], float acc[3], float gyro[3], float dt, float alpha){
   float acc_angles[2] = {0};
 
-  Get_Roll_Pitch(acc, acc_angles);
-  update_euler_angles(gyro_angles, angles, gyro, dt);
+  Calculate_Angles_acc(acc, acc_angles);
+  Calculate_Angles_gyro(angles, gyro, dt);
 
-  angles[0] = alpha * acc_angles[0] + (1-alpha) * gyro_angles[0] * 3.14159265/180;
-  angles[1] = alpha * acc_angles[1] + (1-alpha) * gyro_angles[1] * 3.14159265/180;
+  angles[0] = alpha * acc_angles[0] + (1-alpha) * angles[0];
+  angles[1] = alpha * acc_angles[1] + (1-alpha) * angles[1];
 }

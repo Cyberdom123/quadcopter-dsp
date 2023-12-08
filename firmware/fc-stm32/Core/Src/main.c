@@ -91,16 +91,16 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
-    const float dt = 0.001, alpha = 0.9;
+    const float dt = 0.001f, alpha = 0.02f;
 
     float acc_angles[2];
-    Get_Roll_Pitch(acc_buff, acc_angles);
+    Calculate_Angles_acc(acc_buff, acc_angles);
     Get_Complementary_Roll_Pitch(angles, acc_buff, gyro_buff, dt, alpha);
 
-    telemetry.floatingPoint[0] = (acc_angles[0]/3.14)*180;
-    telemetry.floatingPoint[2] = (acc_angles[1]/3.14)*180;
-    telemetry.floatingPoint[1] = (angles[0]/3.14)*180;
-    telemetry.floatingPoint[3] = (angles[1]/3.14)*180;
+    telemetry.floatingPoint[0] = (acc_angles[0]/3.14f)*180;
+    telemetry.floatingPoint[2] = (acc_angles[1]/3.14f)*180;
+    telemetry.floatingPoint[1] = (angles[0]/3.14f)*180;
+    telemetry.floatingPoint[3] = (angles[1]/3.14f)*180;
     // telemetry.floatingPoint[1] = 3.14 * angles[0]/180;
     // telemetry.floatingPoint[3] = 3.14 * angles[1]/180;
 
