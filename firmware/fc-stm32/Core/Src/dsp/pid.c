@@ -10,6 +10,10 @@
  * Call this function at the beginning
  */
 void PID_init(pid_t *pid){
+
+    pid->ki = pid->ki * pid->sampleTime;
+    pid->kd = pid->kd / pid->sampleTime;
+
     pid->IntError = 0;
     pid->lastError = 0;
     pid->derivError = 0;
@@ -22,7 +26,7 @@ float PID_Calculate(pid_t *pid, float input, float target){
 
     float error = target - input;
 
-    pid->IntError +=  pid->ki * 0.5f * (error + pid->lastError) * pid->sampleTime;
+    pid->IntError +=  pid->ki * 0.5f * (error + pid->lastError);
 
     if (pid->IntError > pid->maxInt)
     {
@@ -34,7 +38,7 @@ float PID_Calculate(pid_t *pid, float input, float target){
     }
 
     float output  = error * pid->kp + pid->IntError + 
-                   (error - pid->lastError) * pid->kd / pid->sampleTime;
+                   (input - pid->derivError) * pid->kd;
 
     if(output > pid->maxOut){
         output = pid->maxOut;

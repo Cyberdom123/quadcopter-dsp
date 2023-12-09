@@ -67,6 +67,8 @@ union Telemetry {
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
 
+float angles[3] = {0};
+float gyro_angles[3] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,25 +91,29 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
-    
-    /* Writing to telemetry buffer */    
-    #if defined(TELEMETRY)    
-    // float angles[2];
-    // Get_Roll_Pitch_Acc(acc_buff, angles);
-    // telemetry.floatingPoint[0] = (angles[0]/3.14)*180;
-    // telemetry.floatingPoint[1] = (angles[1]/3.14)*180;
+    #if defined(TELEMETRY)
+    // const float dt = 0.001f, alpha = 0.02f;
 
-    for (size_t i = 0; i < 3; i++)
-    {
-      telemetry.floatingPoint[i] = acc_buff[i];
-    }
-    for (size_t i = 0; i < 3; i++)
-    {
-      telemetry.floatingPoint[3+i] = acc_buff[i];
-    }
-    
+    // float acc_angles[2];
+    // Calculate_Angles_acc(acc_buff, acc_angles);
+    // Get_Complementary_Roll_Pitch(angles, acc_buff, gyro_buff, dt, alpha);
+
+    // telemetry.floatingPoint[0] = (acc_angles[0]/3.14f)*180;
+    // telemetry.floatingPoint[2] = (acc_angles[1]/3.14f)*180;
+    // telemetry.floatingPoint[1] = (angles[0]/3.14f)*180;
+    // telemetry.floatingPoint[3] = (angles[1]/3.14f)*180;
+    // telemetry.floatingPoint[1] = 3.14 * angles[0]/180;
+    // telemetry.floatingPoint[3] = 3.14 * angles[1]/180;
+
+    // for (size_t i = 0; i < 3; i++)
+    // {
+    //   telemetry.floatingPoint[i] = 0;
+    // }
+    // for (size_t i = 0; i < 3; i++)
+    // {
+    //   telemetry.floatingPoint[3+i] = gyro_buff[i];
+    // }
     #endif // TELEMETRY
-
     Stabilize(acc_buff, gyro_buff, command);
     
   }
@@ -169,7 +175,7 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_Delay(1000);
+  HAL_Delay(100);
   
   /* Initialize IO buffers */
   mpu.mpu_acc_buff = acc_buff;
@@ -181,6 +187,9 @@ int main(void)
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
+  MPU_measure_gyro_offset(&mpu, 10000);
+
+  HAL_StatusTypeDef status = MPU_clear_int(&mpu);
 
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
