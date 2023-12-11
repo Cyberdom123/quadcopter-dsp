@@ -11,12 +11,14 @@
  */
 void PID_init(pid_t *pid){
 
-    pid->ki = pid->ki * pid->sampleTime;
-    pid->kd = pid->kd / pid->sampleTime;
+    pid->ki = pid->ki * pid->sampleTime * 0.5f;
+    pid->kd = pid->kd * 2/(2*pid->tau + pid->sampleTime);
+    pid->lowPassTerm = (2 * pid->tau - pid->sampleTime)/(2 * pid->tau + pid->sampleTime);
 
     pid->IntError = 0;
     pid->lastError = 0;
     pid->derivError = 0;
+    pid->lastDeriv = 0;
 }
 
 /**
@@ -26,7 +28,7 @@ float PID_Calculate(pid_t *pid, float input, float target){
 
     float error = target - input;
 
-    pid->IntError +=  pid->ki * 0.5f * (error + pid->lastError);
+    pid->IntError +=  pid->ki * (error + pid->lastError);
 
     if (pid->IntError > pid->maxInt)
     {
@@ -37,8 +39,9 @@ float PID_Calculate(pid_t *pid, float input, float target){
         pid->IntError = pid->minInt;
     }
 
-    float output  = error * pid->kp + pid->IntError + 
-                   (input - pid->derivError) * pid->kd;
+    float derivative = (input - pid->derivError)  * pid->kd + pid->lowPassTerm * pid->lastDeriv;
+
+    float output  = error * pid->kp + pid->IntError + derivative;
 
     if(output > pid->maxOut){
         output = pid->maxOut;
@@ -51,6 +54,7 @@ float PID_Calculate(pid_t *pid, float input, float target){
     /* shit values */
     pid->derivError = input;
     pid->lastError = error;
+    pid->lastDeriv = derivative;
 
     return output; 
 }  

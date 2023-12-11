@@ -13,6 +13,11 @@ typedef struct
     float IntError;
     float lastError;
     float derivError;
+    float lastDeriv;
+
+    /* filter */
+    float tau;
+    float lowPassTerm;
 
     /* limits */
     float maxOut;
