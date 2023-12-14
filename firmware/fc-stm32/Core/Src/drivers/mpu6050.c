@@ -11,6 +11,7 @@ static uint8_t mpu_acc_gyro_buf_raw[14];
 static FLOAT_TYPE* mpu_acc_buffer;
 static FLOAT_TYPE* mpu_gyro_buffer;
 static FLOAT_TYPE mpu_gyro_offset[3] = {0.0, 0.0, 0.0};
+static FLOAT_TYPE mpu_acc_offset[3] = {0.0, 0.0, 0.0};
 
 extern bool mpu_acc_read_available;
 extern bool mpu_gyro_read_available;
@@ -149,6 +150,20 @@ HAL_StatusTypeDef MPU_measure_gyro_offset(MPU6050_STRUCT* mpu, uint16_t samples)
 
 }
 
+HAL_StatusTypeDef MPU_measure_acc_offset(MPU6050_STRUCT* mpu, uint16_t samples) {
+    FLOAT_TYPE acc_data[3];
+    HAL_StatusTypeDef status = HAL_OK;
+
+    for(uint16_t i = 0; i < samples; i++) {
+        status = MPU_read_acc(mpu, acc_data);
+
+        mpu_acc_offset[0] += acc_data[0] / samples;
+        mpu_acc_offset[1] += acc_data[1] / samples;
+        mpu_acc_offset[2] += (acc_data[2] - 1) / samples;
+    }
+
+}
+
 HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu){
 
     uint8_t i2c_read_buffer[1];
@@ -276,7 +291,7 @@ HAL_StatusTypeDef MPU_read_acc_gyro_DMA(MPU6050_STRUCT *mpu) {
 HAL_StatusTypeDef MPU_read_acc_gyro_DMA_complete(MPU6050_STRUCT *mpu) {
     for(uint8_t i = 0; i < 3; i++) {
         mpu_acc_buffer[i] = ACC_SCALE_FACTOR * (int16_t)((mpu_acc_gyro_buf_raw[2 * i] << 8) |
-                                                          mpu_acc_gyro_buf_raw[2 * i + 1]);
+                                                          mpu_acc_gyro_buf_raw[2 * i + 1]) - mpu_acc_offset[i];
     }
     for(uint8_t i = 0; i < 3; i++) {
         mpu_gyro_buffer[i] = GYRO_SCALE_FACTOR * (int16_t)((mpu_acc_gyro_buf_raw[8 + 2 * i] << 8) |

@@ -1,3 +1,8 @@
+/**
+ * @author Kacper Filipek & Dominik Michalczyk
+ * @date  10-09-2023
+ */
+
 #include <dsp/angle_estimation.h>
 
 /**
@@ -66,4 +71,9 @@ void Get_Complementary_Roll_Pitch(float angles[3], float acc[3], float gyro[3], 
 
   angles[0] = alpha * acc_angles[0] + (1-alpha) * angles[0];
   angles[1] = alpha * acc_angles[1] + (1-alpha) * angles[1];
+}
+
+
+void Get_XY_Velocities(float acc[3], float angles[3]){
+
 }

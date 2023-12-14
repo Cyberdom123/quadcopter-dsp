@@ -3,11 +3,12 @@ import serial
 import struct
 import time
 import numpy as np
+from scipy import signal
 
 from logger import DataLogger
 from filters import ema_filter
 
-baudRate = 115200
+baudRate = 57600
 ser = serial.Serial('/dev/ttyUSB0', baudRate)
 
 
@@ -59,6 +60,15 @@ def get_pitch_roll(ax, ay, az):
 
     return pitch, roll
 
+ax_sum = 0; ay_sum = 0;
+ax_prev = 0; ay_prev = 0;
+def get_xy_velocity(ax, ay):
+    global ax_sum, ay_sum;
+
+    ax_sum += ax;
+    ay_sum += ay;
+    return ax_sum, ay_sum
+
 if __name__ == '__main__':
     ser.timeout = 0.005
     logger = DataLogger("sample1-filtered-10Hz")
@@ -69,12 +79,16 @@ if __name__ == '__main__':
             stop = time.time()
 
             sampling = round(1/(stop - start)) 
-            #print(f"{acc0} {acc1} {acc2} {gyro0} {gyro1} {gyro2}")
-            logger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
-            [pitch, roll] = get_pitch_roll(acc0, acc1, acc2)
-            print(f"pitch = {pitch}, roll = {roll}")
+            print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}")
+            #logger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
+            
+            [vx, vy] = get_xy_velocity(acc0, acc1);
+            print(f"{vx:7.2f} {vy:7.2f}")
+
+            #[pitch, roll] = get_pitch_roll(acc0, acc1, acc2)
+            #print(f"pitch = {pitch}, roll = {roll}")
         except KeyboardInterrupt:
             print(" Nara")
-            logger.save_data()
+            #logger.save_data()
             exit()
             

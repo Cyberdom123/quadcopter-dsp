@@ -30,28 +30,23 @@ float PID_Calculate(pid_t *pid, float input, float target){
 
     pid->IntError +=  pid->ki * (error + pid->lastError);
 
-    if (pid->IntError > pid->maxInt)
-    {
-        pid->IntError = pid->maxInt;
-    }
-    if(pid->IntError < pid->minInt)
-    {
-        pid->IntError = pid->minInt;
-    }
+    /* Integral anti windup */
+    if (pid->IntError > pid->maxInt) pid->IntError = pid->maxInt;
 
+    if(pid->IntError < pid->minInt)  pid->IntError = pid->minInt;
+
+    /* Derivative on measurement */
     float derivative = (input - pid->derivError)  * pid->kd + pid->lowPassTerm * pid->lastDeriv;
-
+    
+    /* Calculate PID output */
     float output  = error * pid->kp + pid->IntError + derivative;
 
-    if(output > pid->maxOut){
-        output = pid->maxOut;
-    }
+    /* Apply output limits */
+    if(output > pid->maxOut) output = pid->maxOut;
 
-    if(output < pid->minOut){
-        output = pid->minOut;
-    }
+    if(output < pid->minOut) output = pid->minOut;
 
-    /* shit values */
+    /* Shit values */
     pid->derivError = input;
     pid->lastError = error;
     pid->lastDeriv = derivative;

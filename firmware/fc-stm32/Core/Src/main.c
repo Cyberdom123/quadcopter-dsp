@@ -103,18 +103,14 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
     // telemetry.floatingPoint[1] = (angles[0]/3.14f)*180;
     // telemetry.floatingPoint[3] = (angles[1]/3.14f)*180;
 
-
-    // telemetry.floatingPoint[1] = 3.14 * angles[0]/180;
-    // telemetry.floatingPoint[3] = 3.14 * angles[1]/180;
-
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //   telemetry.floatingPoint[i] = 0;
-    // }
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //   telemetry.floatingPoint[3+i] = gyro_buff[i];
-    // }
+    for (size_t i = 0; i < 3; i++)
+    {
+      telemetry.floatingPoint[i] = acc_buff[i];
+    }
+    for (size_t i = 0; i < 3; i++)
+    {
+      telemetry.floatingPoint[3+i] = gyro_buff[i];
+    }
     #endif // TELEMETRY
     Stabilize(acc_buff, gyro_buff, command);
     
@@ -190,6 +186,7 @@ int main(void)
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
   MPU_measure_gyro_offset(&mpu, 10000);
+  MPU_measure_acc_offset(&mpu, 10000);
 
   HAL_StatusTypeDef status = MPU_clear_int(&mpu);
 

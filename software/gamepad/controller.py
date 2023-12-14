@@ -5,7 +5,7 @@ import time
 import math
 import threading
 
-ser = serial.Serial('/dev/ttyUSB0', 115200)
+ser = serial.Serial('/dev/ttyUSB0', 57600)
 
 class XboxController(object):
     MAX_TRIG_VAL = math.pow(2, 8)
@@ -54,14 +54,14 @@ class XboxController(object):
         b = self.B
         time.sleep(0.0001)
 
-        ser.write(bytearray([y1, x1, y2, x2, a, b]))
+        ser.write(bytearray([y1, 0, 0, 0, a, b]))
         
         while True:
             if(ser.in_waiting > 0):
                 msg = ser.read(24)
                 try:
                     [acc0, acc1, acc2, gyro0, gyro1, gyro2] = struct.unpack('6f', msg)
-                    print(f"{acc0} {acc1} {acc2} {gyro0} {gyro1} {gyro2}")
+                    print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}")
                 except:
                     pass
                 break

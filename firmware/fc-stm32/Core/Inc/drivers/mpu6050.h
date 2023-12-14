@@ -282,6 +282,7 @@ HAL_StatusTypeDef MPU_set_gyro_resolution(MPU6050_STRUCT *mpu, gyro_range_t rang
 HAL_StatusTypeDef MPU_read_acc_gyro_DMA(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_read_acc_gyro_DMA_complete(MPU6050_STRUCT *mpu);
 HAL_StatusTypeDef MPU_measure_gyro_offset(MPU6050_STRUCT* mpu, uint16_t samples);
+HAL_StatusTypeDef MPU_measure_acc_offset(MPU6050_STRUCT* mpu, uint16_t samples) ;
 // todo: add a function for sampling rate
 MPU6050_config MPU_get_default_cfg(void);
 
