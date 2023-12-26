@@ -1,6 +1,6 @@
 #include <dsp/stabilizer.h>
 
-static pid_t roll_pid, pitch_pid;
+static pid_t roll_pid, pitch_pid, yaw_pid;
 
 static IIR_filter_t iir;
 
@@ -16,62 +16,70 @@ void Stabilizer_init(){
     pitch_pid.maxInt =   5;
     pitch_pid.minInt =  -5; 
 
-    roll_pid.sampleTime  =  0.001;
-    pitch_pid.sampleTime =  0.001;
+    yaw_pid.maxOut =  75;
+    yaw_pid.minOut = -75;
+    yaw_pid.maxInt =   5;
+    yaw_pid.minInt =  -5; 
 
+    roll_pid.sampleTime  =  0.001f;
+    pitch_pid.sampleTime =  0.001f;
+    yaw_pid.sampleTime   =  0.001f;
     /* Initialize all constants for each pid */
 
     //roll pid
-    roll_pid.tau  =  0.006;   // 25Hz cutoff freq
-    roll_pid.kp   =  1.8;
-    roll_pid.ki   =  0;  
-    roll_pid.kd   = -0.14;
+    roll_pid.tau  =  0.006f;  // 25Hz cutoff freq
+    roll_pid.kp   =  1.8f;
+    roll_pid.ki   =  0.0f;  
+    roll_pid.kd   = -0.14f;
     
     //pitch pid
     pitch_pid.tau =  0.006f; // 25Hz cutoff freq
-    pitch_pid.kp  =  1.5;
-    pitch_pid.ki  =  0;
-    pitch_pid.kd  = -0.16;
+    pitch_pid.kp  =  1.5f;
+    pitch_pid.ki  =  0.0f;
+    pitch_pid.kd  = -0.16f;
 
-    iir.tau = 0.002273f;
+    //yaw pid
+    yaw_pid.tau =  0.008f;  // 25Hz cutoff freq
+    yaw_pid.kp  = -2.1f;
+    yaw_pid.ki  =  0.0f;
+    yaw_pid.kd  =  0.0f;
+
+    iir.tau = 0.007f;
     iir.samplingTime = 0.001f;
     Low_Pass_IIR_Filter_Init(&iir);
 
     PID_init(&roll_pid);
     PID_init(&pitch_pid);
+    PID_init(&yaw_pid);
 }
 
-static float filter_input_x[2] = {0};
-static float filter_output_x[2] = {0};
+static float filter_input[2] = {0};
+static float filter_output[2] = {0};
 
-static float filter_input_y[2] = {0};
-static float filter_output_y[2] = {0};
-
-static float angles[3] = {0};
+static float angles[2] = {0};
 void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
+
     float roll, pitch;
     volatile float set_angles[3] = {0};   // roll, pitch, yaw
+    float acc_angles[2];
+    float angle_change[3];
+    const float dt = 0.001f, alpha = 0.0001f;
     volatile int8_t duty_cycles[3] = {0}; // roll, pitch, yaw
     
-    const float dt = 0.001f, alpha = 0.000001f;
-    
-    filter_input_x[0] = acc_buff[0];
-    filter_input_y[0] = acc_buff[1];
-    Low_Pass_IIR_Filter(&iir, filter_output_x, filter_input_x);
-    Low_Pass_IIR_Filter(&iir, filter_output_y, filter_input_y);    
-    acc_buff[0] = filter_output_x[0];
-    acc_buff[1] = filter_output_y[0];
-    
-    Get_Complementary_Roll_Pitch(angles, acc_buff, gyro_buff, dt, alpha);
 
+    Calculate_Angles_acc(acc_buff, acc_angles);
+    Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
+    Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
+
+    filter_input[0] = angle_change[2];
+    Low_Pass_IIR_Filter(&iir, filter_output, filter_input);
+    angle_change[2] = filter_output[0];
 
     pitch = radToDeg(angles[0]);
     roll  = radToDeg(angles[1]);
-    //angles[2] = 0;
 
-    set_angles[0] = command[3] * ROLL_ANGLE_SCALE;
-    set_angles[1] = command[1] * PITCH_ANGLE_SCALE;
-    //set_angles[2] = 0;
+    set_angles[0] = command[3] * PITCH_ANGLE_SCALE + 2.1f;  //2
+    set_angles[1] = command[1] * ROLL_ANGLE_SCALE + 1.9f;  //1.5
 
     /* Angle PID's */
     //pitch
@@ -79,7 +87,7 @@ void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
     //roll    
     duty_cycles[1] = (int8_t) PID_Calculate(&roll_pid, roll, set_angles[1]);
     //yaw
-    //duty_cycles[2] = 0;
+    duty_cycles[2] = (int8_t) PID_Calculate(&yaw_pid, angle_change[2], set_angles[2]);
 
     int8_t command2[8];
     for (size_t i = 0; i < 8; i++)
@@ -93,6 +101,8 @@ void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
     command2[3] = duty_cycles[0];
     //roll
     command2[1] = duty_cycles[1];
+    //yaw
+    command2[2] = duty_cycles[2];
     
     Motors_Run(command2);
 }

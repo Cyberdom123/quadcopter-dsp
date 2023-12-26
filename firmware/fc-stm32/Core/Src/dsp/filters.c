@@ -93,6 +93,16 @@ void Butterwort_High_Pass_Filter(float output[3], float input[3]){
     Second_Order_IIR_Filter(&butterwort_high_filter, output, input);
 }
 
+
+IIR_second_order_filter_t butterwort_low_filter = {
+    .b = {0.000241f, 0.000483f, 0.000241f},
+    .a = {-1.955578f,  0.956544f}
+};
+
+void Butterwort_Low_Pass_Filter(float output[3], float input[3]){
+    Second_Order_IIR_Filter(&butterwort_low_filter, output, input);
+}
+
 /**
  * @brief Second order band IIR filter based on analog prototype 
  */

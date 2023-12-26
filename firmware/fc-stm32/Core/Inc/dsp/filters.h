@@ -44,6 +44,7 @@ void Second_Order_IIR_Filter(IIR_second_order_filter_t* iir, float output[3], fl
 void Butterwort_Band_Pass_Filter(float output[3], float input[3]);
 void Chebyshev1_Band_Pass_Filter(float output[3], float input[3]);
 void Butterwort_High_Pass_Filter(float output[3], float input[3]);
+void Butterwort_Low_Pass_Filter(float output[3], float input[3]);
 
 void IIR_4th_Order_Filter(IIR_4th_order_filter_t* iir, float output[5], float input[5]);
 void Butterwort_4th_Band_Filter(float output[5], float input[5]);

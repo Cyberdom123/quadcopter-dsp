@@ -31,6 +31,7 @@
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
 #include <drivers/motors.h>
+#include <dsp/filters.h>
 #include <stabilizer.h>
 /* USER CODE END Includes */
 
@@ -67,8 +68,16 @@ union Telemetry {
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
 
-float angles[3] = {0};
-float gyro_angles[3] = {0};
+static float filter_acc_x_in[2]  = {0};
+static float filter_acc_x_out[2] = {0};
+
+static float filter_acc_y_in[2]  = {0};
+static float filter_acc_y_out[2] = {0};
+
+static float filter_acc_z_in[2]  = {0};
+static float filter_acc_z_out[2] = {0};
+
+float angles[2] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,28 +100,30 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
+    Stabilize(acc_buff, gyro_buff, command);
     #if defined(TELEMETRY)
-    // const float dt = 0.001f, alpha = 0.001f;
-    // float acc_angles[2];
-    
+    // const float dt = 0.001f, alpha = 0.0001f;
+    // float acc_angles[2] = {0};
+    // float angle_change[3];
+
     // Calculate_Angles_acc(acc_buff, acc_angles);
-    // Get_Complementary_Roll_Pitch(angles, acc_buff, gyro_buff, dt, alpha);
+    // Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
+    // Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
 
     // telemetry.floatingPoint[0] = (acc_angles[0]/3.14f)*180;
-    // telemetry.floatingPoint[2] = (acc_angles[1]/3.14f)*180;
-    // telemetry.floatingPoint[1] = (angles[0]/3.14f)*180;
-    // telemetry.floatingPoint[3] = (angles[1]/3.14f)*180;
+    // telemetry.floatingPoint[1] = (acc_angles[1]/3.14f)*180;
+    // telemetry.floatingPoint[3] = (angles[0]/3.14f)*180;
+    // telemetry.floatingPoint[4] = (angles[1]/3.14f)*180;
 
-    for (size_t i = 0; i < 3; i++)
-    {
-      telemetry.floatingPoint[i] = acc_buff[i];
-    }
-    for (size_t i = 0; i < 3; i++)
-    {
-      telemetry.floatingPoint[3+i] = gyro_buff[i];
-    }
+    // for (size_t i = 0; i < 3; i++)
+    // {
+    //   telemetry.floatingPoint[i] = acc_buff[i];
+    // }
+    // for (size_t i = 0; i < 3; i++)
+    // {
+    //   telemetry.floatingPoint[3+i] = gyro_buff[i];
+    // }
     #endif // TELEMETRY
-    Stabilize(acc_buff, gyro_buff, command);
     
   }
   else if(mpu.gyro_busy){
