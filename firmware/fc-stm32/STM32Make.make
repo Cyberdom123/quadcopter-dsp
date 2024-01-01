@@ -40,11 +40,14 @@ Core/Src/dma.c \
 Core/Src/drivers/motors.c \
 Core/Src/drivers/mpu6050.c \
 Core/Src/drivers/nrf24l01.c \
-Core/Src/drivers/w25qxx.c \
+Core/Src/drivers/w25q64.c \
 Core/Src/dsp/angle_estimation.c \
 Core/Src/dsp/filters.c \
+Core/Src/dsp/pid.c \
+Core/Src/dsp/stabilizer.c \
 Core/Src/gpio.c \
 Core/Src/i2c.c \
+Core/Src/logger.c \
 Core/Src/main.c \
 Core/Src/spi.c \
 Core/Src/sprintf_opt.c \

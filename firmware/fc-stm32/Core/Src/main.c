@@ -17,12 +17,12 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <main.h>
-#include <dma.h>
-#include <i2c.h>
-#include <spi.h>
-#include <tim.h>
-#include <gpio.h>
+#include "main.h"
+#include "dma.h"
+#include "i2c.h"
+#include "spi.h"
+#include "tim.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -68,14 +68,15 @@ union Telemetry {
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
 
-static float filter_acc_x_in[2]  = {0};
-static float filter_acc_x_out[2] = {0};
+static float filter_gyro_x_in[2]  = {0};
+static float filter_gyro_x_out[2] = {0};
+static IIR_filter_t iir;
 
-static float filter_acc_y_in[2]  = {0};
-static float filter_acc_y_out[2] = {0};
+// static float filter_acc_y_in[2]  = {0};
+// static float filter_acc_y_out[2] = {0};
 
-static float filter_acc_z_in[2]  = {0};
-static float filter_acc_z_out[2] = {0};
+// static float filter_acc_z_in[2]  = {0};
+// static float filter_acc_z_out[2] = {0};
 
 float angles[2] = {0};
 /* USER CODE END PV */
@@ -91,7 +92,6 @@ void SystemClock_Config(void);
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, (uint8_t*) command, 8);
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Start_Listening(&nrf24l01);
   }
 
@@ -101,19 +101,27 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
     Stabilize(acc_buff, gyro_buff, command);
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     #if defined(TELEMETRY)
-    // const float dt = 0.001f, alpha = 0.0001f;
-    // float acc_angles[2] = {0};
-    // float angle_change[3];
+    const float dt = 0.001f, alpha = 0.001f; //good for vibrations bad for constant calibration 0.0001
+    float acc_angles[2] = {0};
+    float angle_change[3];
 
-    // Calculate_Angles_acc(acc_buff, acc_angles);
-    // Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
-    // Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
+    Calculate_Angles_acc(acc_buff, acc_angles);
+    Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
+    Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
 
-    // telemetry.floatingPoint[0] = (acc_angles[0]/3.14f)*180;
-    // telemetry.floatingPoint[1] = (acc_angles[1]/3.14f)*180;
-    // telemetry.floatingPoint[3] = (angles[0]/3.14f)*180;
-    // telemetry.floatingPoint[4] = (angles[1]/3.14f)*180;
+    telemetry.floatingPoint[0] = (acc_angles[0]/3.14f)*180;
+    telemetry.floatingPoint[1] = (acc_angles[1]/3.14f)*180;
+    telemetry.floatingPoint[3] = (angles[0]/3.14f)*180;
+    telemetry.floatingPoint[4] = (angles[1]/3.14f)*180;
+
+    // telemetry.floatingPoint[5] = gyro_buff[0];
+
+    // telemetry.floatingPoint[0] = (float) command[0];
+    // telemetry.floatingPoint[1] = (float) command[1];
+    // telemetry.floatingPoint[2] = (float) command[2];
+    // telemetry.floatingPoint[3] = (float) command[3];
 
     // for (size_t i = 0; i < 3; i++)
     // {
@@ -196,10 +204,9 @@ int main(void)
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
-  MPU_measure_gyro_offset(&mpu, 10000);
-  MPU_measure_acc_offset(&mpu, 10000);
+  MPU_measure_gyro_offset(&mpu, 8000);
+  MPU_measure_acc_offset(&mpu, 8000);
 
-  HAL_StatusTypeDef status = MPU_clear_int(&mpu);
 
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
@@ -219,6 +226,8 @@ int main(void)
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
 
+  HAL_StatusTypeDef status = MPU_clear_int(&mpu);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -231,7 +240,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
-} 
+}
 
 /**
   * @brief System Clock Configuration

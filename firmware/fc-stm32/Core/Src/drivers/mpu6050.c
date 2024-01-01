@@ -17,11 +17,11 @@ extern bool mpu_acc_read_available;
 extern bool mpu_gyro_read_available;
 
 MPU6050_config default_cfg = {
-    .sample_rate_divider = 7,
+    .sample_rate_divider = 0,
     .ext_sync_set = 0,
     .int_level = MPU_int_active_low,
     .latch_int = true,
-    .dlpf_cfg = BAND_260HZ,
+    .dlpf_cfg = BAND_94Hz,
     .data_rdy_en = true,
     .i2c_mst_int_en = false,
     .fifo_oflow_en = false,

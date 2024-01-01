@@ -5,6 +5,8 @@ import time
 import math
 import threading
 
+from logger import DataLogger
+
 ser = serial.Serial('/dev/ttyUSB0', 57600)
 
 class XboxController(object):
@@ -12,6 +14,8 @@ class XboxController(object):
     MAX_JOY_VAL = math.pow(2, 15)
 
     def __init__(self):
+
+        self.dataLogger = DataLogger("flight5.csv")
 
         self.LeftJoystickY = 0
         self.LeftJoystickX = 0
@@ -46,21 +50,22 @@ class XboxController(object):
         return [x, y, a]
     
     def send(self):
-        x1 = -round(self.LeftJoystickX*100) + 100
+        x1 = -round(self.LeftJoystickX*127) + 127
         y1 = -round(self.LeftJoystickY*100) + 100
-        x2 = -round(self.RightJoystickX*100) + 100
-        y2 = -round(self.RightJoystickY*100) + 100
+        x2 = -round(self.RightJoystickX*127) + 127
+        y2 = -round(self.RightJoystickY*127) + 127
         a = self.A
         b = self.B
         time.sleep(0.0001)
 
         ser.write(bytearray([y1, 0, 0, 0, a, b]))
-        
+        #print(y1, 0, x2, y2, a, b)
         while True:
             if(ser.in_waiting > 0):
                 msg = ser.read(24)
                 try:
                     [acc0, acc1, acc2, gyro0, gyro1, gyro2] = struct.unpack('6f', msg)
+                    self.dataLogger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
                     print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}")
                 except:
                     pass
@@ -116,4 +121,9 @@ if __name__ == '__main__':
     joy = XboxController()
     ser.timeout = 0.005
     while True:
-        joy.send()
+        try:
+            joy.send()
+        except KeyboardInterrupt:
+            print(" Nara")
+            #joy.dataLogger.save_data()
+            exit()

@@ -5,7 +5,7 @@ static pid_t roll_pid, pitch_pid, yaw_pid;
 static IIR_filter_t iir;
 
 void Stabilizer_init(){
-    //initialize all pids sample_times and max_values
+    // Initialize all pids sample times and max_values
     roll_pid.maxOut =   75;
     roll_pid.minOut =  -75;
     roll_pid.maxInt =    5;
@@ -44,6 +44,7 @@ void Stabilizer_init(){
     yaw_pid.ki  =  0.0f;
     yaw_pid.kd  =  0.0f;
 
+    //yaw filter
     iir.tau = 0.007f;
     iir.samplingTime = 0.001f;
     Low_Pass_IIR_Filter_Init(&iir);
@@ -55,16 +56,15 @@ void Stabilizer_init(){
 
 static float filter_input[2] = {0};
 static float filter_output[2] = {0};
-
 static float angles[2] = {0};
 void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
 
     float roll, pitch;
-    volatile float set_angles[3] = {0};   // roll, pitch, yaw
+    float set_angles[3] = {0};   // roll, pitch, yaw
     float acc_angles[2];
     float angle_change[3];
-    const float dt = 0.001f, alpha = 0.0001f;
-    volatile int8_t duty_cycles[3] = {0}; // roll, pitch, yaw
+    const float dt = 0.001f, alpha = 0.001f;
+    int8_t duty_cycles[3] = {0}; // roll, pitch, yaw
     
 
     Calculate_Angles_acc(acc_buff, acc_angles);
@@ -78,8 +78,8 @@ void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
     pitch = radToDeg(angles[0]);
     roll  = radToDeg(angles[1]);
 
-    set_angles[0] = command[3] * PITCH_ANGLE_SCALE + 2.1f;  //2
-    set_angles[1] = command[1] * ROLL_ANGLE_SCALE + 1.9f;  //1.5
+    set_angles[0] = command[3] * PITCH_ANGLE_SCALE - 5.1f;  //+2.1
+    set_angles[1] = command[1] * ROLL_ANGLE_SCALE - 2.0f;  //+1.9
 
     /* Angle PID's */
     //pitch

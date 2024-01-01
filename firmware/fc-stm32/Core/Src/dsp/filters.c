@@ -72,8 +72,8 @@ void Butterwort_Band_Pass_Filter(float output[3], float input[3]){
  *        allowed below unity gain in the pass band 6dB
   */
 IIR_second_order_filter_t chebyshev1_filter = {
-    .b = { 0.136774f, 0.0f,       -0.136774f},
-    .a = {-1.710764f, 0.726451f}
+    .b = { 0.97803f,  -1.956061f,  0.97803f},
+    .a = {-1.955578f,  0.956544f}
 };
 
 void Chebyshev1_Band_Pass_Filter(float output[3], float input[3]){
