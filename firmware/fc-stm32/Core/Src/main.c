@@ -32,6 +32,7 @@
 #include <drivers/mpu6050.h>
 #include <drivers/motors.h>
 #include <dsp/filters.h>
+#include <dsp/angle_estimation.h>
 #include <stabilizer.h>
 /* USER CODE END Includes */
 
@@ -56,6 +57,10 @@
 NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
 
+kalman_t kalman_pitch;
+kalman_t kalman_roll;
+float kalman_angle[2] = {0};
+
 /* Declare buffers */
 int8_t command[8] = {0};
 #if defined(TELEMETRY)
@@ -68,15 +73,27 @@ union Telemetry {
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
 
+// static float filter_gyro_x_in[2]  = {0};
+// static float filter_gyro_x_out[2] = {0};
+static IIR_filter_t iir, iir2;
+
+static float filter_acc_x_in[2]  = {0};
+static float filter_acc_x_out[2] = {0};
+
+static float filter_acc_y_in[2]  = {0};
+static float filter_acc_y_out[2] = {0};
+
+static float filter_acc_z_in[2]  = {0};
+static float filter_acc_z_out[2] = {0};
+
 static float filter_gyro_x_in[2]  = {0};
 static float filter_gyro_x_out[2] = {0};
-static IIR_filter_t iir;
 
-// static float filter_acc_y_in[2]  = {0};
-// static float filter_acc_y_out[2] = {0};
+static float filter_gyro_y_in[2]  = {0};
+static float filter_gyro_y_out[2] = {0};
 
-// static float filter_acc_z_in[2]  = {0};
-// static float filter_acc_z_out[2] = {0};
+static float filter_gyro_z_in[2]  = {0};
+static float filter_gyro_z_out[2] = {0};
 
 float angles[2] = {0};
 /* USER CODE END PV */
@@ -91,6 +108,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, (uint8_t*) command, 8);
     NRF24L01_Start_Listening(&nrf24l01);
   }
@@ -100,23 +118,51 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
-    Stabilize(acc_buff, gyro_buff, command);
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     #if defined(TELEMETRY)
     const float dt = 0.001f, alpha = 0.001f; //good for vibrations bad for constant calibration 0.0001
     float acc_angles[2] = {0};
     float angle_change[3];
 
+    filter_acc_x_in[0] = acc_buff[0];
+    Low_Pass_IIR_Filter(&iir, filter_acc_x_out, filter_acc_x_in);
+    acc_buff[0] = filter_acc_x_out[0];
+
+    filter_acc_y_in[0] = acc_buff[1];
+    Low_Pass_IIR_Filter(&iir, filter_acc_y_out, filter_acc_y_in);
+    acc_buff[1] = filter_acc_y_out[0];
+
+    filter_acc_z_in[0] = acc_buff[2];
+    Low_Pass_IIR_Filter(&iir, filter_acc_z_out, filter_acc_z_in);
+    acc_buff[2] = filter_acc_z_out[0];
+
+    Stabilize(acc_buff, gyro_buff, command);
+
+    // filter_gyro_x_in[0] = gyro_buff[0];
+    // Low_Pass_IIR_Filter(&iir2, filter_gyro_x_out, filter_gyro_x_in);
+    // gyro_buff[0] = filter_gyro_x_out[0];
+
+    // filter_gyro_y_in[0] = gyro_buff[1];
+    // Low_Pass_IIR_Filter(&iir2, filter_gyro_y_out, filter_gyro_y_in);
+    // gyro_buff[1] = filter_gyro_y_out[0];
+
+    // filter_gyro_z_in[0] = gyro_buff[2];
+    // Low_Pass_IIR_Filter(&iir2, filter_gyro_z_out, filter_gyro_z_in);
+    // gyro_buff[2] = filter_gyro_z_out[0];
+
     Calculate_Angles_acc(acc_buff, acc_angles);
-    Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
-    Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
+    // Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
+    // Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
 
-    telemetry.floatingPoint[0] = (acc_angles[0]/3.14f)*180;
-    telemetry.floatingPoint[1] = (acc_angles[1]/3.14f)*180;
-    telemetry.floatingPoint[3] = (angles[0]/3.14f)*180;
-    telemetry.floatingPoint[4] = (angles[1]/3.14f)*180;
+    Kalman_calculate(&kalman_pitch, &kalman_angle[0], radToDeg(acc_angles[0]), -gyro_buff[0]);
+    Kalman_calculate(&kalman_roll, &kalman_angle[1], radToDeg(acc_angles[1]), gyro_buff[1]);
 
-    // telemetry.floatingPoint[5] = gyro_buff[0];
+    telemetry.floatingPoint[0] = kalman_angle[0];
+    telemetry.floatingPoint[1] = radToDeg(acc_angles[0]);
+    // telemetry.floatingPoint[2] = radToDeg(angles[0]);
+
+    telemetry.floatingPoint[3] = kalman_angle[1];
+    telemetry.floatingPoint[4] = radToDeg(acc_angles[1]);
+    // telemetry.floatingPoint[5] = radToDeg(angles[1]);
 
     // telemetry.floatingPoint[0] = (float) command[0];
     // telemetry.floatingPoint[1] = (float) command[1];
@@ -200,6 +246,24 @@ int main(void)
 
   /* Initialize stabilizer */
   Stabilizer_init();
+
+  kalman_pitch.sampling_time = 0.001;
+  kalman_pitch.angular_velocity_variance = 16;
+  kalman_pitch.angle_variance = 9;
+  Kalman_init(&kalman_pitch);
+
+  kalman_roll.sampling_time = 0.001;
+  kalman_roll.angular_velocity_variance = 16;
+  kalman_roll.angle_variance = 9;
+  Kalman_init(&kalman_roll);
+
+  iir.samplingTime = 0.001;
+  iir.tau = 0.04;
+  Low_Pass_IIR_Filter_Init(&iir);
+
+  iir2.samplingTime = 0.001;
+  iir2.tau = 0.00106;
+  Low_Pass_IIR_Filter_Init(&iir2);
   /* Initialize mpu */
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();

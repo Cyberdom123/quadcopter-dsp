@@ -4,6 +4,7 @@ import struct
 import time
 import math
 import threading
+import numpy as np
 
 from logger import DataLogger
 
@@ -50,10 +51,10 @@ class XboxController(object):
         return [x, y, a]
     
     def send(self):
-        x1 = -round(self.LeftJoystickX*127) + 127
+        x1 = np.uint8(np.int8(-round(self.LeftJoystickX*127)))
         y1 = -round(self.LeftJoystickY*100) + 100
-        x2 = -round(self.RightJoystickX*127) + 127
-        y2 = -round(self.RightJoystickY*127) + 127
+        x2 = np.uint8(np.int8(-round(self.RightJoystickX*127)))
+        y2 = np.uint8(np.int8(-round(self.RightJoystickY*127)))
         a = self.A
         b = self.B
         time.sleep(0.0001)
