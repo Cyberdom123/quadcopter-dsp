@@ -83,3 +83,26 @@ void Get_Complementary_Roll_Pitch(float angles[2], float acc_angles[2], float an
 void Get_XY_Velocities(float acc[3], float angles[3]){
 
 }
+
+/**
+ * @brief one dimensional Kalman filter
+  */
+void Kalman_init(kalman_t *kalman){
+  kalman->kalman_extrapolation_term = kalman->sampling_time * kalman->sampling_time * kalman->angular_velocity_variance;
+  
+  /* initial guess */
+  kalman->variance_prediction = sqrt(kalman->angle_variance);
+}
+
+void Kalman_calculate(kalman_t *kalman, float *kalman_state, float measurement, float velocity){
+  /* predict current state */
+  *kalman_state = *kalman_state + kalman->sampling_time * velocity;
+  /* calculate current variance */
+  kalman->variance_prediction = kalman->variance_prediction + kalman->kalman_extrapolation_term; 
+  /* update kalman gain */
+  kalman->kalman_gain = kalman->variance_prediction/(kalman->variance_prediction + kalman->angle_variance);
+  /* predict kalman angle */
+  *kalman_state = *kalman_state + kalman->kalman_gain * (measurement - *kalman_state);
+  /* update variance */
+  kalman->variance_prediction = (1 - kalman->kalman_gain) * kalman->variance_prediction;
+}

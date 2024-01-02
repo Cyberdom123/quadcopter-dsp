@@ -78,8 +78,8 @@ void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
     pitch = radToDeg(angles[0]);
     roll  = radToDeg(angles[1]);
 
-    set_angles[0] = command[3] * PITCH_ANGLE_SCALE - 5.1f;  //+2.1
-    set_angles[1] = command[1] * ROLL_ANGLE_SCALE - 2.0f;  //+1.9
+    set_angles[0] = command[3] * PITCH_ANGLE_SCALE - 1.2f;  //+2.1
+    set_angles[1] = command[1] * ROLL_ANGLE_SCALE - 1.1f;  //+1.9
 
     /* Angle PID's */
     //pitch
