@@ -51,15 +51,15 @@ class XboxController(object):
         return [x, y, a]
     
     def send(self):
-        x1 = np.uint8(np.int8(-round(self.LeftJoystickX*127)))
-        y1 = -round(self.LeftJoystickY*100) + 100
-        x2 = np.uint8(np.int8(-round(self.RightJoystickX*127)))
-        y2 = np.uint8(np.int8(-round(self.RightJoystickY*127)))
+        x1 = np.uint8(np.int8(-round(self.LeftJoystickX*100)))
+        y1 = np.uint8(np.int8(-round(self.LeftJoystickY*100)))
+        x2 = np.uint8(np.int8(-round(self.RightJoystickX*100)))
+        y2 = np.uint8(np.int8(round(self.RightJoystickY*100)))
         a = self.A
         b = self.B
         time.sleep(0.0001)
 
-        ser.write(bytearray([y1, 0, 0, 0, a, b]))
+        ser.write(bytearray([y1, y2, 0, x2, a, b]))
         #print(y1, 0, x2, y2, a, b)
         while True:
             if(ser.in_waiting > 0):
