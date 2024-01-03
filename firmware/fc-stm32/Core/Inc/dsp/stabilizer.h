@@ -6,10 +6,9 @@
 #include <dsp/pid.h>
 #include <drivers/motors.h>
 
-#define ROLL_ANGLE_SCALE 0.2f
-#define PITCH_ANGLE_SCALE 0.2f
+
 
 void Stabilizer_init();
-void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]);
+void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t control_inputs[4]);
 
 #endif // STABILIZER
