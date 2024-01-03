@@ -1,8 +1,13 @@
 #include <dsp/stabilizer.h>
 
 static pid_t roll_pid, pitch_pid, yaw_pid;
-
 static IIR_filter_t iir;
+static enum{
+    thrust = 0,
+    pitch  = 1,
+    yaw    = 2,
+    roll   = 3
+}Control_Inputs_t;
 
 void Stabilizer_init(){
     // Initialize all pids sample times and max_values
@@ -28,15 +33,15 @@ void Stabilizer_init(){
 
     //roll pid
     roll_pid.tau  =  0.006f;  // 25Hz cutoff freq
-    roll_pid.kp   =  1.8f;
+    roll_pid.kp   =  2.1f;
     roll_pid.ki   =  0.0f;  
-    roll_pid.kd   = -0.14f;
+    roll_pid.kd   = -0.2f;
     
     //pitch pid
     pitch_pid.tau =  0.006f; // 25Hz cutoff freq
-    pitch_pid.kp  =  1.5f;
+    pitch_pid.kp  =  2.1f;
     pitch_pid.ki  =  0.0f;
-    pitch_pid.kd  = -0.16f;
+    pitch_pid.kd  = -0.2f;
 
     //yaw pid
     yaw_pid.tau =  0.008f;  // 25Hz cutoff freq
@@ -57,14 +62,13 @@ void Stabilizer_init(){
 static float filter_input[2] = {0};
 static float filter_output[2] = {0};
 static float angles[2] = {0};
-void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
-
-    float roll, pitch;
-    float set_angles[3] = {0};   // roll, pitch, yaw
+void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t control_inputs[4]){
+    float roll_val , pitch_val;
+    float set_angles[3] = {0};
     float acc_angles[2];
     float angle_change[3];
     const float dt = 0.001f, alpha = 0.001f;
-    int8_t duty_cycles[3] = {0}; // roll, pitch, yaw
+    int8_t duty_cycles[3] = {0};
     
 
     Calculate_Angles_acc(acc_buff, acc_angles);
@@ -75,34 +79,19 @@ void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t command[8]){
     Low_Pass_IIR_Filter(&iir, filter_output, filter_input);
     angle_change[2] = filter_output[0];
 
-    pitch = radToDeg(angles[0]);
-    roll  = radToDeg(angles[1]);
+    roll_val = radToDeg(angles[0]);
+    pitch_val  = radToDeg(angles[1]);
 
-    set_angles[0] = command[3] * PITCH_ANGLE_SCALE - 1.2f;  //+2.1
-    set_angles[1] = command[1] * ROLL_ANGLE_SCALE - 1.1f;  //+1.9
+    set_angles[0] = control_inputs[pitch] - 1.2f;  //+2.1
+    set_angles[1] = control_inputs[roll] - 1.1f;  //+1.9
 
     /* Angle PID's */
     //pitch
-    duty_cycles[0] = (int8_t) PID_Calculate(&pitch_pid, pitch, set_angles[0]); 
+    duty_cycles[1] = (int8_t) PID_Calculate(&roll_pid, pitch_val, set_angles[1]);
     //roll    
-    duty_cycles[1] = (int8_t) PID_Calculate(&roll_pid, roll, set_angles[1]);
+    duty_cycles[0] = (int8_t) PID_Calculate(&pitch_pid, roll_val, set_angles[0]); 
     //yaw
     duty_cycles[2] = (int8_t) PID_Calculate(&yaw_pid, angle_change[2], set_angles[2]);
 
-    int8_t command2[8];
-    for (size_t i = 0; i < 8; i++)
-    {
-        command2[i] = command[i];
-    }
-    
-    //thrust
-    command2[0] = command2[0] - 100;
-    //pitch
-    command2[3] = duty_cycles[0];
-    //roll
-    command2[1] = duty_cycles[1];
-    //yaw
-    command2[2] = duty_cycles[2];
-    
-    Motors_Run(command2);
+    Motors_SetPWR(control_inputs[thrust], duty_cycles[2], duty_cycles[1], duty_cycles[0]);    
 }
