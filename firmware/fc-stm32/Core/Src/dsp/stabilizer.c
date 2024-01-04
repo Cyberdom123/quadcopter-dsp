@@ -59,39 +59,22 @@ void Stabilizer_init(){
     PID_init(&yaw_pid);
 }
 
-static float filter_input[2] = {0};
-static float filter_output[2] = {0};
-static float angles[2] = {0};
-void Stabilize(float acc_buff[3], float gyro_buff[3], int8_t control_inputs[4]){
-    float roll_val , pitch_val;
-    float set_angles[3] = {0};
-    float acc_angles[2];
-    float angle_change[3];
-    const float dt = 0.001f, alpha = 0.001f;
-    int8_t duty_cycles[3] = {0};
-    
+/* TO DO: check when to cast to int8, in motors or stabizler */
+void Stabilize(float angles[2], float angular_velocities[3], int8_t control_inputs[4]){
+    float set_val[3];
+    int8_t duty_cycles[3];
 
-    Calculate_Angles_acc(acc_buff, acc_angles);
-    Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
-    Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
-
-    filter_input[0] = angle_change[2];
-    Low_Pass_IIR_Filter(&iir, filter_output, filter_input);
-    angle_change[2] = filter_output[0];
-
-    roll_val = radToDeg(angles[0]);
-    pitch_val  = radToDeg(angles[1]);
-
-    set_angles[0] = control_inputs[pitch] - 1.2f;  //+2.1
-    set_angles[1] = control_inputs[roll] - 1.1f;  //+1.9
+    set_val[0] = control_inputs[pitch];  //+2.1
+    set_val[1] = control_inputs[roll] - 1.0f;  //+1.9
+    set_val[2] = control_inputs[yaw];
 
     /* Angle PID's */
-    //pitch
-    duty_cycles[1] = (int8_t) PID_Calculate(&roll_pid, pitch_val, set_angles[1]);
     //roll    
-    duty_cycles[0] = (int8_t) PID_Calculate(&pitch_pid, roll_val, set_angles[0]); 
+    duty_cycles[0] = (int8_t) PID_Calculate(&pitch_pid, radToDeg(angles[0]), set_val[0]); 
+    //pitch
+    duty_cycles[1] = (int8_t) PID_Calculate(&roll_pid, radToDeg(angles[1]), set_val[1]);
     //yaw
-    duty_cycles[2] = (int8_t) PID_Calculate(&yaw_pid, angle_change[2], set_angles[2]);
+    duty_cycles[2] = (int8_t) PID_Calculate(&yaw_pid, angular_velocities[2], set_val[2]);
 
     Motors_SetPWR(control_inputs[thrust], duty_cycles[2], duty_cycles[1], duty_cycles[0]);    
 }

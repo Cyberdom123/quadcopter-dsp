@@ -1,11 +1,15 @@
 #if !defined(ANGLE_ESTIMATION)
 #define ANGLE_ESTIMATION
 #include "math.h"
+#include "stdbool.h"
+#include <filters.h>
 
-#define degToRad(angleInDegrees) ((angleInDegrees) * 3.14159f / 180.0f)
-#define radToDeg(angleInRadians) ((angleInRadians) * 180.0f / 3.14159f)
+#define degToRad(angleInDegrees) ((angleInDegrees) * 3.141592f / 180.0f)
+#define radToDeg(angleInRadians) ((angleInRadians) * 180.0f / 3.141592f)
 
 #define AX_OFFSET   0.05f
+
+#define KALMAN
 
 typedef struct kalman_t
 {
@@ -26,5 +30,8 @@ void Get_Complementary_Roll_Pitch(float angles[2], float acc_angles[2], float an
 
 void Kalman_init(kalman_t *kalman);
 void Kalman_calculate(kalman_t *kalman, float *kalman_state, float measurement, float velocity);
+
+void Estimate_Angles_Init(float dt, float alpha, float tau);
+void Estimate_Angles(float angles[2], float angular_velocities[3], float acc_buf[3], float gyro_buf[3]);
 
 #endif // ANGLE_ESTIMATION

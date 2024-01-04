@@ -67,7 +67,7 @@ class XboxController(object):
                 try:
                     [acc0, acc1, acc2, gyro0, gyro1, gyro2] = struct.unpack('6f', msg)
                     self.dataLogger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
-                    print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}")
+                    print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}", end="\r")
                 except:
                     pass
                 break

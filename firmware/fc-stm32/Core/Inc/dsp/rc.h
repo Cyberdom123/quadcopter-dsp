@@ -4,7 +4,7 @@
 
 #define ACTIVATION_THRESHOLD  3
 #define ACTIVATION_THRESHOLD_THRUST 10
-// #define THRUST_SCALE 0.007f
+
 #define ROLL_ANGLE_SCALE      0.15f
 #define PITCH_ANGLE_SCALE     0.15f
 #define YAW_ANGLE_SCALE       0.05f

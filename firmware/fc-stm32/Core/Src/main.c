@@ -55,33 +55,19 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-NRF24L01_STRUCT nrf24l01;
-MPU6050_STRUCT mpu;
-RC_t rc;
-
-kalman_t kalman_pitch;
-kalman_t kalman_roll;
-float kalman_angle[2] = {0};
 
 /* Declare buffers */
+NRF24L01_STRUCT nrf24l01;
+MPU6050_STRUCT mpu;
+
 uint8_t command[8] = {0};
+RC_t rc;
 #if defined(TELEMETRY)
 Telemetry_t telemetry;
 #endif // TELEMETRY
 
 FLOAT_TYPE acc_buff[3];
 FLOAT_TYPE gyro_buff[3];
-
-static IIR_filter_t iir;
-
-static float filter_acc_x_in[2]  = {0};
-static float filter_acc_x_out[2] = {0};
-
-static float filter_acc_y_in[2]  = {0};
-static float filter_acc_y_out[2] = {0};
-
-static float filter_acc_z_in[2]  = {0};
-static float filter_acc_z_out[2] = {0};
 
 float angles[2] = {0};
 /* USER CODE END PV */
@@ -98,6 +84,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
+    RC_Receive_Message(command, &rc);
     NRF24L01_Start_Listening(&nrf24l01);
   }
 
@@ -107,47 +94,20 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
   if(mpu.gyro_busy && mpu.acc_busy){
     MPU_read_acc_gyro_DMA_complete(&mpu);
     #if defined(TELEMETRY)
-    float acc_angles[2] = {0};
+    float angle_change[3];
 
-    // const float dt = 0.001f, alpha = 0.001f; //good for vibrations bad for constant calibration 0.0001
-    // float angle_change[3];
-
-    filter_acc_x_in[0] = acc_buff[0];
-    Low_Pass_IIR_Filter(&iir, filter_acc_x_out, filter_acc_x_in);
-    acc_buff[0] = filter_acc_x_out[0];
-
-    filter_acc_y_in[0] = acc_buff[1];
-    Low_Pass_IIR_Filter(&iir, filter_acc_y_out, filter_acc_y_in);
-    acc_buff[1] = filter_acc_y_out[0];
-
-    filter_acc_z_in[0] = acc_buff[2];
-    Low_Pass_IIR_Filter(&iir, filter_acc_z_out, filter_acc_z_in);
-    acc_buff[2] = filter_acc_z_out[0];
-
-    RC_Receive_Message(command, &rc);
-    Stabilize(acc_buff, gyro_buff, rc.controls_inputs);
+    Estimate_Angles(angles, angle_change, acc_buff, gyro_buff);
+    Stabilize(angles, angle_change, rc.controls_inputs);
     Motors_Switch(rc.power_on);
 
-    // Calculate_Angles_acc(acc_buff, acc_angles);
-    // Calculate_Angular_Velocities(angle_change, angles, gyro_buff);
-    // Get_Complementary_Roll_Pitch(angles, acc_angles, angle_change, dt, alpha);
+    telemetry.floatingPoint[0] = radToDeg(angles[0]);;
+    telemetry.floatingPoint[1] = radToDeg(angles[1]);
 
-    // Kalman_calculate(&kalman_pitch, &kalman_angle[0], radToDeg(acc_angles[0]), -gyro_buff[0]);
-    // Kalman_calculate(&kalman_roll, &kalman_angle[1], radToDeg(acc_angles[1]), gyro_buff[1]);
-
-    // telemetry.floatingPoint[0] = kalman_angle[0];
-    // telemetry.floatingPoint[1] = radToDeg(acc_angles[0]);
-    // telemetry.floatingPoint[2] = radToDeg(angles[0]);
-
-    // telemetry.floatingPoint[3] = kalman_angle[1];
-    // telemetry.floatingPoint[4] = radToDeg(acc_angles[1]);
-    // telemetry.floatingPoint[5] = radToDeg(angles[1]);
-
-    telemetry.floatingPoint[0] = (float) rc.controls_inputs[thrust];
-    telemetry.floatingPoint[1] = (float) rc.controls_inputs[pitch];
-    telemetry.floatingPoint[2] = (float) rc.controls_inputs[yaw];
-    telemetry.floatingPoint[3] = (float) rc.controls_inputs[roll];
-    telemetry.floatingPoint[4] = (float) rc.power_on;
+    // telemetry.floatingPoint[0] = (float) rc.controls_inputs[thrust];
+    // telemetry.floatingPoint[1] = (float) rc.controls_inputs[pitch];
+    // telemetry.floatingPoint[2] = (float) rc.controls_inputs[yaw];
+    // telemetry.floatingPoint[3] = (float) rc.controls_inputs[roll];
+    // telemetry.floatingPoint[4] = (float) rc.power_on;
 
     // for (size_t i = 0; i < 3; i++)
     // {
@@ -226,20 +186,7 @@ int main(void)
 
   /* Initialize stabilizer */
   Stabilizer_init();
-
-  kalman_pitch.sampling_time = 0.001;
-  kalman_pitch.angular_velocity_variance = 16;
-  kalman_pitch.angle_variance = 9;
-  Kalman_init(&kalman_pitch);
-
-  kalman_roll.sampling_time = 0.001;
-  kalman_roll.angular_velocity_variance = 16;
-  kalman_roll.angle_variance = 9;
-  Kalman_init(&kalman_roll);
-
-  iir.samplingTime = 0.001;
-  iir.tau = 0.04;
-  Low_Pass_IIR_Filter_Init(&iir);
+  Estimate_Angles_Init(0.001, 0.001, 0.04);
 
   /* Initialize mpu */
   mpu.hi2c = &hi2c1;
@@ -266,8 +213,7 @@ int main(void)
   
   NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
-
-  HAL_StatusTypeDef status = MPU_clear_int(&mpu);
+  MPU_clear_int(&mpu);
 
   /* USER CODE END 2 */
 
