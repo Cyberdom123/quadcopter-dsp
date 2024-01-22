@@ -6,6 +6,12 @@ unit, which combines MEMS accelerometer and gyroscope into a single IC. The comb
 sensor readings from the IMU combined with an adequate mathematical model and a regulating
 system allows to make a quadcopter with a stable control system.
 
+For the quadcopter to be stable, it needs to continuously measure the sensor data and estimate
+its attitute angles and correct to the set position and drive the motors in a way that reduces
+deviations from the user-set attitude.
+
+![](https://github.com/Cyberdom123/quadcopter-dsp/blob/develop/photos/video.gif)
+
 More detailed documentation has been placed in the project repository.
 
 ## Part list
