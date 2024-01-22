@@ -114,6 +114,13 @@ static kalman_t kalman_roll;
 static IIR_filter_t iir;
 static float s_dt, s_alpha;
 
+/**
+ * @brief Initialize Angle estimator
+ * 
+ * @param dt 
+ * @param alpha 
+ * @param tau 
+ */
 void Estimate_Angles_Init(float dt, float alpha, float tau){
   s_dt = dt;
   s_alpha = alpha;
