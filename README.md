@@ -41,12 +41,12 @@ estimation of the state of the system based on previous state and correcting it 
 measurement. Kalman filter uses the mathematical model and data about Gaussian noise in
 order to minimalise the estimates and measurement unceirtanties.
 The angle estimates and yaw angular velocity is fed into the regulation system consisitng
-of three PID regulators for every quantity. The PID regulator works by minimising the differ-
-ence between the actual state of the system and a desirable reference state. It contains three
+of three PID regulators for every quantity. The PID regulator works by minimising the difference
+between the actual state of the system and a desirable reference state. It contains three
 components: proportional (P), which reacts proportionally to current deviateion, integral (I),
 which accumulates the deviation as time passes and differential (D), which takes into account
 the rate of change of the difference. The output of the PIDs is a duty cycle fed into a signal
-mixer, which sets the duty cicle for each of the motors.
+mixer, which sets the duty cycle for each of the motors.
 
 More detailed documentation has been placed in the project repository.
 
