@@ -57,20 +57,18 @@ class XboxController(object):
         y2 = np.uint8(np.int8(round(self.RightJoystickY*100)))
         a = self.A
         b = self.B
-        time.sleep(0.0001)
 
+        #time.sleep(0.0001)
         ser.write(bytearray([y1, y2, 0, x2, a, b]))
         #print(y1, 0, x2, y2, a, b)
-        while True:
-            if(ser.in_waiting > 0):
-                msg = ser.read(24)
-                try:
-                    [acc0, acc1, acc2, gyro0, gyro1, gyro2] = struct.unpack('6f', msg)
-                    self.dataLogger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
-                    print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}", end="\r")
-                except:
-                    pass
-                break
+        msg = ser.read(24)
+
+        try:
+            [acc0, acc1, acc2, gyro0, gyro1, gyro2] = struct.unpack('6f', msg)
+            self.dataLogger.log_data(acc0, acc1, acc2, gyro0, gyro1, gyro2)
+            print(f"{acc0:7.2f} {acc1:7.2f} {acc2:7.2f} {gyro0:7.2f} {gyro1:7.2f} {gyro2:7.2f}", end="\r")
+        except:
+            pass
 
     def _monitor_controller(self):
         while True:
@@ -120,7 +118,7 @@ class XboxController(object):
 
 if __name__ == '__main__':
     joy = XboxController()
-    ser.timeout = 0.005
+    ser.timeout = 1
     while True:
         try:
             joy.send()

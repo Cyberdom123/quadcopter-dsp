@@ -100,14 +100,13 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
     Stabilize(angles, angle_change, rc.controls_inputs);
     Motors_Switch(rc.power_on);
 
-    telemetry.floatingPoint[0] = radToDeg(angles[0]);;
+    telemetry.floatingPoint[0] = radToDeg(angles[0]);
     telemetry.floatingPoint[1] = radToDeg(angles[1]);
 
-    // telemetry.floatingPoint[0] = (float) rc.controls_inputs[thrust];
-    // telemetry.floatingPoint[1] = (float) rc.controls_inputs[pitch];
-    // telemetry.floatingPoint[2] = (float) rc.controls_inputs[yaw];
-    // telemetry.floatingPoint[3] = (float) rc.controls_inputs[roll];
-    // telemetry.floatingPoint[4] = (float) rc.power_on;
+    telemetry.floatingPoint[2] = (float) rc.controls_inputs[thrust];
+    telemetry.floatingPoint[3] = (float) rc.controls_inputs[pitch];
+    telemetry.floatingPoint[4] = (float) rc.controls_inputs[yaw];
+    telemetry.floatingPoint[5] = (float) rc.controls_inputs[roll];
 
     // for (size_t i = 0; i < 3; i++)
     // {

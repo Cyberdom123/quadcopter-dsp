@@ -10,7 +10,7 @@ NRF24L01_CONFIG nrf24l01_default_config = {
     .rx_tx_addr_width = FIVE_BYTES_ADDR,
     .lna_hcurr = LNA_HCURR_SET,
     .data_rate = ONE_MBPS_DATA_RATE,
-    .power_sel = RF_POWER_1,
+    .power_sel = RF_POWER_2,
     .re_transmission_delay = 0x4,
     .re_transmission_num = 0xF,
     .chanel = 88
@@ -166,8 +166,8 @@ HAL_StatusTypeDef NRF24L01_Read(NRF24L01_STRUCT *nrf24l01, uint8_t addr, uint64_
     while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);
     if(status != HAL_OK){ return status; }
 
-    uint8_t tx_dummy[len];
-    status = HAL_SPI_TransmitReceive(nrf24l01->spiHandle, tx_dummy, data_ptr, len, HAL_MAX_DELAY);
+    uint8_t tx_dummy;
+    status = HAL_SPI_TransmitReceive(nrf24l01->spiHandle, &tx_dummy, data_ptr, len, HAL_MAX_DELAY);
     while(HAL_SPI_GetState(nrf24l01->spiHandle) != HAL_SPI_STATE_READY);
     if(status != HAL_OK){ return status; }
 
