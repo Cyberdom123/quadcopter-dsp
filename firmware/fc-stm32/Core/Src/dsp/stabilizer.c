@@ -1,7 +1,7 @@
 #include <dsp/stabilizer.h>
 
 static pid_t roll_pid, pitch_pid, yaw_pid;
-static IIR_filter_t iir;
+// static IIR_filter_t iir;
 static enum{
     thrust = 0,
     pitch  = 1,
@@ -44,15 +44,15 @@ void Stabilizer_init(){
     pitch_pid.kd  = -0.2f;
 
     //yaw pid
-    yaw_pid.tau =  0.008f;  // 25Hz cutoff freq
+    yaw_pid.tau =  0.008f;  // 20Hz cutoff freq
     yaw_pid.kp  = -2.1f;
     yaw_pid.ki  =  0.0f;
     yaw_pid.kd  =  0.0f;
 
-    //yaw filter
-    iir.tau = 0.007f;
-    iir.samplingTime = 0.001f;
-    Low_Pass_IIR_Filter_Init(&iir);
+    // //yaw filter
+    // iir.tau = 0.007f;
+    // iir.samplingTime = 0.001f;
+    // Low_Pass_IIR_Filter_Init(&iir);
 
     PID_init(&roll_pid);
     PID_init(&pitch_pid);

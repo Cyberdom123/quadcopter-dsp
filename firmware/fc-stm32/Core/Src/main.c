@@ -27,11 +27,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include "usbd_cdc_if.h"
-#include "string.h"
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
 #include <drivers/motors.h>
-#include <dsp/filters.h>
 #include <dsp/angle_estimation.h>
 #include <stabilizer.h>
 #include <rc.h>
@@ -60,7 +58,7 @@
 NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
 
-uint8_t command[8] = {0};
+uint8_t message[8] = {0};
 RC_t rc;
 #if defined(TELEMETRY)
 Telemetry_t telemetry;
@@ -82,9 +80,10 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
   if(nrf24l01.payloadFlag){
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
-    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, command, 8);
-    RC_Receive_Message(command, &rc);
+    RC_Connection_Tick();
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, message, 8);
+    RC_Receive_Message(message, &rc);
     NRF24L01_Start_Listening(&nrf24l01);
   }
 
@@ -116,6 +115,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
     // {
     //   telemetry.floatingPoint[3+i] = gyro_buff[i];
     // }
+    
     #endif // TELEMETRY
     
   }
@@ -185,14 +185,16 @@ int main(void)
 
   /* Initialize stabilizer */
   Stabilizer_init();
-  Estimate_Angles_Init(0.001, 0.001, 0.04);
+  const float dt = 0.001f, comp_alpha = 0.001f, iir_tau = 0.04f;
+  Estimate_Angles_Init(dt, comp_alpha, iir_tau);
 
   /* Initialize mpu */
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
-  MPU_measure_gyro_offset(&mpu, 8000);
-  MPU_measure_acc_offset(&mpu, 8000);
+  const uint16_t samples = 8000;
+  MPU_measure_gyro_offset(&mpu, samples);
+  MPU_measure_acc_offset(&mpu, samples);
 
 
   /* Initialize nrf24l01 */
@@ -205,13 +207,14 @@ int main(void)
 
   #if defined(TELEMETRY)
   NRF24L01_Enable_ACKN_Payload(&nrf24l01);  
-  uint64_t rx_addr_pipe = 0xc2c2c2c2c2LL;
+  const uint64_t rx_addr_pipe = 0xc2c2c2c2c2LL;
   NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, rx_addr_pipe, 8);
   #endif // TELEMETRY
   
-  
-  NRF24L01_Get_Info(&nrf24l01);
+  /* Start listening for incoming messages and enable interrupts */
+  //NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
+  /* Enable mpu interrupts */
   MPU_clear_int(&mpu);
 
   /* USER CODE END 2 */
@@ -220,7 +223,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+    if(RC_Check_Connection()){
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+      Lower_Altitude(&rc); 
+    }
   } 
     /* USER CODE END WHILE */
 

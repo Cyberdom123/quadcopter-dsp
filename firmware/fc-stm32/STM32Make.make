@@ -37,6 +37,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/dma.c \
+Core/Src/drivers/flash_memory.c \
 Core/Src/drivers/motors.c \
 Core/Src/drivers/mpu6050.c \
 Core/Src/drivers/nrf24l01.c \
@@ -49,6 +50,7 @@ Core/Src/gpio.c \
 Core/Src/i2c.c \
 Core/Src/logger.c \
 Core/Src/main.c \
+Core/Src/rc.c \
 Core/Src/spi.c \
 Core/Src/sprintf_opt.c \
 Core/Src/stm32f1xx_hal_msp.c \
@@ -203,7 +205,6 @@ vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
 
-# list of ASM program objects
 # list of ASM program objects
 UPPER_CASE_ASM_SOURCES = $(filter %.S,$(ASM_SOURCES))
 LOWER_CASE_ASM_SOURCES = $(filter %.s,$(ASM_SOURCES))
