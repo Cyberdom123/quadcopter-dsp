@@ -1,3 +1,13 @@
+/**
+ * @file rc.c
+ * @author Dominik Michalczyk
+ * @brief Radio control liblary for decoding
+ *        messages
+ * @version 0.1
+ * @date 2024-01-26
+ * 
+ * 
+ */
 #include <rc.h>
 
 /**

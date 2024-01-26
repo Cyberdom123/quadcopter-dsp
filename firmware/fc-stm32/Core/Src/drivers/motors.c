@@ -1,3 +1,10 @@
+/**
+ * @file motors.c
+ * @author Dominik Michalczyk
+ * @brief 
+ * @version 0.1
+ * @date 2024-01-26
+ */
 #include <drivers/motors.h>
 
 /**

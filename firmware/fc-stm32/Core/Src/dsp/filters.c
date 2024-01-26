@@ -1,3 +1,10 @@
+/**
+ * @file filters.c
+ * @author Dominik Michalczyk
+ * @brief Digital filters liblary
+ * @version 0.1
+ * @date 2024-01-26
+ */
 #include <dsp/filters.h>
 
 void EMA_filter(EMA_filter_t* ema, float* output, float input) {

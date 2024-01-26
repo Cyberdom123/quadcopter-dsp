@@ -1,3 +1,10 @@
+/**
+ * @file stabilizer.c
+ * @author Dominik Michalczyk
+ * @brief Stabilizer liblary for stabilizing quadcopter
+ * @version 0.1
+ * @date 2024-01-26
+ */
 #include <dsp/stabilizer.h>
 
 static pid_t roll_pid, pitch_pid, yaw_pid;

@@ -1,3 +1,10 @@
+/**
+ * @file mpu6050.c
+ * @author Kacper Filipek
+ * @brief 
+ * @version 0.1
+ * @date 2024-01-26
+ */
 #include <drivers/mpu6050.h>
 
 #define HAL_error_check(status) if(status != HAL_OK) { return status; }

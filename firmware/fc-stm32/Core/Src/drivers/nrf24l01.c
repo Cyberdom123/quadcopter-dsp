@@ -1,3 +1,11 @@
+/**
+ * @file nrf24l01.c
+ * @author Dominik Michalczyk
+ * @brief nRF24l01+ liblary 
+ * @version 0.1
+ * @date 2024-01-26
+ */
+
 #include <drivers/nrf24l01.h>
 
 NRF24L01_CONFIG nrf24l01_default_config = {

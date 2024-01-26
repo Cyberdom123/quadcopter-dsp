@@ -1,9 +1,9 @@
-#include <w25q64.h>
-
 /**
  * @author Dominik Michalczyk
  * @date  25-12-2023
  */
+#include <w25q64.h>
+
 
 HAL_StatusTypeDef W25Q64_Read_Bytes(W25Q64_STRUCT *w25q, uint8_t address, uint8_t *data_buf, uint16_t size){
     HAL_GPIO_WritePin(w25q->cs_gpio, w25q->cs_pin, GPIO_PIN_RESET);

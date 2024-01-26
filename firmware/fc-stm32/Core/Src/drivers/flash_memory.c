@@ -1,3 +1,10 @@
+/**
+ * @file flash_memory.c
+ * @author Dominik Michalczyk
+ * @brief Flash memory liblary for saving user data to flash
+ * @version 0.1
+ * @date 2024-01-26
+ */
 #include <drivers/flash_memory.h>
 #include <stm32f1xx_it.h>
 
