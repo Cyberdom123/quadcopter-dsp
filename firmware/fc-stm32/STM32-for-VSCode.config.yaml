@@ -73,6 +73,7 @@ includeDirectories:
   - Core/Inc/**
   - Core/Lib/**
   - Src/**
+  - Src/hal/**
   - Core/Src/**
   - Core/Lib/**
 
@@ -86,6 +87,7 @@ sourceFiles:
   - Src/**
   - Src/dsp/**
   - Src/drivers/**
+  - Src/hal/**
   - Core/Src/**
   - Core/Lib/**
 
