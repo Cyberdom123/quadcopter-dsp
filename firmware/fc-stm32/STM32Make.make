@@ -36,6 +36,7 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Src/dma.c \
 Core/Src/drivers/flash_memory.c \
 Core/Src/drivers/motors.c \
 Core/Src/drivers/mpu6050.c \
@@ -45,18 +46,16 @@ Core/Src/dsp/angle_estimation.c \
 Core/Src/dsp/filters.c \
 Core/Src/dsp/pid.c \
 Core/Src/dsp/stabilizer.c \
-Core/Src/hal/dma.c \
-Core/Src/hal/gpio.c \
-Core/Src/hal/i2c.c \
-Core/Src/hal/spi.c \
-Core/Src/hal/stm32f1xx_hal_msp.c \
-Core/Src/hal/stm32f1xx_it.c \
-Core/Src/hal/system_stm32f1xx.c \
-Core/Src/hal/tim.c \
+Core/Src/gpio.c \
+Core/Src/i2c.c \
 Core/Src/logger.c \
 Core/Src/main.c \
 Core/Src/rc.c \
-Core/Src/sprintf_opt.c \
+Core/Src/spi.c \
+Core/Src/stm32f1xx_hal_msp.c \
+Core/Src/stm32f1xx_it.c \
+Core/Src/system_stm32f1xx.c \
+Core/Src/tim.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c \
@@ -146,7 +145,6 @@ C_INCLUDES =  \
 -ICore/Inc \
 -ICore/Inc/drivers \
 -ICore/Inc/dsp \
--ICore/Inc/hal \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \

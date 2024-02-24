@@ -8,9 +8,12 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "/home/dom/Documents/Coding/stm32/quadcopter-dsp/firmware/fc-stm32/CMakeLists.txt"
+  "CMakeFiles/3.27.7/CMakeASMCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeCCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeSystem.cmake"
+  "/home/dom/Documents/Coding/stm32/quadcopter-dsp/firmware/fc-stm32/gcc-arm-none-eabi.cmake"
+  "/usr/share/cmake/Modules/CMakeASMInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"
@@ -20,15 +23,11 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake"
   "/usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+  "/usr/share/cmake/Modules/Compiler/GNU-ASM.cmake"
   "/usr/share/cmake/Modules/Compiler/GNU-C.cmake"
   "/usr/share/cmake/Modules/Compiler/GNU-CXX.cmake"
   "/usr/share/cmake/Modules/Compiler/GNU.cmake"
-  "/usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake"
-  "/usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake"
-  "/usr/share/cmake/Modules/Platform/Linux-GNU.cmake"
-  "/usr/share/cmake/Modules/Platform/Linux-Initialize.cmake"
-  "/usr/share/cmake/Modules/Platform/Linux.cmake"
-  "/usr/share/cmake/Modules/Platform/UnixPaths.cmake"
+  "/usr/share/cmake/Modules/Platform/Generic.cmake"
   )
 
 # The corresponding makefile is:
@@ -44,4 +43,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/quadcopter_dsp.dir/DependInfo.cmake"
   )

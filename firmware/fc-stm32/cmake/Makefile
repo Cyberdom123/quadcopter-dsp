@@ -116,6 +116,867 @@ depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named quadcopter_dsp
+
+# Build rule for target.
+quadcopter_dsp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 quadcopter_dsp
+.PHONY : quadcopter_dsp
+
+# fast build rule for target.
+quadcopter_dsp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/build
+.PHONY : quadcopter_dsp/fast
+
+Core/Src/dma.obj: Core/Src/dma.c.obj
+.PHONY : Core/Src/dma.obj
+
+# target to build an object file
+Core/Src/dma.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dma.c.obj
+.PHONY : Core/Src/dma.c.obj
+
+Core/Src/dma.i: Core/Src/dma.c.i
+.PHONY : Core/Src/dma.i
+
+# target to preprocess a source file
+Core/Src/dma.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dma.c.i
+.PHONY : Core/Src/dma.c.i
+
+Core/Src/dma.s: Core/Src/dma.c.s
+.PHONY : Core/Src/dma.s
+
+# target to generate assembly for a file
+Core/Src/dma.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dma.c.s
+.PHONY : Core/Src/dma.c.s
+
+Core/Src/drivers/flash_memory.obj: Core/Src/drivers/flash_memory.c.obj
+.PHONY : Core/Src/drivers/flash_memory.obj
+
+# target to build an object file
+Core/Src/drivers/flash_memory.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/flash_memory.c.obj
+.PHONY : Core/Src/drivers/flash_memory.c.obj
+
+Core/Src/drivers/flash_memory.i: Core/Src/drivers/flash_memory.c.i
+.PHONY : Core/Src/drivers/flash_memory.i
+
+# target to preprocess a source file
+Core/Src/drivers/flash_memory.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/flash_memory.c.i
+.PHONY : Core/Src/drivers/flash_memory.c.i
+
+Core/Src/drivers/flash_memory.s: Core/Src/drivers/flash_memory.c.s
+.PHONY : Core/Src/drivers/flash_memory.s
+
+# target to generate assembly for a file
+Core/Src/drivers/flash_memory.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/flash_memory.c.s
+.PHONY : Core/Src/drivers/flash_memory.c.s
+
+Core/Src/drivers/motors.obj: Core/Src/drivers/motors.c.obj
+.PHONY : Core/Src/drivers/motors.obj
+
+# target to build an object file
+Core/Src/drivers/motors.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/motors.c.obj
+.PHONY : Core/Src/drivers/motors.c.obj
+
+Core/Src/drivers/motors.i: Core/Src/drivers/motors.c.i
+.PHONY : Core/Src/drivers/motors.i
+
+# target to preprocess a source file
+Core/Src/drivers/motors.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/motors.c.i
+.PHONY : Core/Src/drivers/motors.c.i
+
+Core/Src/drivers/motors.s: Core/Src/drivers/motors.c.s
+.PHONY : Core/Src/drivers/motors.s
+
+# target to generate assembly for a file
+Core/Src/drivers/motors.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/motors.c.s
+.PHONY : Core/Src/drivers/motors.c.s
+
+Core/Src/drivers/mpu6050.obj: Core/Src/drivers/mpu6050.c.obj
+.PHONY : Core/Src/drivers/mpu6050.obj
+
+# target to build an object file
+Core/Src/drivers/mpu6050.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/mpu6050.c.obj
+.PHONY : Core/Src/drivers/mpu6050.c.obj
+
+Core/Src/drivers/mpu6050.i: Core/Src/drivers/mpu6050.c.i
+.PHONY : Core/Src/drivers/mpu6050.i
+
+# target to preprocess a source file
+Core/Src/drivers/mpu6050.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/mpu6050.c.i
+.PHONY : Core/Src/drivers/mpu6050.c.i
+
+Core/Src/drivers/mpu6050.s: Core/Src/drivers/mpu6050.c.s
+.PHONY : Core/Src/drivers/mpu6050.s
+
+# target to generate assembly for a file
+Core/Src/drivers/mpu6050.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/mpu6050.c.s
+.PHONY : Core/Src/drivers/mpu6050.c.s
+
+Core/Src/drivers/nrf24l01.obj: Core/Src/drivers/nrf24l01.c.obj
+.PHONY : Core/Src/drivers/nrf24l01.obj
+
+# target to build an object file
+Core/Src/drivers/nrf24l01.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/nrf24l01.c.obj
+.PHONY : Core/Src/drivers/nrf24l01.c.obj
+
+Core/Src/drivers/nrf24l01.i: Core/Src/drivers/nrf24l01.c.i
+.PHONY : Core/Src/drivers/nrf24l01.i
+
+# target to preprocess a source file
+Core/Src/drivers/nrf24l01.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/nrf24l01.c.i
+.PHONY : Core/Src/drivers/nrf24l01.c.i
+
+Core/Src/drivers/nrf24l01.s: Core/Src/drivers/nrf24l01.c.s
+.PHONY : Core/Src/drivers/nrf24l01.s
+
+# target to generate assembly for a file
+Core/Src/drivers/nrf24l01.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/nrf24l01.c.s
+.PHONY : Core/Src/drivers/nrf24l01.c.s
+
+Core/Src/drivers/w25q64.obj: Core/Src/drivers/w25q64.c.obj
+.PHONY : Core/Src/drivers/w25q64.obj
+
+# target to build an object file
+Core/Src/drivers/w25q64.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/w25q64.c.obj
+.PHONY : Core/Src/drivers/w25q64.c.obj
+
+Core/Src/drivers/w25q64.i: Core/Src/drivers/w25q64.c.i
+.PHONY : Core/Src/drivers/w25q64.i
+
+# target to preprocess a source file
+Core/Src/drivers/w25q64.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/w25q64.c.i
+.PHONY : Core/Src/drivers/w25q64.c.i
+
+Core/Src/drivers/w25q64.s: Core/Src/drivers/w25q64.c.s
+.PHONY : Core/Src/drivers/w25q64.s
+
+# target to generate assembly for a file
+Core/Src/drivers/w25q64.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/drivers/w25q64.c.s
+.PHONY : Core/Src/drivers/w25q64.c.s
+
+Core/Src/dsp/angle_estimation.obj: Core/Src/dsp/angle_estimation.c.obj
+.PHONY : Core/Src/dsp/angle_estimation.obj
+
+# target to build an object file
+Core/Src/dsp/angle_estimation.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/angle_estimation.c.obj
+.PHONY : Core/Src/dsp/angle_estimation.c.obj
+
+Core/Src/dsp/angle_estimation.i: Core/Src/dsp/angle_estimation.c.i
+.PHONY : Core/Src/dsp/angle_estimation.i
+
+# target to preprocess a source file
+Core/Src/dsp/angle_estimation.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/angle_estimation.c.i
+.PHONY : Core/Src/dsp/angle_estimation.c.i
+
+Core/Src/dsp/angle_estimation.s: Core/Src/dsp/angle_estimation.c.s
+.PHONY : Core/Src/dsp/angle_estimation.s
+
+# target to generate assembly for a file
+Core/Src/dsp/angle_estimation.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/angle_estimation.c.s
+.PHONY : Core/Src/dsp/angle_estimation.c.s
+
+Core/Src/dsp/filters.obj: Core/Src/dsp/filters.c.obj
+.PHONY : Core/Src/dsp/filters.obj
+
+# target to build an object file
+Core/Src/dsp/filters.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/filters.c.obj
+.PHONY : Core/Src/dsp/filters.c.obj
+
+Core/Src/dsp/filters.i: Core/Src/dsp/filters.c.i
+.PHONY : Core/Src/dsp/filters.i
+
+# target to preprocess a source file
+Core/Src/dsp/filters.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/filters.c.i
+.PHONY : Core/Src/dsp/filters.c.i
+
+Core/Src/dsp/filters.s: Core/Src/dsp/filters.c.s
+.PHONY : Core/Src/dsp/filters.s
+
+# target to generate assembly for a file
+Core/Src/dsp/filters.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/filters.c.s
+.PHONY : Core/Src/dsp/filters.c.s
+
+Core/Src/dsp/pid.obj: Core/Src/dsp/pid.c.obj
+.PHONY : Core/Src/dsp/pid.obj
+
+# target to build an object file
+Core/Src/dsp/pid.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/pid.c.obj
+.PHONY : Core/Src/dsp/pid.c.obj
+
+Core/Src/dsp/pid.i: Core/Src/dsp/pid.c.i
+.PHONY : Core/Src/dsp/pid.i
+
+# target to preprocess a source file
+Core/Src/dsp/pid.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/pid.c.i
+.PHONY : Core/Src/dsp/pid.c.i
+
+Core/Src/dsp/pid.s: Core/Src/dsp/pid.c.s
+.PHONY : Core/Src/dsp/pid.s
+
+# target to generate assembly for a file
+Core/Src/dsp/pid.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/pid.c.s
+.PHONY : Core/Src/dsp/pid.c.s
+
+Core/Src/dsp/stabilizer.obj: Core/Src/dsp/stabilizer.c.obj
+.PHONY : Core/Src/dsp/stabilizer.obj
+
+# target to build an object file
+Core/Src/dsp/stabilizer.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/stabilizer.c.obj
+.PHONY : Core/Src/dsp/stabilizer.c.obj
+
+Core/Src/dsp/stabilizer.i: Core/Src/dsp/stabilizer.c.i
+.PHONY : Core/Src/dsp/stabilizer.i
+
+# target to preprocess a source file
+Core/Src/dsp/stabilizer.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/stabilizer.c.i
+.PHONY : Core/Src/dsp/stabilizer.c.i
+
+Core/Src/dsp/stabilizer.s: Core/Src/dsp/stabilizer.c.s
+.PHONY : Core/Src/dsp/stabilizer.s
+
+# target to generate assembly for a file
+Core/Src/dsp/stabilizer.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/dsp/stabilizer.c.s
+.PHONY : Core/Src/dsp/stabilizer.c.s
+
+Core/Src/gpio.obj: Core/Src/gpio.c.obj
+.PHONY : Core/Src/gpio.obj
+
+# target to build an object file
+Core/Src/gpio.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/gpio.c.obj
+.PHONY : Core/Src/gpio.c.obj
+
+Core/Src/gpio.i: Core/Src/gpio.c.i
+.PHONY : Core/Src/gpio.i
+
+# target to preprocess a source file
+Core/Src/gpio.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/gpio.c.i
+.PHONY : Core/Src/gpio.c.i
+
+Core/Src/gpio.s: Core/Src/gpio.c.s
+.PHONY : Core/Src/gpio.s
+
+# target to generate assembly for a file
+Core/Src/gpio.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/gpio.c.s
+.PHONY : Core/Src/gpio.c.s
+
+Core/Src/i2c.obj: Core/Src/i2c.c.obj
+.PHONY : Core/Src/i2c.obj
+
+# target to build an object file
+Core/Src/i2c.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/i2c.c.obj
+.PHONY : Core/Src/i2c.c.obj
+
+Core/Src/i2c.i: Core/Src/i2c.c.i
+.PHONY : Core/Src/i2c.i
+
+# target to preprocess a source file
+Core/Src/i2c.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/i2c.c.i
+.PHONY : Core/Src/i2c.c.i
+
+Core/Src/i2c.s: Core/Src/i2c.c.s
+.PHONY : Core/Src/i2c.s
+
+# target to generate assembly for a file
+Core/Src/i2c.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/i2c.c.s
+.PHONY : Core/Src/i2c.c.s
+
+Core/Src/logger.obj: Core/Src/logger.c.obj
+.PHONY : Core/Src/logger.obj
+
+# target to build an object file
+Core/Src/logger.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/logger.c.obj
+.PHONY : Core/Src/logger.c.obj
+
+Core/Src/logger.i: Core/Src/logger.c.i
+.PHONY : Core/Src/logger.i
+
+# target to preprocess a source file
+Core/Src/logger.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/logger.c.i
+.PHONY : Core/Src/logger.c.i
+
+Core/Src/logger.s: Core/Src/logger.c.s
+.PHONY : Core/Src/logger.s
+
+# target to generate assembly for a file
+Core/Src/logger.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/logger.c.s
+.PHONY : Core/Src/logger.c.s
+
+Core/Src/main.obj: Core/Src/main.c.obj
+.PHONY : Core/Src/main.obj
+
+# target to build an object file
+Core/Src/main.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/main.c.obj
+.PHONY : Core/Src/main.c.obj
+
+Core/Src/main.i: Core/Src/main.c.i
+.PHONY : Core/Src/main.i
+
+# target to preprocess a source file
+Core/Src/main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/main.c.i
+.PHONY : Core/Src/main.c.i
+
+Core/Src/main.s: Core/Src/main.c.s
+.PHONY : Core/Src/main.s
+
+# target to generate assembly for a file
+Core/Src/main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/main.c.s
+.PHONY : Core/Src/main.c.s
+
+Core/Src/rc.obj: Core/Src/rc.c.obj
+.PHONY : Core/Src/rc.obj
+
+# target to build an object file
+Core/Src/rc.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/rc.c.obj
+.PHONY : Core/Src/rc.c.obj
+
+Core/Src/rc.i: Core/Src/rc.c.i
+.PHONY : Core/Src/rc.i
+
+# target to preprocess a source file
+Core/Src/rc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/rc.c.i
+.PHONY : Core/Src/rc.c.i
+
+Core/Src/rc.s: Core/Src/rc.c.s
+.PHONY : Core/Src/rc.s
+
+# target to generate assembly for a file
+Core/Src/rc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/rc.c.s
+.PHONY : Core/Src/rc.c.s
+
+Core/Src/spi.obj: Core/Src/spi.c.obj
+.PHONY : Core/Src/spi.obj
+
+# target to build an object file
+Core/Src/spi.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/spi.c.obj
+.PHONY : Core/Src/spi.c.obj
+
+Core/Src/spi.i: Core/Src/spi.c.i
+.PHONY : Core/Src/spi.i
+
+# target to preprocess a source file
+Core/Src/spi.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/spi.c.i
+.PHONY : Core/Src/spi.c.i
+
+Core/Src/spi.s: Core/Src/spi.c.s
+.PHONY : Core/Src/spi.s
+
+# target to generate assembly for a file
+Core/Src/spi.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/spi.c.s
+.PHONY : Core/Src/spi.c.s
+
+Core/Src/stm32f1xx_hal_msp.obj: Core/Src/stm32f1xx_hal_msp.c.obj
+.PHONY : Core/Src/stm32f1xx_hal_msp.obj
+
+# target to build an object file
+Core/Src/stm32f1xx_hal_msp.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/stm32f1xx_hal_msp.c.obj
+.PHONY : Core/Src/stm32f1xx_hal_msp.c.obj
+
+Core/Src/stm32f1xx_hal_msp.i: Core/Src/stm32f1xx_hal_msp.c.i
+.PHONY : Core/Src/stm32f1xx_hal_msp.i
+
+# target to preprocess a source file
+Core/Src/stm32f1xx_hal_msp.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/stm32f1xx_hal_msp.c.i
+.PHONY : Core/Src/stm32f1xx_hal_msp.c.i
+
+Core/Src/stm32f1xx_hal_msp.s: Core/Src/stm32f1xx_hal_msp.c.s
+.PHONY : Core/Src/stm32f1xx_hal_msp.s
+
+# target to generate assembly for a file
+Core/Src/stm32f1xx_hal_msp.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/stm32f1xx_hal_msp.c.s
+.PHONY : Core/Src/stm32f1xx_hal_msp.c.s
+
+Core/Src/stm32f1xx_it.obj: Core/Src/stm32f1xx_it.c.obj
+.PHONY : Core/Src/stm32f1xx_it.obj
+
+# target to build an object file
+Core/Src/stm32f1xx_it.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/stm32f1xx_it.c.obj
+.PHONY : Core/Src/stm32f1xx_it.c.obj
+
+Core/Src/stm32f1xx_it.i: Core/Src/stm32f1xx_it.c.i
+.PHONY : Core/Src/stm32f1xx_it.i
+
+# target to preprocess a source file
+Core/Src/stm32f1xx_it.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/stm32f1xx_it.c.i
+.PHONY : Core/Src/stm32f1xx_it.c.i
+
+Core/Src/stm32f1xx_it.s: Core/Src/stm32f1xx_it.c.s
+.PHONY : Core/Src/stm32f1xx_it.s
+
+# target to generate assembly for a file
+Core/Src/stm32f1xx_it.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/stm32f1xx_it.c.s
+.PHONY : Core/Src/stm32f1xx_it.c.s
+
+Core/Src/system_stm32f1xx.obj: Core/Src/system_stm32f1xx.c.obj
+.PHONY : Core/Src/system_stm32f1xx.obj
+
+# target to build an object file
+Core/Src/system_stm32f1xx.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/system_stm32f1xx.c.obj
+.PHONY : Core/Src/system_stm32f1xx.c.obj
+
+Core/Src/system_stm32f1xx.i: Core/Src/system_stm32f1xx.c.i
+.PHONY : Core/Src/system_stm32f1xx.i
+
+# target to preprocess a source file
+Core/Src/system_stm32f1xx.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/system_stm32f1xx.c.i
+.PHONY : Core/Src/system_stm32f1xx.c.i
+
+Core/Src/system_stm32f1xx.s: Core/Src/system_stm32f1xx.c.s
+.PHONY : Core/Src/system_stm32f1xx.s
+
+# target to generate assembly for a file
+Core/Src/system_stm32f1xx.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/system_stm32f1xx.c.s
+.PHONY : Core/Src/system_stm32f1xx.c.s
+
+Core/Src/tim.obj: Core/Src/tim.c.obj
+.PHONY : Core/Src/tim.obj
+
+# target to build an object file
+Core/Src/tim.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/tim.c.obj
+.PHONY : Core/Src/tim.c.obj
+
+Core/Src/tim.i: Core/Src/tim.c.i
+.PHONY : Core/Src/tim.i
+
+# target to preprocess a source file
+Core/Src/tim.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/tim.c.i
+.PHONY : Core/Src/tim.c.i
+
+Core/Src/tim.s: Core/Src/tim.c.s
+.PHONY : Core/Src/tim.s
+
+# target to generate assembly for a file
+Core/Src/tim.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Core/Src/tim.c.s
+.PHONY : Core/Src/tim.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.s
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.obj: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.obj
+
+# target to build an object file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.obj
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.obj
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.i: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.i
+
+# target to preprocess a source file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.i
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.i
+
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.s: Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.s
+
+# target to generate assembly for a file
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.s
+.PHONY : Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.s
+
+startup_stm32f103x6.obj: startup_stm32f103x6.s.obj
+.PHONY : startup_stm32f103x6.obj
+
+# target to build an object file
+startup_stm32f103x6.s.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quadcopter_dsp.dir/build.make CMakeFiles/quadcopter_dsp.dir/startup_stm32f103x6.s.obj
+.PHONY : startup_stm32f103x6.s.obj
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -124,6 +985,113 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... quadcopter_dsp"
+	@echo "... Core/Src/dma.obj"
+	@echo "... Core/Src/dma.i"
+	@echo "... Core/Src/dma.s"
+	@echo "... Core/Src/drivers/flash_memory.obj"
+	@echo "... Core/Src/drivers/flash_memory.i"
+	@echo "... Core/Src/drivers/flash_memory.s"
+	@echo "... Core/Src/drivers/motors.obj"
+	@echo "... Core/Src/drivers/motors.i"
+	@echo "... Core/Src/drivers/motors.s"
+	@echo "... Core/Src/drivers/mpu6050.obj"
+	@echo "... Core/Src/drivers/mpu6050.i"
+	@echo "... Core/Src/drivers/mpu6050.s"
+	@echo "... Core/Src/drivers/nrf24l01.obj"
+	@echo "... Core/Src/drivers/nrf24l01.i"
+	@echo "... Core/Src/drivers/nrf24l01.s"
+	@echo "... Core/Src/drivers/w25q64.obj"
+	@echo "... Core/Src/drivers/w25q64.i"
+	@echo "... Core/Src/drivers/w25q64.s"
+	@echo "... Core/Src/dsp/angle_estimation.obj"
+	@echo "... Core/Src/dsp/angle_estimation.i"
+	@echo "... Core/Src/dsp/angle_estimation.s"
+	@echo "... Core/Src/dsp/filters.obj"
+	@echo "... Core/Src/dsp/filters.i"
+	@echo "... Core/Src/dsp/filters.s"
+	@echo "... Core/Src/dsp/pid.obj"
+	@echo "... Core/Src/dsp/pid.i"
+	@echo "... Core/Src/dsp/pid.s"
+	@echo "... Core/Src/dsp/stabilizer.obj"
+	@echo "... Core/Src/dsp/stabilizer.i"
+	@echo "... Core/Src/dsp/stabilizer.s"
+	@echo "... Core/Src/gpio.obj"
+	@echo "... Core/Src/gpio.i"
+	@echo "... Core/Src/gpio.s"
+	@echo "... Core/Src/i2c.obj"
+	@echo "... Core/Src/i2c.i"
+	@echo "... Core/Src/i2c.s"
+	@echo "... Core/Src/logger.obj"
+	@echo "... Core/Src/logger.i"
+	@echo "... Core/Src/logger.s"
+	@echo "... Core/Src/main.obj"
+	@echo "... Core/Src/main.i"
+	@echo "... Core/Src/main.s"
+	@echo "... Core/Src/rc.obj"
+	@echo "... Core/Src/rc.i"
+	@echo "... Core/Src/rc.s"
+	@echo "... Core/Src/spi.obj"
+	@echo "... Core/Src/spi.i"
+	@echo "... Core/Src/spi.s"
+	@echo "... Core/Src/stm32f1xx_hal_msp.obj"
+	@echo "... Core/Src/stm32f1xx_hal_msp.i"
+	@echo "... Core/Src/stm32f1xx_hal_msp.s"
+	@echo "... Core/Src/stm32f1xx_it.obj"
+	@echo "... Core/Src/stm32f1xx_it.i"
+	@echo "... Core/Src/stm32f1xx_it.s"
+	@echo "... Core/Src/system_stm32f1xx.obj"
+	@echo "... Core/Src/system_stm32f1xx.i"
+	@echo "... Core/Src/system_stm32f1xx.s"
+	@echo "... Core/Src/tim.obj"
+	@echo "... Core/Src/tim.i"
+	@echo "... Core/Src/tim.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.s"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.obj"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.i"
+	@echo "... Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.s"
+	@echo "... startup_stm32f103x6.obj"
 .PHONY : help
 
 
