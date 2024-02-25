@@ -1,3 +1,0 @@
-/home/dom/Documents/Coding/stm32/quadcopter-dsp/firmware/fc-stm32/cmake/CMakeFiles/quadcopter_dsp.dir
-/home/dom/Documents/Coding/stm32/quadcopter-dsp/firmware/fc-stm32/cmake/CMakeFiles/edit_cache.dir
-/home/dom/Documents/Coding/stm32/quadcopter-dsp/firmware/fc-stm32/cmake/CMakeFiles/rebuild_cache.dir
