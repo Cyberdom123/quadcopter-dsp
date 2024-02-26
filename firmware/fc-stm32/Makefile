@@ -1,7 +1,7 @@
 .PHONY: all build cmake clean format
 
 BUILD_DIR := build
-TARGET := quadcopter_dsp
+TARGET := fc-stm32
 
 all: build
 

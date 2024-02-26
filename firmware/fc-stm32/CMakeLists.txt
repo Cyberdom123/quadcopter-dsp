@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27.7)
 
-project(quadcopter_dsp)
+project(fc-stm32)
 
 set(EXECUTABLE ${CMAKE_PROJECT_NAME})
 enable_language(C CXX ASM)
