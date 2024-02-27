@@ -8,12 +8,11 @@
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
-            //"preLaunchTask": "Build STM",
             "device": "stm32f103x6.s",
             "configFiles": [
                 "openocd.cfg"
             ],
-            "svdFile": "STM32F103xx.svd"
+            "svdFile": "STM32F103xx.svd" //file for register names and addresses
         },
         {
             "showDevDebugOutput": "parsed",
@@ -23,7 +22,6 @@
             "request": "attach",
             "type": "cortex-debug",
             "servertype": "openocd",
-            //"preLaunchTask": "Build STM",
             "device": "stm32f103x6.s",
             "configFiles": [
                 "openocd.cfg"

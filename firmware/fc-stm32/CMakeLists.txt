@@ -84,12 +84,18 @@ target_compile_options(${EXECUTABLE} PUBLIC
     -Wextra
     -Wpedantic
     -Wno-unused-parameter
+    #debug flags begin 
+    -g
+    -gdwarf
+    -ggdb
+    #debug flags end
     $<$<COMPILE_LANGUAGE:CXX>:
         -Wno-volatile
         -Wold-style-cast
         -Wuseless-cast
         -Wsuggest-override>
-        -Os)
+        
+    -Os)
 
 target_link_options(${EXECUTABLE} PUBLIC
     -T${MCU_LINKER_SCRIPT}
