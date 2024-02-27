@@ -1,0 +1,26 @@
+{
+    "cortex-debug.armToolchainPath": "/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-none-eabi-gcc/12.2.1-1.2.1/.content/bin",
+    "cortex-debug.openocdPath": "/home/dom/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd",
+    "files.associations": {
+        "angle_estimation.h": "c",
+        "mpu6050.h": "c",
+        "stabilizer.h": "c",
+        "tim.h": "c",
+        "motors.h": "c",
+        "filters.h": "c",
+        "main.h": "c",
+        "nrf24l01.h": "c",
+        "rc.h": "c",
+        "stm32f1xx_hal_i2c.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "stm32f1xx_hal_conf.h": "c",
+        "dma.h": "c",
+        "core_armv8mml.h": "c",
+        "gpio.h": "c"
+    },
+    "cortex-debug.variableUseNaturalFormat": true,
+    "cSpell.words": [
+        "Dominik",
+        "JEDEC"
+    ]
+}

@@ -1,0 +1,7 @@
+openpcd
+arm-none-eabi-* (toolchain)
+cmake
+
+
+for debugging in vscode
+- cortex debug

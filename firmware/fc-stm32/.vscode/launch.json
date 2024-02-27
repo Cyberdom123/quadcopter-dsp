@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/fc-stm32.elf",
+            "name": "Debug STM32",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "stm32f103x6.s",
+            "configFiles": [
+                "openocd.cfg"
+            ],
+            "svdFile": "STM32F103xx.svd" //file for register names and addresses
+        },
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/fc-stm32.elf",
+            "name": "Attach STM32",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "stm32f103x6.s",
+            "configFiles": [
+                "openocd.cfg"
+            ],
+            "svdFile": "STM32F103xx.svd"
+        }
+    ]
+}
