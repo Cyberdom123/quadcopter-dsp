@@ -8,6 +8,7 @@ all: build
 ${BUILD_DIR}/Makefile:
 	cmake \
 		-B${BUILD_DIR} \
+		-DMCU=stm32f103c8t6 \
 		-DCMAKE_TOOLCHAIN_FILE=gcc-arm-none-eabi.cmake \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
@@ -23,7 +24,7 @@ format: $(addsuffix .format,${SRCS})
 	clang-format -i $<
 
 flash:
-	openocd -f openocd.cfg -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
+	openocd -f ./Devices/Debug/openocd.cfg -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
 
 clean:
 	rm -rf $(BUILD_DIR)

@@ -29,6 +29,7 @@
 //#include "usbd_cdc_if.h"
 #include <drivers/nrf24l01.h>
 #include <drivers/mpu6050.h>
+#include <drivers/bmp280.h>
 #include <drivers/motors.h>
 #include <dsp/angle_estimation.h>
 #include <stabilizer.h>
@@ -57,6 +58,7 @@
 /* Declare buffers */
 NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
+bmp280_dev bmp;
 
 uint8_t message[8] = {0};
 RC_t rc;
@@ -196,6 +198,7 @@ int main(void)
   MPU_measure_gyro_offset(&mpu, samples);
   MPU_measure_acc_offset(&mpu, samples);
 
+  /* Initialize bmp280 */
 
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;

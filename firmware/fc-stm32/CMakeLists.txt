@@ -15,7 +15,17 @@ set(MCU "stm32f103c6t6" CACHE STRING "MCU target")
 
 if(MCU STREQUAL "stm32f103c8t6")
     message("Selected MCU: stm32f103c8t6")
-
+    set(MCU_FAMILY STM32F1xx)
+    set(MCU_MODEL STM32F103xB)
+    set(CPU_PARAMETERS
+        -mcpu=cortex-m3
+        -mthumb
+        # -mfpu=
+        # -mfloat-abi=
+        )
+    set(STARTUP_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/startup_stm32f103xb.s)
+    set(MCU_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/STM32F103C8Tx_FLASH.ld)
+    
 elseif(MCU STREQUAL "stm32f103c6t6")
     message("Selected Default MCU: stm32f103c6t6")
 
@@ -29,8 +39,8 @@ elseif(MCU STREQUAL "stm32f103c6t6")
         # -mfloat-abi=
         )
     
-    set(STARTUP_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/startup_stm32f103x6.s)
-    set(MCU_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/STM32F103C6Tx_FLASH.ld)
+    set(STARTUP_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/startup_stm32f103x6.s)
+    set(MCU_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/STM32F103C6Tx_FLASH.ld)
 
 else()
     message("Wrong MCU name")
