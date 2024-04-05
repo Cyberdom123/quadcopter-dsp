@@ -199,7 +199,13 @@ int main(void)
   MPU_measure_acc_offset(&mpu, samples);
 
   /* Initialize bmp280 */
-
+  #if defined(STM32F103xB)
+  bmp.hi2c = &hi2c1;
+  bmp.defoult_conf = true;
+  bmp280_init(&bmp);
+  bmp280_burst_read(&bmp);
+  #endif // STM32F103xB
+  
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
   nrf24l01.csnPin = CSN_Pin;

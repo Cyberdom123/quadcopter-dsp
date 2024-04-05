@@ -83,10 +83,12 @@ typedef struct
     bmp280_calib_param calib_param;
     bmp280_config conf;
 
+    bool bmp280_busy;
+    uint8_t data[6]; 
     I2C_HandleTypeDef *hi2c;
 } bmp280_dev;
 
-#define BMP280_I2C_ADDR        0x76
+#define BMP280_I2C_ADDR        0x77
 #define BMP280_CHIP_ID_1       0x56
 #define BMP280_CHIP_ID_2       0x57
 #define BMP280_CHIP_ID_3       0x58
@@ -136,17 +138,17 @@ typedef struct
 #define BMP280_RESET_VALUE     0xB6
 
 
-HAL_StatusTypeDef i2c_master_init();
+HAL_StatusTypeDef bmp280_write(bmp280_dev *dev, uint8_t reg_addr, uint8_t data);
 
-HAL_StatusTypeDef i2c_bmp280_write(bmp280_dev *dev, uint8_t reg_addr, uint8_t data);
+HAL_StatusTypeDef bmp280_read(bmp280_dev *dev, uint8_t reg_addr, uint8_t *data, size_t data_len);
 
-HAL_StatusTypeDef i2c_bmp280_read(bmp280_dev *dev, uint8_t reg_addr, uint8_t *data, size_t data_len);
+HAL_StatusTypeDef bmp280_init(bmp280_dev *dev);
 
-HAL_StatusTypeDef i2c_bmp280_init(bmp280_dev *dev);
+HAL_StatusTypeDef bmp280_burst_read(bmp280_dev *dev);
 
-HAL_StatusTypeDef i2c_bmp280_burst_read(bmp280_dev *dev);
+HAL_StatusTypeDef bmp280_burst_read_DMA(bmp280_dev *dev);
 
-HAL_StatusTypeDef i2c_bmp280_test();
+void bmp280_burst_read_DMA_complete(bmp280_dev *dev);
 
 #endif // BMP280
 
