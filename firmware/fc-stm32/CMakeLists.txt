@@ -115,7 +115,6 @@ target_link_options(${EXECUTABLE} PUBLIC
     -Wl,--start-group
     -lc
     #-lm
-    -lstdc++
     -Wl,--end-group
     -Wl,--print-memory-usage)
 
