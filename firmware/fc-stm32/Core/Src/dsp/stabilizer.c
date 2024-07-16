@@ -6,15 +6,15 @@
  * @date 2024-01-26
  */
 #include <dsp/stabilizer.h>
-
-static pid_t roll_pid, pitch_pid, yaw_pid;
-// static IIR_filter_t iir;
-static enum{
+typedef enum{
     thrust = 0,
     pitch  = 1,
     yaw    = 2,
     roll   = 3
 }Control_Inputs_t;
+
+// static IIR_filter_t iir;
+static pid_t roll_pid, pitch_pid, yaw_pid;
 
 void Stabilizer_init(){
     // Initialize all pids sample times and max_values
@@ -66,7 +66,7 @@ void Stabilizer_init(){
     PID_init(&yaw_pid);
 }
 
-/* TO DO: check when to cast to int8, in motors or stabizler */
+/* TODO: check when to cast to int8, in motors or stabizler */
 void Stabilize(float angles[2], float angular_velocities[3], int8_t control_inputs[4]){
     float set_val[3];
     int8_t duty_cycles[3];

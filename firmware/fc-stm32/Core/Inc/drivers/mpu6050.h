@@ -26,17 +26,17 @@ typedef struct
 } MPU6050_STRUCT;
 
 typedef enum acc_range_t {
-  AFS_2g  = 0b00U,
-  AFS_4g  = 0b01U,
-  AFS_8g  = 0b10U,
-  AFS_16g = 0b11U
+  AFS_2g  = 0,
+  AFS_4g  = 1,
+  AFS_8g  = 2,
+  AFS_16g = 3
 } acc_range_t;
 
 typedef enum gyro_range_t {
-  FS_250dps  = 0b00U,
-  FS_500dps  = 0b01U,
-  FS_1000dps = 0b10U,
-  FS_2000dps = 0b11U
+  FS_250dps  = 0,
+  FS_500dps  = 1,
+  FS_1000dps = 2,
+  FS_2000dps = 3
 } gyro_range_t;
 
 typedef enum mpu_clk_src_t {
@@ -100,7 +100,7 @@ typedef struct MPU6050_config {
 } MPU6050_config;
 
 #define AD0 0
-#define MPU6050_ADDR	(0b1101000 | (AD0))
+#define MPU6050_ADDR	(0xD0 | (AD0))
 
 
 /////////////////////////////////////

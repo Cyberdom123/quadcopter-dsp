@@ -5,10 +5,7 @@
 
 #include <pid.h>
 
-/** 
- * @brief Initialize pid controller
- * Call this function at the beginning
- */
+
 void PID_init(pid_t *pid){
 
     pid->ki = pid->ki * pid->sampleTime * 0.5f;
@@ -21,9 +18,6 @@ void PID_init(pid_t *pid){
     pid->lastDeriv = 0;
 }
 
-/**
- * @brief Calculate pid output
- */
 float PID_Calculate(pid_t *pid, float input, float target){
 
     float error = target - input;

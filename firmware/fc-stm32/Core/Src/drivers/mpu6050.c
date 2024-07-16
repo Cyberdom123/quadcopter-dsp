@@ -154,7 +154,7 @@ HAL_StatusTypeDef MPU_measure_gyro_offset(MPU6050_STRUCT* mpu, uint16_t samples)
         mpu_gyro_offset[1] += gyro_data[1] / samples;
         mpu_gyro_offset[2] += gyro_data[2] / samples;
     }
-
+    return status;
 }
 
 HAL_StatusTypeDef MPU_measure_acc_offset(MPU6050_STRUCT* mpu, uint16_t samples) {
@@ -168,6 +168,7 @@ HAL_StatusTypeDef MPU_measure_acc_offset(MPU6050_STRUCT* mpu, uint16_t samples) 
         mpu_acc_offset[1] += acc_data[1] / samples;
         mpu_acc_offset[2] += (acc_data[2] - 1) / samples;
     }
+    return status;
 }
 
 HAL_StatusTypeDef MPU_clear_int(MPU6050_STRUCT *mpu){
