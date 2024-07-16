@@ -86,7 +86,6 @@ target_include_directories(${EXECUTABLE} PUBLIC
 target_link_libraries(${EXECUTABLE} PRIVATE
     m)
 
-
 # Compiler and linker options
 target_compile_options(${EXECUTABLE} PUBLIC
     ${CPU_PARAMETERS}

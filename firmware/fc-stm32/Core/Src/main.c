@@ -22,6 +22,7 @@
 #include "i2c.h"
 #include "spi.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -151,6 +152,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -178,6 +180,7 @@ int main(void)
   MX_TIM1_Init();
   MX_I2C1_Init();
   MX_TIM2_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(100);
   
