@@ -42,6 +42,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #define TELEMETRY
+#define SPI_FLASH
+#define NRF
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -213,11 +215,13 @@ int main(void)
   #endif
 
   /* Initialize nrf24l01 */
+  #if defined(NRF)
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
   nrf24l01.csnPin = CSN_Pin;
   nrf24l01.cePin = CE_Pin;
   nrf24l01.spiHandle = &hspi1;
-
+  #endif
+  
   /* Initialize IBUS */
   #if defined(IBUS)
   // TODO
