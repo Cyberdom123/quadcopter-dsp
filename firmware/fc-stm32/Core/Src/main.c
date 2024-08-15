@@ -29,6 +29,8 @@
 /* USER CODE BEGIN Includes */
 //#include "usbd_cdc_if.h"
 #include <drivers/nrf24l01.h>
+#include <drivers/ibus.h>
+#include <drivers/w25q64.h>
 #include <drivers/mpu6050.h>
 #include <drivers/bmp280.h>
 #include <drivers/motors.h>
@@ -60,6 +62,7 @@
 NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
 bmp280_dev bmp;
+W25Q64_STRUCT w25q64;
 
 uint8_t message[8] = {0};
 RC_t rc;
@@ -109,15 +112,6 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
     telemetry.floatingPoint[3] = (float) rc.controls_inputs[pitch];
     telemetry.floatingPoint[4] = (float) rc.controls_inputs[yaw];
     telemetry.floatingPoint[5] = (float) rc.controls_inputs[roll];
-
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //   telemetry.floatingPoint[i] = acc_buff[i];
-    // }
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //   telemetry.floatingPoint[3+i] = gyro_buff[i];
-    // }
     
     #endif // TELEMETRY
     
@@ -201,19 +195,33 @@ int main(void)
   MPU_measure_gyro_offset(&mpu, samples);
   MPU_measure_acc_offset(&mpu, samples);
 
-  /* Initialize bmp280 */
-  #if defined(STM32F103xB)
+  /* Initialize additional */
+  #if defined(BAROMETER)
   bmp.hi2c = &hi2c1;
   bmp.defoult_conf = true;
   bmp280_init(&bmp);
   bmp280_burst_read(&bmp);
   #endif // STM32F103xB
   
+
+  /* Initialize W25Q64 */
+  #if defined(SPI_FLASH)
+  w25q64.cs_gpio = SPI_CS_GPIO_Port; 
+  w25q64.cs_pin = SPI_CS_Pin;
+  w25q64.hspi = &hspi1;
+  W25Q64_Init(&w25q64);
+  #endif
+
   /* Initialize nrf24l01 */
   nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
   nrf24l01.csnPin = CSN_Pin;
   nrf24l01.cePin = CE_Pin;
   nrf24l01.spiHandle = &hspi1;
+
+  /* Initialize IBUS */
+  #if defined(IBUS)
+  // TODO
+  #endif
 
   NRF24L01_Init(&nrf24l01, &nrf24l01_default_config);
 
@@ -224,7 +232,6 @@ int main(void)
   #endif // TELEMETRY
   
   /* Start listening for incoming messages and enable interrupts */
-  //NRF24L01_Get_Info(&nrf24l01);
   NRF24L01_Start_Listening(&nrf24l01);
   /* Enable mpu interrupts */
   MPU_clear_int(&mpu);

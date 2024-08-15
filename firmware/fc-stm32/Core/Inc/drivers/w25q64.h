@@ -36,6 +36,7 @@ HAL_StatusTypeDef W25Q64_Init(W25Q64_STRUCT *w25q);
 HAL_StatusTypeDef W25Q64_Chip_Erase(W25Q64_STRUCT *w25q);
 HAL_StatusTypeDef W25Q64_Write_Page(W25Q64_STRUCT *w25q, uint32_t address, uint8_t *data_buf, uint16_t size);
 HAL_StatusTypeDef W25Q64_Read_Data(W25Q64_STRUCT *w25q, uint32_t address, uint8_t *data_buf, uint16_t size);
+void W25Q64_Test_Function(W25Q64_STRUCT *w25q);
 
 // void W25Q64_Test_Function(W25Q64_STRUCT *w25q);
 
