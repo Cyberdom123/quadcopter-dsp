@@ -63,7 +63,7 @@
 /* Declare buffers */
 NRF24L01_STRUCT nrf24l01;
 MPU6050_STRUCT mpu;
-bmp280_dev bmp;
+BMP280_STRUCT bmp;
 W25Q64_STRUCT w25q64;
 
 uint8_t message[8] = {0};
@@ -189,7 +189,7 @@ int main(void)
   const float dt = 0.001f, comp_alpha = 0.001f, iir_tau = 0.04f;
   Estimate_Angles_Init(dt, comp_alpha, iir_tau);
 
-  /* Initialize mpu */
+  /* Initialize IMU */
   mpu.hi2c = &hi2c1;
   MPU6050_config mpu_cfg = MPU_get_default_cfg();
   MPU_init(&mpu, &mpu_cfg);
@@ -245,7 +245,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
+  { 
     if(RC_Check_Connection()){
       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
       Lower_Altitude(&rc); 

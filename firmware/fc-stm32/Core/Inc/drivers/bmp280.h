@@ -1,8 +1,10 @@
 #if !defined(BMP280)
 #define BMP280
-#include <main.h>
-#include <stdbool.h>
 
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "main.h"
 /**
  * Mode of BMP280 module operation.
  * Forced - Measurement is initiated by user.
@@ -73,20 +75,17 @@ typedef struct
     BMP280_StandbyTime standby_time;
     BMP280_Oversampling oversampling_pressure;
     BMP280_Oversampling oversampling_temperature;
-} bmp280_config;
+} BMP280_CONFIG;
 
 typedef struct 
 {
     float temp;
     float press;
-    bool defoult_conf;
     bmp280_calib_param calib_param;
-    bmp280_config conf;
-
     bool bmp280_busy;
     uint8_t data[6]; 
     I2C_HandleTypeDef *hi2c;
-} bmp280_dev;
+} BMP280_STRUCT;
 
 #define BMP280_I2C_ADDR        0x77
 #define BMP280_CHIP_ID_1       0x56
@@ -138,17 +137,19 @@ typedef struct
 #define BMP280_RESET_VALUE     0xB6
 
 
-HAL_StatusTypeDef bmp280_write(bmp280_dev *dev, uint8_t reg_addr, uint8_t data);
+HAL_StatusTypeDef bmp280_write(BMP280_STRUCT *dev, uint8_t reg_addr, uint8_t data);
 
-HAL_StatusTypeDef bmp280_read(bmp280_dev *dev, uint8_t reg_addr, uint8_t *data, size_t data_len);
+HAL_StatusTypeDef bmp280_read(BMP280_STRUCT *dev, uint8_t reg_addr, uint8_t *data, size_t data_len);
 
-HAL_StatusTypeDef bmp280_init(bmp280_dev *dev);
+HAL_StatusTypeDef bmp280_init(BMP280_STRUCT *dev, BMP280_CONFIG config);
 
-HAL_StatusTypeDef bmp280_burst_read(bmp280_dev *dev);
+BMP280_CONFIG bmp280_get_default_config();
 
-HAL_StatusTypeDef bmp280_burst_read_DMA(bmp280_dev *dev);
+HAL_StatusTypeDef bmp280_burst_read(BMP280_STRUCT *dev);
 
-void bmp280_burst_read_DMA_complete(bmp280_dev *dev);
+HAL_StatusTypeDef bmp280_burst_read_DMA(BMP280_STRUCT *dev);
+
+void bmp280_burst_read_DMA_complete(BMP280_STRUCT *dev);
 
 #endif // BMP280
 

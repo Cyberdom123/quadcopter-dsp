@@ -8,27 +8,11 @@
 
 #include <drivers/nrf24l01.h>
 
-NRF24L01_CONFIG nrf24l01_default_config = {
-    .rx_int = RX_DR_INT_SET,
-    .tx_int = TX_DS_INT_RESET,
-    .max_rt_int = MAX_RT_INT_RESET,
-    .en_crc = EN_CRC_SET,
-    .crco_enc = ONE_BYTE_ENCODING,
-    .rx_tx_control = PRX,
-    .rx_tx_addr_width = FIVE_BYTES_ADDR,
-    .lna_hcurr = LNA_HCURR_SET,
-    .data_rate = ONE_MBPS_DATA_RATE,
-    .power_sel = RF_POWER_2,
-    .re_transmission_delay = 0x4,
-    .re_transmission_num = 0xF,
-    .chanel = 88
-};
-
 /**
  * @brief Initialize device 
  * Call this function at the beginning
  */
-HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf24l01_cfg)
+HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, const NRF24L01_CONFIG *nrf24l01_cfg)
 {
     uint8_t data; HAL_StatusTypeDef status; 
 
@@ -90,6 +74,26 @@ HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf2
     NRF24L01_Chanel(nrf24l01, nrf24l01_cfg->chanel);
 
     return HAL_OK;
+}
+
+NRF24L01_CONFIG NRF24L01_Get_Default_Config(void)
+{
+    NRF24L01_CONFIG nrf24l01_default_config = {
+        .rx_int = RX_DR_INT_SET,
+        .tx_int = TX_DS_INT_RESET,
+        .max_rt_int = MAX_RT_INT_RESET,
+        .en_crc = EN_CRC_SET,
+        .crco_enc = ONE_BYTE_ENCODING,
+        .rx_tx_control = PRX,
+        .rx_tx_addr_width = FIVE_BYTES_ADDR,
+        .lna_hcurr = LNA_HCURR_SET,
+        .data_rate = ONE_MBPS_DATA_RATE,
+        .power_sel = RF_POWER_2,
+        .re_transmission_delay = 0x4,
+        .re_transmission_num = 0xF,
+        .chanel = 88
+    };
+    return nrf24l01_default_config;
 }
 
 /**

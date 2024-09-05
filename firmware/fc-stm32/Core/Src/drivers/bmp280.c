@@ -1,24 +1,27 @@
 #include <drivers/bmp280.h>
 
-void bmp280_init_default_params(bmp280_dev *dev) {
-	dev->conf.mode = BMP280_MODE_NORMAL;
-	dev->conf.filter = BMP280_FILTER_OFF;
-	dev->conf.oversampling_pressure = BMP280_STANDARD;
-	dev->conf.oversampling_temperature = BMP280_STANDARD;
-	dev->conf.standby_time = BMP280_STANDBY_250;
+BMP280_CONFIG bmp280_get_default_config() {
+    BMP280_CONFIG config = {
+        .mode = BMP280_MODE_NORMAL,
+        .filter = BMP280_FILTER_OFF,
+        .oversampling_pressure = BMP280_STANDARD,
+        .oversampling_temperature = BMP280_STANDARD,
+        .standby_time = BMP280_STANDBY_250,
+    };
+    return config;
 }
 
-HAL_StatusTypeDef bmp280_write(bmp280_dev *dev, uint8_t reg_addr, uint8_t data){
+HAL_StatusTypeDef bmp280_write(BMP280_STRUCT *dev, uint8_t reg_addr, uint8_t data){
     return HAL_I2C_Mem_Write(dev->hi2c, BMP280_I2C_ADDR << 1, reg_addr, 1, &data,
                              1, HAL_MAX_DELAY);
 }
 
-HAL_StatusTypeDef bmp280_read(bmp280_dev *dev, uint8_t reg_addr, uint8_t *data, size_t data_len){
+HAL_StatusTypeDef bmp280_read(BMP280_STRUCT *dev, uint8_t reg_addr, uint8_t *data, size_t data_len){
 	return HAL_I2C_Mem_Read(dev->hi2c, BMP280_I2C_ADDR << 1, reg_addr, 1, data, 
 							data_len, HAL_MAX_DELAY);
 }
 
-void bmp280_read_calibration(bmp280_dev *dev){
+void bmp280_read_calibration(BMP280_STRUCT *dev){
     uint8_t data1, data0;
 
     bmp280_read(dev, BMP280_DIG_T1_LSB_ADDR, &data1, 1);
@@ -73,7 +76,7 @@ void bmp280_read_calibration(bmp280_dev *dev){
 
 //Get fine_temp for pressure compensation
 //Return value in degrees Celsius.
-static inline int32_t compensate_temperature(bmp280_dev *dev, int32_t adc_temp,
+static inline int32_t compensate_temperature(BMP280_STRUCT *dev, int32_t adc_temp,
 		int32_t *fine_temp) {
 	int32_t var1, var2;
 
@@ -88,7 +91,7 @@ static inline int32_t compensate_temperature(bmp280_dev *dev, int32_t adc_temp,
 }
 
 //Return value is in Pa, 24 integer bits and 8 fractional bits.
-static inline uint32_t compensate_pressure(bmp280_dev *dev, int32_t adc_press,
+static inline uint32_t compensate_pressure(BMP280_STRUCT *dev, int32_t adc_press,
 		                                   int32_t fine_temp) 
 {
 	int64_t var1, var2, p;
@@ -114,7 +117,7 @@ static inline uint32_t compensate_pressure(bmp280_dev *dev, int32_t adc_press,
 	return p;
 }
 
-HAL_StatusTypeDef bmp280_init(bmp280_dev *dev){
+HAL_StatusTypeDef bmp280_init(BMP280_STRUCT *dev, BMP280_CONFIG config){
     uint8_t data;
     int ret;
     
@@ -138,11 +141,6 @@ HAL_StatusTypeDef bmp280_init(bmp280_dev *dev){
     //Read calibration register
     bmp280_read_calibration(dev);
 
-    //note: set the default parameters if they are not set
-    if(dev->defoult_conf == true){
-        bmp280_init_default_params(dev);
-    }
-
     //Set config register
     uint8_t conf = dev->conf.filter << 2 | dev->conf.standby_time << 5;
     ret = bmp280_write(dev, BMP280_REG_CONFIG, conf);
@@ -161,7 +159,7 @@ HAL_StatusTypeDef bmp280_init(bmp280_dev *dev){
     return HAL_OK;
 }
 
-HAL_StatusTypeDef bmp280_burst_read_raw(bmp280_dev *dev, int32_t *temp, uint32_t *press){
+HAL_StatusTypeDef bmp280_burst_read_raw(BMP280_STRUCT *dev, int32_t *temp, uint32_t *press){
     //The BMP280 does not have a humidity reading,
     //so we need to read 6 bytes of data.
     int ret;
@@ -181,7 +179,7 @@ HAL_StatusTypeDef bmp280_burst_read_raw(bmp280_dev *dev, int32_t *temp, uint32_t
     return HAL_OK;
 }
 
-HAL_StatusTypeDef bmp280_burst_read(bmp280_dev *dev){
+HAL_StatusTypeDef bmp280_burst_read(BMP280_STRUCT *dev){
     int32_t temp;
     uint32_t press;
     int ret = bmp280_burst_read_raw(dev, &temp, &press);
@@ -191,13 +189,13 @@ HAL_StatusTypeDef bmp280_burst_read(bmp280_dev *dev){
 }
 
 
-HAL_StatusTypeDef bmp280_burst_read_DMA(bmp280_dev *dev){
+HAL_StatusTypeDef bmp280_burst_read_DMA(BMP280_STRUCT *dev){
    dev->bmp280_busy = true;
    return HAL_I2C_Mem_Read_DMA(dev->hi2c, BMP280_I2C_ADDR, BMP280_REG_PRESS_MSB, 1,
                                 dev->data, 6); 
 }   
 
-void bmp280_burst_read_DMA_complete(bmp280_dev *dev){
+void bmp280_burst_read_DMA_complete(BMP280_STRUCT *dev){
     dev->bmp280_busy = false;
     int32_t temp; 
     uint32_t press;

@@ -112,9 +112,6 @@ typedef struct
 
 } NRF24L01_CONFIG;
 
-/* Default NRF24L01 Config */
-extern NRF24L01_CONFIG nrf24l01_default_config;
-
 /* LOW LEVEL FUNCTIONS */
 HAL_StatusTypeDef NRF24L01_Read_Byte(NRF24L01_STRUCT *nrf24l01, uint8_t addr, uint8_t *data);
 
@@ -130,7 +127,9 @@ HAL_StatusTypeDef NRF24L01_Flush_Rx(NRF24L01_STRUCT *nrf24l01);
 /* END OF LOW LEVEL FUNCTIONS */
 
 /* MAIN FUNCTIONS */
-HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, NRF24L01_CONFIG *nrf24l01_cfg);
+HAL_StatusTypeDef NRF24L01_Init(NRF24L01_STRUCT *nrf24l01, const NRF24L01_CONFIG *nrf24l01_cfg);
+
+NRF24L01_CONFIG NRF24L01_Get_Default_Config(void);
 
 HAL_StatusTypeDef NRF24L01_Chanel(NRF24L01_STRUCT *nrf24l01, uint8_t rfCh);
 
