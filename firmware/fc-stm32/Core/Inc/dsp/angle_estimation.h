@@ -25,13 +25,13 @@ typedef struct kalman_t
 
 
 void Calculate_Angles_acc(float acc_buf[3], float angles[2]);
-void Calculate_Angular_Velocities(float angle_change[3], float angles[2], float gyro[3]);
+void Calculate_Angular_Velocities(float angle_change[3], float angles[2], const float gyro[3]);
 void Get_Complementary_Roll_Pitch(float angles[2], float acc_angles[2], float angle_change[3], float dt, float alpha);
 
 void Kalman_init(kalman_t *kalman);
 void Kalman_calculate(kalman_t *kalman, float *kalman_state, float measurement, float velocity);
 
 void Estimate_Angles_Init(float dt, float alpha, float tau);
-void Estimate_Angles(float angles[2], float angular_velocities[3], float acc_buf[3], float gyro_buf[3]);
+void Estimate_Angles(float angles[2], float angular_velocities[3], const float acc_buf[3], const float gyro_buff[3]);
 
 #endif // ANGLE_ESTIMATION

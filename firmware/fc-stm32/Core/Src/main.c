@@ -28,15 +28,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include "usbd_cdc_if.h"
-#include <drivers/nrf24l01.h>
-#include <drivers/ibus.h>
-#include <drivers/w25q64.h>
-#include <drivers/mpu6050.h>
-#include <drivers/bmp280.h>
-#include <drivers/motors.h>
-#include <dsp/angle_estimation.h>
-#include <stabilizer.h>
-#include <rc.h>
+#include "navi_hal/navi.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,21 +53,7 @@
 /* USER CODE BEGIN PV */
 
 /* Declare buffers */
-NRF24L01_STRUCT nrf24l01;
-MPU6050_STRUCT mpu;
-BMP280_STRUCT bmp;
-W25Q64_STRUCT w25q64;
 
-uint8_t message[8] = {0};
-RC_t rc;
-#if defined(TELEMETRY)
-Telemetry_t telemetry;
-#endif // TELEMETRY
-
-FLOAT_TYPE acc_buff[3];
-FLOAT_TYPE gyro_buff[3];
-
-float angles[2] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,59 +64,60 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
-  if(nrf24l01.payloadFlag){
-    RC_Connection_Tick();
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-    NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, message, 8);
-    RC_Receive_Message(message, &rc);
-    NRF24L01_Start_Listening(&nrf24l01);
-  }
 
-}
+// void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
+//   if(nrf24l01.payloadFlag){
+//     RC_Connection_Tick();
+//     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+//     NRF24L01_Read_PayloadDMA_Complete(&nrf24l01, message, 8);
+//     RC_Receive_Message(message, &rc);
+//     NRF24L01_Start_Listening(&nrf24l01);
+//   }
 
-void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
-  if(mpu.gyro_busy && mpu.acc_busy){
-    MPU_read_acc_gyro_DMA_complete(&mpu);
-    #if defined(TELEMETRY)
-    float angle_change[3];
+// }
 
-    Estimate_Angles(angles, angle_change, acc_buff, gyro_buff);
-    Stabilize(angles, angle_change, rc.controls_inputs);
-    Motors_Switch(rc.power_on);
+// void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
+//   if(mpu.gyro_busy && mpu.acc_busy){
+//     MPU_read_acc_gyro_DMA_complete(&mpu);
+//     #if defined(TELEMETRY)
+//     float angle_change[3];
 
-    telemetry.floatingPoint[0] = radToDeg(angles[0]);
-    telemetry.floatingPoint[1] = radToDeg(angles[1]);
+//     Estimate_Angles(angles, angle_change, acc_buff, gyro_buff);
+//     Stabilize(angles, angle_change, rc.controls_inputs);
+//     Motors_Switch(rc.power_on);
 
-    telemetry.floatingPoint[2] = (float) rc.controls_inputs[thrust];
-    telemetry.floatingPoint[3] = (float) rc.controls_inputs[pitch];
-    telemetry.floatingPoint[4] = (float) rc.controls_inputs[yaw];
-    telemetry.floatingPoint[5] = (float) rc.controls_inputs[roll];
+//     telemetry.floatingPoint[0] = radToDeg(angles[0]);
+//     telemetry.floatingPoint[1] = radToDeg(angles[1]);
+
+//     telemetry.floatingPoint[2] = (float) rc.controls_inputs[thrust];
+//     telemetry.floatingPoint[3] = (float) rc.controls_inputs[pitch];
+//     telemetry.floatingPoint[4] = (float) rc.controls_inputs[yaw];
+//     telemetry.floatingPoint[5] = (float) rc.controls_inputs[roll];
     
-    #endif // TELEMETRY
+//     #endif // TELEMETRY
     
-  }
-  else if(mpu.gyro_busy){
-    MPU_read_gyro_DMA_complete(&mpu);
-  }
-  else if(mpu.acc_busy){
-    MPU_read_acc_DMA_complete(&mpu);
-  }
-}
+//   }
+//   else if(mpu.gyro_busy){
+//     MPU_read_gyro_DMA_complete(&mpu);
+//   }
+//   else if(mpu.acc_busy){
+//     MPU_read_acc_DMA_complete(&mpu);
+//   }
+// }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-  if(GPIO_Pin == NRF_INT_Pin){
-    NRF24L01_Stop_Listening(&nrf24l01);
-    #if defined(TELEMETRY)
-    NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry.bytes, 24);    
-    #endif // TELEMETRY
+// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+//   if(GPIO_Pin == NRF_INT_Pin){
+//     NRF24L01_Stop_Listening(&nrf24l01);
+//     #if defined(TELEMETRY)
+//     NRF24L01_Write_ACKN_Payload(&nrf24l01, telemetry.bytes, 24);    
+//     #endif // TELEMETRY
     
-    NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
-  }
-  if(GPIO_Pin == MPU_INT_Pin){
-    MPU_read_acc_gyro_DMA(&mpu);
-  }
-}
+//     NRF24L01_Read_PayloadDMA(&nrf24l01, 8);
+//   }
+//   if(GPIO_Pin == MPU_INT_Pin){
+//     MPU_read_acc_gyro_DMA(&mpu);
+//   }
+// }
 
 /* USER CODE END 0 */
 
@@ -178,78 +157,14 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_Delay(100);
-  
-  /* Initialize IO buffers */
-  mpu.mpu_acc_buff = acc_buff;
-  mpu.mpu_gyro_buff = gyro_buff;
-
-  /* Initialize stabilizer */
-  Stabilizer_init();
-  const float dt = 0.001f, comp_alpha = 0.001f, iir_tau = 0.04f;
-  Estimate_Angles_Init(dt, comp_alpha, iir_tau);
-
-  /* Initialize IMU */
-  mpu.hi2c = &hi2c1;
-  MPU6050_config mpu_cfg = MPU_get_default_cfg();
-  MPU_init(&mpu, &mpu_cfg);
-  const uint16_t samples = 8000;
-  MPU_measure_gyro_offset(&mpu, samples);
-  MPU_measure_acc_offset(&mpu, samples);
-
-  /* Initialize additional */
-  #if defined(BAROMETER)
-  bmp.hi2c = &hi2c1;
-  bmp.defoult_conf = true;
-  bmp280_init(&bmp);
-  bmp280_burst_read(&bmp);
-  #endif // STM32F103xB
-  
-
-  /* Initialize W25Q64 */
-  #if defined(SPI_FLASH)
-  w25q64.cs_gpio = SPI_CS_GPIO_Port; 
-  w25q64.cs_pin = SPI_CS_Pin;
-  w25q64.hspi = &hspi1;
-  W25Q64_Init(&w25q64);
-  #endif
-
-  /* Initialize nrf24l01 */
-  #if defined(NRF)
-  nrf24l01.nrf24l01GpioPort = CE_GPIO_Port;
-  nrf24l01.csnPin = CSN_Pin;
-  nrf24l01.cePin = CE_Pin;
-  nrf24l01.spiHandle = &hspi1;
-  #endif
-  
-  /* Initialize IBUS */
-  #if defined(IBUS)
-  // TODO
-  #endif
-
-  NRF24L01_Init(&nrf24l01, &nrf24l01_default_config);
-
-  #if defined(TELEMETRY)
-  NRF24L01_Enable_ACKN_Payload(&nrf24l01);  
-  const uint64_t rx_addr_pipe = 0xc2c2c2c2c2LL;
-  NRF24L01_Open_Reading_Pipe(&nrf24l01, RX_ADDR_P1, rx_addr_pipe, 8);
-  #endif // TELEMETRY
-  
-  /* Start listening for incoming messages and enable interrupts */
-  NRF24L01_Start_Listening(&nrf24l01);
-  /* Enable mpu interrupts */
-  MPU_clear_int(&mpu);
-
+  NAVI_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   { 
-    if(RC_Check_Connection()){
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-      Lower_Altitude(&rc); 
-    }
+    NAVI_proc();
   } 
     /* USER CODE END WHILE */
 

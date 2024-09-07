@@ -13,7 +13,8 @@
 
 typedef void (*BARO_conversion_callback_t)(const float* pressure, const float* temperature);
 
-void BARO_init(BARO_conversion_callback_t* baro_conversion_callback);
+void BARO_init(BARO_conversion_callback_t baro_conversion_callback);
 void BARO_deinit();
+void BARO_proc();
 
 #endif // BARO_H

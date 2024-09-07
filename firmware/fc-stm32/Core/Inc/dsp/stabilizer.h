@@ -1,10 +1,10 @@
 #if !defined(STABILIZER)
 #define STABILIZER
 
-#include <dsp/filters.h>
-#include <dsp/angle_estimation.h>
-#include <dsp/pid.h>
-#include <drivers/motors.h>
+#include "dsp/filters.h"
+#include "dsp/angle_estimation.h"
+#include "dsp/pid.h"
+#include "brushed_motors.h"
 
 /**
  * @brief Initializes the stabilizer module.
