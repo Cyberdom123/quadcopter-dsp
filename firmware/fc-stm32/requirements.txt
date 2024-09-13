@@ -1,6 +1,6 @@
 openpcd
 arm-none-eabi-* (toolchain)
-cmake
+cmake > 3.22
 
 
 for debugging in vscode

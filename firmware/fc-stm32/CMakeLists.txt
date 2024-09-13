@@ -1,127 +1,82 @@
-cmake_minimum_required(VERSION 3.27.7)
+cmake_minimum_required(VERSION 3.22)
 
-project(fc-stm32)
-
-set(EXECUTABLE ${CMAKE_PROJECT_NAME})
-enable_language(C CXX ASM)
+# Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
 
-set(MCU "stm32f103c6t6" CACHE STRING "MCU target")
 
-if(MCU STREQUAL "stm32f103c8t6")
-    message("Selected MCU: stm32f103c8t6")
-    set(MCU_FAMILY STM32F1xx)
-    set(MCU_MODEL STM32F103xB)
-    set(CPU_PARAMETERS
-        -mcpu=cortex-m3
-        -mthumb
-        # -mfpu=
-        # -mfloat-abi=
-        )
-    set(STARTUP_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/startup_stm32f103xb.s)
-    set(MCU_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/STM32F103C8Tx_FLASH.ld)
-    
-elseif(MCU STREQUAL "stm32f103c6t6")
-    message("Selected Default MCU: stm32f103c6t6")
-
-    # Set environment variables
-    set(MCU_FAMILY STM32F1xx)
-    set(MCU_MODEL STM32F103x6)
-    set(CPU_PARAMETERS
-        -mcpu=cortex-m3
-        -mthumb
-        # -mfpu=
-        # -mfloat-abi=
-        )
-    
-    set(STARTUP_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/startup_stm32f103x6.s)
-    set(MCU_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Devices/STM32F103C6Tx_FLASH.ld)
-
-else()
-    message("Wrong MCU name")
+# Define the build type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-# Headers
-set(CUBEMX_INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/${MCU_FAMILY}/Include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/${MCU_FAMILY}_HAL_Driver/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/${MCU_FAMILY}_Driver/Inc/Legacy)
+# Set the project name
+set(CMAKE_PROJECT_NAME fc-stm32)
 
-set(PROJECT_INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc/
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc/drivers
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc/dsp)
+# Include toolchain file
+include(gcc-arm-none-eabi.cmake)
 
-# Sources
-file(GLOB_RECURSE STM32CUBEMX_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/${MCU_FAMILY}_HAL_Driver/Src/*.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/*.c)
+# Include functions file
+include(functions.cmake)
 
-file(GLOB_RECURSE PROJECT_SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/*.c)
+# Enable compile command to ease indexing with e.g. clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-# Executable files
-add_executable(${EXECUTABLE}
-    ${STM32CUBEMX_SOURCES} 
-    ${PROJECT_SOURCES}
-    ${STARTUP_SCRIPT})
+# Enable CMake support for ASM and C languages
+enable_language(C CXX ASM)
 
-# Defines
-target_compile_definitions(${EXECUTABLE} PUBLIC
-    ${MCU_MODEL}
-    USE_HAL_DRIVER)
+# Core project settings
+project(${CMAKE_PROJECT_NAME})
+message("Build type: " ${CMAKE_BUILD_TYPE})
 
-target_include_directories(${EXECUTABLE} PUBLIC
-    ${CUBEMX_INCLUDE_DIRECTORIES}
-    ${PROJECT_INCLUDE_DIRECTORIES})
+# Create an executable object type
+add_executable(${CMAKE_PROJECT_NAME}
+    Core/Src/drivers/bmp280.c
+    Core/Src/drivers/flash_memory.c
+    Core/Src/drivers/ibus.c
+    Core/Src/drivers/motors.c
+    Core/Src/drivers/mpu6050.c
+    Core/Src/drivers/nrf24l01.c
+    Core/Src/drivers/w25q64.c
 
+    Core/Src/dsp/angle_estimation.c
+    Core/Src/dsp/filters.c
+    Core/Src/dsp/pid.c
+    Core/Src/dsp/stabilizer.c
 
-target_link_libraries(${EXECUTABLE} PRIVATE
-    m)
+    Core/Src/dma.c
+    Core/Src/gpio.c
+    Core/Src/i2c.c
+    Core/Src/logger.c
+    Core/Src/rc.c
+    Core/Src/spi.c
+    Core/Src/tim.c
+    Core/Src/usart.c
+    
+    Core/Src/main.c
 
-# Compiler and linker options
-target_compile_options(${EXECUTABLE} PUBLIC
-    ${CPU_PARAMETERS}
-    -Wall
-    -Wextra
-    -Wpedantic
-    -Wno-unused-parameter
-    #debug flags begin 
-    -g
-    -gdwarf
-    -ggdb
-    #debug flags end
-    $<$<COMPILE_LANGUAGE:CXX>:
-        -Wno-volatile
-        -Wold-style-cast
-        -Wuseless-cast
-        -Wsuggest-override>
-        
-    -Os)
+    Core/Src/syscalls.c
+    Core/Src/sysmem.c
 
-target_link_options(${EXECUTABLE} PUBLIC
-    -T${MCU_LINKER_SCRIPT}
-    ${CPU_PARAMETERS}
-    -Wl,-Map=${CMAKE_PROJECT_NAME}.map
-    --specs=nosys.specs
-    -Wl,--start-group
-    -lc
-    #-lm
-    -Wl,--end-group
-    -Wl,--print-memory-usage)
+    Drivers/STM32F1xx/Src/stm32f1xx_hal_msp.c
+    Drivers/STM32F1xx/Src/stm32f1xx_it.c
+    Drivers/STM32F1xx/Src/system_stm32f1xx.c
+    Drivers/STM32F1xx/startup_stm32f103xb.s
+)
 
-add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
-    COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${EXECUTABLE}>)
+include_directories(
+    Core/Inc
+    Core/Inc/drivers
+    Core/Inc/dsp
+)
 
-add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${EXECUTABLE}>
-    ${EXECUTABLE}.hex
-    COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${EXECUTABLE}>
-    ${EXECUTABLE}.bin)
+# Add STM32CubeMX generated sources
+add_subdirectory(Drivers/STM32F1xx_HAL_Driver)
+
+# Add linked libraries
+target_link_libraries(${CMAKE_PROJECT_NAME}
+    stm32f1xxHal
+)
+
+target_stlink_flash(${CMAKE_PROJECT_NAME})
