@@ -51,24 +51,17 @@ add_executable(${CMAKE_PROJECT_NAME}
     Core/Src/dsp/pid.c
     Core/Src/dsp/stabilizer.c
 
-    Core/Src/dma.c
-    Core/Src/gpio.c
-    Core/Src/i2c.c
     Core/Src/logger.c
     Core/Src/rc.c
-    Core/Src/spi.c
-    Core/Src/tim.c
-    Core/Src/usart.c
-    
     Core/Src/main.c
 
     Core/Src/syscalls.c
     Core/Src/sysmem.c
 
-    Drivers/${MCU_FAMILY}/Src/${MCU_FAMILY_LOWER}_hal_msp.c
-    Drivers/${MCU_FAMILY}/Src/${MCU_FAMILY_LOWER}_it.c
-    Drivers/${MCU_FAMILY}/Src/system_${MCU_FAMILY_LOWER}.c
-    Drivers/${MCU_FAMILY}/startup_${MCU_MODEL_LOWER}.s
+    HAL_STM32/${MCU_FAMILY}/Src/${MCU_FAMILY_LOWER}_hal_msp.c
+    HAL_STM32/${MCU_FAMILY}/Src/${MCU_FAMILY_LOWER}_it.c
+    HAL_STM32/${MCU_FAMILY}/Src/system_${MCU_FAMILY_LOWER}.c
+    HAL_STM32/${MCU_FAMILY}/startup_${MCU_MODEL_LOWER}.s
 )
 
 include_directories(
@@ -78,7 +71,7 @@ include_directories(
 )
 
 # Add STM32CubeMX generated sources
-add_subdirectory(Drivers/${MCU_FAMILY}_HAL_Driver)
+add_subdirectory(HAL_STM32/${MCU_FAMILY}_HAL_Driver)
 
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}

@@ -15,6 +15,13 @@ add_library(stm32f1xxHal STATIC
     Src/stm32f1xx_hal_tim.c
     Src/stm32f1xx_hal_tim_ex.c
     Src/stm32f1xx_hal_uart.c
+
+    ../STM32F1xx/Src/dma.c
+    ../STM32F1xx/Src/gpio.c
+    ../STM32F1xx/Src/i2c.c
+    ../STM32F1xx/Src/spi.c
+    ../STM32F1xx/Src/tim.c
+    ../STM32F1xx/Src/usart.c
 )
 
 target_compile_definitions(stm32f1xxHal PUBLIC 
