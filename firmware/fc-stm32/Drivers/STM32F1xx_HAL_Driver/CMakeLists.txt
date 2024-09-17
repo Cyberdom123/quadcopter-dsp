@@ -1,9 +1,4 @@
-add_library(stm32f1xxHal STATIC
-    # STM32F1xx/Src/stm32f1xx_hal_msp.c
-    # STM32F1xx/Src/stm32f1xx_it.c
-    # STM32F1xx/Src/system_stm32f1xx.c
-    # STM32F1xx/startup_stm32f103xb.s
-    
+add_library(stm32f1xxHal STATIC    
     Src/stm32f1xx_hal_gpio_ex.c
     Src/stm32f1xx_hal_i2c.c
     Src/stm32f1xx_hal.c

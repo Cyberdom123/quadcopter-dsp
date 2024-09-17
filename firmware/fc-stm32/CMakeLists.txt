@@ -5,6 +5,12 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
+# Set target settings
+set(MCU_FAMILY STM32F1xx)
+set(MCU_MODEL_LOWER stm32f103xb)
+set(LINKER_SCRIPT_NAME STM32F103C8Tx_FLASH.ld)
+
+string(TOLOWER ${MCU_FAMILY} MCU_FAMILY_LOWER)
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -59,10 +65,10 @@ add_executable(${CMAKE_PROJECT_NAME}
     Core/Src/syscalls.c
     Core/Src/sysmem.c
 
-    Drivers/STM32F1xx/Src/stm32f1xx_hal_msp.c
-    Drivers/STM32F1xx/Src/stm32f1xx_it.c
-    Drivers/STM32F1xx/Src/system_stm32f1xx.c
-    Drivers/STM32F1xx/startup_stm32f103xb.s
+    Drivers/${MCU_FAMILY}/Src/${MCU_FAMILY_LOWER}_hal_msp.c
+    Drivers/${MCU_FAMILY}/Src/${MCU_FAMILY_LOWER}_it.c
+    Drivers/${MCU_FAMILY}/Src/system_${MCU_FAMILY_LOWER}.c
+    Drivers/${MCU_FAMILY}/startup_${MCU_MODEL_LOWER}.s
 )
 
 include_directories(
@@ -72,11 +78,11 @@ include_directories(
 )
 
 # Add STM32CubeMX generated sources
-add_subdirectory(Drivers/STM32F1xx_HAL_Driver)
+add_subdirectory(Drivers/${MCU_FAMILY}_HAL_Driver)
 
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
-    stm32f1xxHal
+    ${MCU_FAMILY_LOWER}Hal
 )
 
 target_stlink_flash(${CMAKE_PROJECT_NAME})
