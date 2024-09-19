@@ -38,19 +38,20 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
-    Core/Src/drivers/bmp280.c
-    Core/Src/drivers/flash_memory.c
-    Core/Src/drivers/ibus.c
+    # Core/Src/drivers/bmp280.c
+    # Core/Src/drivers/flash_memory.c
+    # Core/Src/drivers/ibus.c
     Core/Src/drivers/motors.c
-    Core/Src/drivers/mpu6050.c
-    Core/Src/drivers/nrf24l01.c
-    Core/Src/drivers/w25q64.c
+    # Core/Src/drivers/mpu6050.c
+    # Core/Src/drivers/nrf24l01.c
+    # Core/Src/drivers/w25q64.c
 
     Core/Src/dsp/angle_estimation.c
     Core/Src/dsp/filters.c
     Core/Src/dsp/pid.c
     Core/Src/dsp/stabilizer.c
-
+    
+    Core/Src/flight_controller.c
     Core/Src/logger.c
     Core/Src/rc.c
     Core/Src/main.c
@@ -73,9 +74,17 @@ include_directories(
 # Add STM32CubeMX generated sources
 add_subdirectory(HAL_STM32/${MCU_FAMILY}_HAL_Driver)
 
+# Add selected libraries
+add_subdirectory(HAL_Flight_Controller/MPU6050)
+add_subdirectory(HAL_Flight_Controller/NRF24L01)
+
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
+    # PUBLIC
     ${MCU_FAMILY_LOWER}Hal
+    # PRIVATE
+    mpu6050
+    nrf24l01
 )
 
 target_stlink_flash(${CMAKE_PROJECT_NAME})

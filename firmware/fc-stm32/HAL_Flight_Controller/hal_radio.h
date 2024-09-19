@@ -15,15 +15,19 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef void (*RADIO_receive_callback_t)(const uint8_t *data, uint8_t len);
+#define HAL_RADIO_INTERFACE_SPI 
 
-void HAL_RADIO_init(RADIO_receive_callback_t radio_receive_callback);
-void HAL_RADIO_deinit();
-void HAL_RADIO_proc();
-void HAL_RADIO_enable_telemetry();
-void HAL_RADIO_start_listening();
-void HAL_RADIO_request_readout();
-void HAL_RADIO_write_telemetry_payload(const uint8_t *data, uint8_t len); // TODO: ADD CIRCULAR BUFFER
+typedef void (*HAL_RADIO_receive_callback_t)(const uint8_t *data, uint8_t len);
+
+void HAL_RADIO_init(HAL_RADIO_receive_callback_t radio_receive_callback);
+void HAL_RADIO_deinit(void);
+void HAL_RADIO_proc(void);
+void HAL_RADIO_enable_telemetry(void);
+void HAL_RADIO_start_listening(void);
+void HAL_RADIO_request_readout(void);
+void HAL_RADIO_receive_payload(void);
+void HAL_RADIO_write_telemetry_payload(const uint8_t *data, const uint8_t len); // TODO: ADD CIRCULAR BUFFER
+
 
 #ifdef __cplusplus
 }
