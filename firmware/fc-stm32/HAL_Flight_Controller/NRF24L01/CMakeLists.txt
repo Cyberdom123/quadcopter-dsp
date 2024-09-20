@@ -1,7 +1,7 @@
 # Add nrf24l01 library
 add_library(nrf24l01
     nrf24l01.c
-    radio.c
+    hal_radio.c
 )
 
 # Add linked libraries

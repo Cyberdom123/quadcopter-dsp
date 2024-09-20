@@ -1,6 +1,6 @@
 add_library(mpu6050
     mpu6050.c
-    imu.c
+    hal_imu.c
 )
 
 # Add linked libraries

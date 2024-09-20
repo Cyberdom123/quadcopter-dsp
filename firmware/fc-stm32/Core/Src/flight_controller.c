@@ -1,11 +1,12 @@
 #include "flight_controller.h"
+#include "main.h"
 
 RC_t rc;
 Telemetry_t telemetry;
-float angle_change[3];
-float angles[2];
 
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+  (void)hi2c;
+
 #ifdef HAL_RADIO_INTERFACE_I2C
   HAL_RADIO_receive_payload();
 #endif // RADIO_INTERFACE_I2C
@@ -16,6 +17,8 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 }
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
+  (void)hspi;
+
 #ifdef HAL_RADIO_INTERFACE_SPI
   HAL_RADIO_receive_payload();
 #endif // RADIO_INTERFACE_SPI
@@ -23,6 +26,10 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 #ifdef HAL_IMU_INTERFACE_SPI
   HAL_IMU_readout();
 #endif // IMU_INTERFACE_SPI
+
+#ifdef HAL_EXTERNAL_MEMORY_INTERFACE_SPI
+  HAL_EXTERNAL_MEMORY_readout();
+#endif // EXTERNAL_MEMORY_INTERFACE_SPI
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
@@ -44,6 +51,9 @@ void RADIO_packet_received_callback(const uint8_t *packet,
 }
 
 void IMU_conversion_complete_callback(const float *acc, const float *gyro) {
+  static float angle_change[3];
+  static float angles[2];
+
   Estimate_Angles(angles, angle_change, acc, gyro);
   Stabilize(angles, angle_change, rc.controls_inputs);
   Motors_Switch(rc.power_on);

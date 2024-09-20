@@ -32,7 +32,7 @@ typedef struct RC_t
   int8_t power_on;
 }RC_t;
 
-void RC_Receive_Message(uint8_t message[8], RC_t *rc);
+void RC_Receive_Message(const uint8_t message[8], RC_t *rc);
 void RC_Connection_Tick();
 bool RC_Check_Connection();
 void Lower_Altitude(RC_t *rc);

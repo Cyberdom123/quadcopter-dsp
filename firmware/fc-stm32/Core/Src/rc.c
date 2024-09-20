@@ -20,7 +20,7 @@
  *        -  msg[5] - Power off
  *        - (msg[6] - msg[8]) - free 
   */
-void RC_Receive_Message(uint8_t message[8], RC_t *rc){
+void RC_Receive_Message(const uint8_t message[8], RC_t *rc){
     int8_t *message_int = (int8_t*) message;
     
     if(message_int[0] > ACTIVATION_THRESHOLD_THRUST){
