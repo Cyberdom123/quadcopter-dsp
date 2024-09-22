@@ -57,7 +57,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define NRF_INT_Pin GPIO_PIN_4
+#define RADIO_INT_Pin GPIO_PIN_4
 #define NRF_INT_GPIO_Port GPIOA
 #define NRF_INT_EXTI_IRQn EXTI4_IRQn
 #define SPI_CS_Pin GPIO_PIN_0
@@ -68,7 +68,7 @@ void Error_Handler(void);
 #define CE_GPIO_Port GPIOB
 #define STATUS_LED_Pin GPIO_PIN_12
 #define STATUS_LED_GPIO_Port GPIOB
-#define MPU_INT_Pin GPIO_PIN_5
+#define IMU_INT_Pin GPIO_PIN_5
 #define MPU_INT_GPIO_Port GPIOB
 #define MPU_INT_EXTI_IRQn EXTI9_5_IRQn
 

@@ -4,46 +4,12 @@
 RC_t rc;
 Telemetry_t telemetry;
 
-void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
-  (void)hi2c;
-
-#ifdef HAL_RADIO_INTERFACE_I2C
-  HAL_RADIO_receive_payload();
-#endif // RADIO_INTERFACE_I2C
-
-#ifdef HAL_IMU_INTERFACE_I2C
-  HAL_IMU_readout();
-#endif // IMU_INTERFACE_I2C
+void HAL_RADIO_request_receive_callback(void) {
+  HAL_RADIO_write_telemetry_payload(telemetry.bytes, 24);
 }
 
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
-  (void)hspi;
-
-#ifdef HAL_RADIO_INTERFACE_SPI
-  HAL_RADIO_receive_payload();
-#endif // RADIO_INTERFACE_SPI
-
-#ifdef HAL_IMU_INTERFACE_SPI
-  HAL_IMU_readout();
-#endif // IMU_INTERFACE_SPI
-
-#ifdef HAL_EXTERNAL_MEMORY_INTERFACE_SPI
-  HAL_EXTERNAL_MEMORY_readout();
-#endif // EXTERNAL_MEMORY_INTERFACE_SPI
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-  if (GPIO_Pin == NRF_INT_Pin) { // Rename to RADIO_INT_Pin
-    HAL_RADIO_write_telemetry_payload(telemetry.bytes, 24);
-    HAL_RADIO_request_readout();
-  }
-  if (GPIO_Pin == MPU_INT_Pin) { // Rename to IMU_INT_Pin
-    HAL_IMU_request_readout();
-  }
-}
-
-void RADIO_packet_received_callback(const uint8_t *packet,
-                                    uint8_t packet_length) {
+void HAL_RADIO_receive_complete_callback(const uint8_t *packet,
+                                         uint8_t packet_length) {
   (void)packet_length;
   RC_Connection_Tick(&rc);
   HAL_GPIO_WritePin(STATUS_LED_GPIO_Port, STATUS_LED_Pin, GPIO_PIN_SET);
@@ -72,7 +38,8 @@ void FC_init() {
   const float dt = 0.001f, comp_alpha = 0.001f, iir_tau = 0.04f;
   Estimate_Angles_Init(dt, comp_alpha, iir_tau);
 
-  HAL_RADIO_init(RADIO_packet_received_callback);
+  HAL_RADIO_init(HAL_RADIO_receive_complete_callback,
+                 HAL_RADIO_request_receive_callback);
   HAL_IMU_init(IMU_conversion_complete_callback);
 
   HAL_IMU_start_conversion();
