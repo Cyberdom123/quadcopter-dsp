@@ -352,11 +352,10 @@ void NRF24L01_Read_PayloadDMA_Complete(NRF24L01_STRUCT *nrf24l01, uint8_t *data,
  * @brief Send payload with payload package
  * Call after selecting reading pipe
  */
-HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, void *data, uint8_t len){
+HAL_StatusTypeDef NRF24L01_Write_ACKN_Payload(NRF24L01_STRUCT *nrf24l01, uint8_t *payload, uint8_t len){
 
     HAL_GPIO_WritePin(nrf24l01->nrf24l01GpioPort, nrf24l01->csnPin, GPIO_PIN_RESET);
     
-    uint8_t *payload = (uint8_t*) data;
     //ACK payload will be sent along with data arrival to selected reading pipe
     uint8_t tx_buff = (W_ACK_PAYLOAD | nrf24l01->pipeNum);
     HAL_StatusTypeDef status = HAL_SPI_Transmit(nrf24l01->spiHandle, &tx_buff, 1, HAL_MAX_DELAY);

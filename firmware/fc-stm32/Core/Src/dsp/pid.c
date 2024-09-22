@@ -40,7 +40,7 @@ float PID_Calculate(pid_t *pid, float input, float target){
 
     if(output < pid->minOut) output = pid->minOut;
 
-    /* Shit values */
+    /* Shift values */
     pid->derivError = input;
     pid->lastError = error;
     pid->lastDeriv = derivative;

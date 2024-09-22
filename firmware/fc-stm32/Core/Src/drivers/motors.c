@@ -5,15 +5,21 @@
  * @version 0.1
  * @date 2024-01-26
  */
-#include <drivers/motors.h>
 
+#include "drivers/motors.h"
 
-void Motors_Run(int8_t thrust, int8_t yaw, int8_t pitch, int8_t roll, int8_t power_on){
+#include "gpio.h"
+#include "tim.h"
+
+#include <stdbool.h>
+#include <stdint.h>
+
+void Motors_Run(int8_t thrust, int8_t yaw, int8_t pitch, int8_t roll, bool power_on){
     Motors_SetPWR(thrust, yaw, pitch, roll);
     Motors_Switch(power_on);
 }
 
-void Motors_Switch(uint8_t power_on){
+void Motors_Switch(bool power_on){
   if(power_on){
     //Start all PWM chanels
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);

@@ -5,13 +5,14 @@
  * @version 0.1
  * @date 2024-01-26
  */
-#include <dsp/stabilizer.h>
-typedef enum{
+#include "dsp/stabilizer.h"
+
+enum{
     thrust = 0,
     pitch  = 1,
     yaw    = 2,
     roll   = 3
-}Control_Inputs_t;
+};
 
 // static IIR_filter_t iir;
 static pid_t roll_pid, pitch_pid, yaw_pid;
