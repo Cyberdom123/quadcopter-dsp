@@ -5,13 +5,14 @@
  * @version 0.1
  * @date 2024-01-26
  */
-#include <dsp/stabilizer.h>
-typedef enum{
+#include "dsp/stabilizer.h"
+
+enum{
     thrust = 0,
     pitch  = 1,
     yaw    = 2,
     roll   = 3
-}Control_Inputs_t;
+};
 
 // static IIR_filter_t iir;
 static pid_t roll_pid, pitch_pid, yaw_pid;
@@ -39,16 +40,16 @@ void Stabilizer_init(){
     /* Initialize all constants for each pid */
 
     //roll pid
-    roll_pid.tau  =  0.006f;  // 25Hz cutoff freq
-    roll_pid.kp   =  2.1f;
+    roll_pid.tau  =  0.005f;  // 25Hz cutoff freq
+    roll_pid.kp   =  3.0f;
     roll_pid.ki   =  0.0f;  
-    roll_pid.kd   = -0.2f;
+    roll_pid.kd   = -0.3f;
     
     //pitch pid
-    pitch_pid.tau =  0.006f; // 25Hz cutoff freq
-    pitch_pid.kp  =  2.1f;
+    pitch_pid.tau =  0.005f; // 25Hz cutoff freq
+    pitch_pid.kp  =  3.0f;
     pitch_pid.ki  =  0.0f;
-    pitch_pid.kd  = -0.2f;
+    pitch_pid.kd  = -0.3f;
 
     //yaw pid
     yaw_pid.tau =  0.008f;  // 20Hz cutoff freq
@@ -71,8 +72,8 @@ void Stabilize(float angles[2], float angular_velocities[3], int8_t control_inpu
     float set_val[3];
     int8_t duty_cycles[3];
 
-    set_val[0] = control_inputs[pitch];  //+2.1
-    set_val[1] = control_inputs[roll] - 1.0f;  //+1.9
+    set_val[0] = control_inputs[pitch];
+    set_val[1] = control_inputs[roll];
     set_val[2] = control_inputs[yaw];
 
     /* Angle PID's */

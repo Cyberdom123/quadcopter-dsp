@@ -1,8 +1,7 @@
 #if !defined(PID)
 #define PID
 
-typedef struct 
-{
+typedef struct {
     /* constants */
     float kp;
     float ki;
@@ -25,7 +24,7 @@ typedef struct
     float maxInt;
     float minInt;
 
-}pid_t;
+} pid_t;
 
 /**
  * @brief Initializes the PID controller.
@@ -35,7 +34,6 @@ typedef struct
  * @param pid Pointer to the PID controller structure.
  */
 void PID_init(pid_t *pid);
-
 
 /**
  * @brief Calculates the output of a PID controller.

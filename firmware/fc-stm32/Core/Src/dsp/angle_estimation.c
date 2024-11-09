@@ -54,11 +54,10 @@ void Calculate_Angles_acc(float acc_buf[3], float angles[2]){
  * @param gyro gyro inputs [x, y, z]
  */
 
-void Calculate_Angular_Velocities(float angle_change[3], float angles[2], float gyro[3]){
+void Calculate_Angular_Velocities(float angle_change[3], float angles[2], const float gyro[3]){
   const int roll = 0, pitch = 1;
   const int x    = 0, y     = 1, z   = 2;
 
-  // NOTE: this are variables, so the trig functions are only evaluated once for speed
   float sin_psi   = sinf(angles[roll]);
   float cos_psi   = cosf(angles[roll]);
   float cos_theta = cosf(angles[pitch]);
@@ -81,7 +80,8 @@ void Get_Complementary_Roll_Pitch(float angles[2], float acc_angles[2], float an
 }
 
 void Get_XY_Velocities(float acc[3], float angles[3]){
-
+  (void)acc;
+  (void)angles;
 }
 
 /**
@@ -142,35 +142,38 @@ void Estimate_Angles_Init(float dt, float alpha, float tau){
   #endif
 }
 
-static float filter_acc_x_in[2]  = {0};
-static float filter_acc_x_out[2] = {0};
-
-static float filter_acc_y_in[2]  = {0};
-static float filter_acc_y_out[2] = {0};
-
-static float filter_acc_z_in[2]  = {0};
-static float filter_acc_z_out[2] = {0};
 /**
  * @brief Calculates Euler angles estimates using 
  *        1D Kalman or complementary filter
  * 
   */
-void Estimate_Angles(float angles[2], float angular_velocities[3], float acc_buf[3], float gyro_buff[3]){
+void Estimate_Angles(float angles[2], float angular_velocities[3], const float acc_buf[3], const float gyro_buff[3]){
+  const int x = 0, y = 1, z = 2;
   float acc_angles[2];
+  float filtered_acc[3];
 
-  filter_acc_x_in[0] = acc_buf[0];
+  static float filter_acc_x_in[2]  = {0};
+  static float filter_acc_x_out[2] = {0};
+
+  static float filter_acc_y_in[2]  = {0};
+  static float filter_acc_y_out[2] = {0};
+
+  static float filter_acc_z_in[2]  = {0};
+  static float filter_acc_z_out[2] = {0};
+
+  filter_acc_x_in[0] = acc_buf[x];
   Low_Pass_IIR_Filter(&iir, filter_acc_x_out, filter_acc_x_in);
-  acc_buf[0] = filter_acc_x_out[0];
+  filtered_acc[x] = filter_acc_x_out[0];
 
-  filter_acc_y_in[0] = acc_buf[1];
+  filter_acc_y_in[0] = acc_buf[y];
   Low_Pass_IIR_Filter(&iir, filter_acc_y_out, filter_acc_y_in);
-  acc_buf[1] = filter_acc_y_out[0];
+  filtered_acc[y] = filter_acc_y_out[0];
 
-  filter_acc_z_in[0] = acc_buf[2];
+  filter_acc_z_in[0] = acc_buf[z];
   Low_Pass_IIR_Filter(&iir, filter_acc_z_out, filter_acc_z_in);
-  acc_buf[2] = filter_acc_z_out[0];
+  filtered_acc[z] = filter_acc_z_out[0];
 
-  Calculate_Angles_acc(acc_buf, acc_angles);
+  Calculate_Angles_acc(filtered_acc, acc_angles);
   Calculate_Angular_Velocities(angular_velocities, angles, gyro_buff);
 
   #ifdef KALMAN

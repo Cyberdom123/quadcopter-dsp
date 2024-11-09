@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "radio.h": "c",
+        "nrf24l01.h": "c",
+        "usart.h": "c",
+        "stabilizer.h": "c",
+        "baro.h": "c",
+        "imu.h": "c",
+        "external_memory.h": "c",
+        "angle_estimation.h": "c",
+        "mpu6050.h": "c",
+        "tim.h": "c",
+        "gpio.h": "c"
+    },
+    "cmake.sourceDirectory": "/home/dom/Documents/Coding/stm32/quadcopter-dsp/firmware/fc-stm32"
+}
