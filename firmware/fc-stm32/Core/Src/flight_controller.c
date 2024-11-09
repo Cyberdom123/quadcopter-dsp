@@ -41,7 +41,8 @@ void FC_init() {
     HAL_RADIO_init(HAL_RADIO_receive_complete_callback,
                    HAL_RADIO_request_receive_callback);
     HAL_IMU_init(IMU_conversion_complete_callback);
-
+    HAL_IMU_calibrate();
+    
     HAL_IMU_start_conversion();
     HAL_RADIO_start_listening();
 }

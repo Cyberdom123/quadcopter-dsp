@@ -12,8 +12,8 @@
 #include <assert.h>
 
 enum {
-  IMU_GYRO_CALIBRATION_SAMPLES = 1000,
-  IMU_ACC_CALIBRATION_SAMPLES = 1000
+  IMU_GYRO_CALIBRATION_SAMPLES = 10000,
+  IMU_ACC_CALIBRATION_SAMPLES = 10000
 };
 
 typedef struct {
@@ -26,8 +26,6 @@ typedef struct {
 static IMU_DEVICE imu;
 
 void HAL_IMU_init(HAL_IMU_conversion_complete_callback_t imu_readout_callback) {
-  // static_assert(imu_readout_callback != NULL);
-
   imu.mpu.hi2c = &hi2c1;
   imu.mpu.mpu_acc_buff = imu.acc;
   imu.mpu.mpu_gyro_buff = imu.gyro;

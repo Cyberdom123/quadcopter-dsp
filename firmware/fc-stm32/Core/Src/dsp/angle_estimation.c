@@ -58,7 +58,6 @@ void Calculate_Angular_Velocities(float angle_change[3], float angles[2], const 
   const int roll = 0, pitch = 1;
   const int x    = 0, y     = 1, z   = 2;
 
-  // NOTE: this are variables, so the trig functions are only evaluated once for speed
   float sin_psi   = sinf(angles[roll]);
   float cos_psi   = cosf(angles[roll]);
   float cos_theta = cosf(angles[pitch]);
